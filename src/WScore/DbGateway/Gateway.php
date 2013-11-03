@@ -67,7 +67,7 @@ class Gateway
      */
     public function query() {
         // set fetch mode after query is cloned in table() method.
-        return $this->query = $this->query->table( $this->table, $this->id_name );
+        return $this->query = $this->query->setTable( $this->table, $this->id_name );
     }
     // +----------------------------------------------------------------------+
     //  Basic DataBase Access.
@@ -99,10 +99,10 @@ class Gateway
         if( !is_null( $value ) ) {
             $query->condition( $column, $value, QueryInterface::EQUALS );
         }
-        $query->execType( QueryInterface::SELECT );
+        $query->setExecType( QueryInterface::SELECT );
         $this->filters->apply( 'query', $query );
-        $query->exec(); 
-        return $query->result();
+        $query->execute(); 
+        return $query->getResult();
     }
 
     // +----------------------------------------------------------------------+
@@ -121,9 +121,12 @@ class Gateway
             $id = $data[ $this->id_name ];
             unset( $data[ $this->id_name ] );
         }
-        $this->query()->condition( $this->id_name, $id, QueryInterface::EQUALS )->values( $data )->execType( QueryInterface::UPDATE );
+        $this->query()
+            ->condition( $this->id_name, $id, QueryInterface::EQUALS )
+            ->setData( $data )
+            ->setExecType( QueryInterface::UPDATE );
         $this->filters->apply( 'update', $query );
-        $this->query->exec();
+        $this->query->execute();
         return $this;
     }
 
@@ -136,9 +139,10 @@ class Gateway
     public function delete( $id )
     {
         $this->query()
-            ->condition( $this->id_name, $id, QueryInterface::EQUALS )->execType( QueryInterface::DELETE );
+            ->condition( $this->id_name, $id, QueryInterface::EQUALS )
+            ->setExecType( QueryInterface::DELETE );
         $this->filters->apply( 'delete', $query );
-        $this->query->exec();
+        $this->query->execute();
     }
 
     // +----------------------------------------------------------------------+
@@ -172,7 +176,7 @@ class Gateway
     {
         unset( $data[ $this->id_name ] );
         $this->insertData( $data );
-        $id = $this->query->lastId();
+        $id = $this->query->getLastId();
         $data[ $this->id_name ] = $id;
         return $id;
     }
@@ -182,9 +186,9 @@ class Gateway
      */
     public function insertData( $data )
     {
-        $this->query()->values( $data );
+        $this->query()->setData( $data );
         $this->filters->apply( 'insert', $query );
-        $this->query->exec();
+        $this->query->execute();
     }
     // +----------------------------------------------------------------------+
 }

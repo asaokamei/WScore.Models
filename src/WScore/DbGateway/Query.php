@@ -30,7 +30,7 @@ class Query implements QueryInterface
      * @param $data
      * @return $this
      */
-    public function values( $data ) 
+    public function setData( $data ) 
     {
         $this->query->values( $data );
         return $this;
@@ -41,7 +41,7 @@ class Query implements QueryInterface
      *
      * @return string
      */
-    public function lastId()
+    public function getLastId()
     {
         return $this->query->lastId();
     }
@@ -53,7 +53,7 @@ class Query implements QueryInterface
      * @param $id_name
      * @return \WScore\DbAccess\Query
      */
-    public function table( $table, $id_name )
+    public function setTable( $table, $id_name )
     {
         return $this->query->table( $table, $id_name );
     }
@@ -78,7 +78,7 @@ class Query implements QueryInterface
      * @param string $type
      * @return $this
      */
-    public function execType( $type )
+    public function setExecType( $type )
     {
         $this->query->execType( $type );
         return $this;
@@ -89,7 +89,7 @@ class Query implements QueryInterface
      * 
      * @return \WScore\DbAccess\Query
      */
-    public function exec()
+    public function execute()
     {
         return $this->query->exec();
     }
@@ -97,7 +97,7 @@ class Query implements QueryInterface
     /**
      * @return mixed
      */
-    public function result()
+    public function getResult()
     {
         return $this->query->getStmt();
     }

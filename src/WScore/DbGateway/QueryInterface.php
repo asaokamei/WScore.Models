@@ -28,7 +28,7 @@ interface QueryInterface
      *
      * @param string $type
      */
-    public function execType( $type );
+    public function setExecType( $type );
 
     /**
      * sets table name and primary key.
@@ -37,21 +37,21 @@ interface QueryInterface
      * @param $id_name
      * @return \WScore\DbAccess\Query
      */
-    public function table( $table, $id_name );
+    public function setTable( $table, $id_name );
 
     /**
      * executes the query.
      *
      * @return \WScore\DbAccess\Query
      */
-    public function exec();
+    public function execute();
 
     /**
      * gets the last inserted ID.
      *
      * @return string
      */
-    public function lastId();
+    public function getLastId();
 
     /**
      * sets where condition.
@@ -65,5 +65,5 @@ interface QueryInterface
     /**
      * @return mixed
      */
-    public function result();
+    public function getResult();
 }
