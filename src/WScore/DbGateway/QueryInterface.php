@@ -23,37 +23,9 @@ interface QueryInterface
     const IS_NULL = 'isNull';
     const NOT_NULL = 'notNull';
 
-    /**
-     * @param $name
-     * @return mixed|null
-     */
-    public function getValue( $name=null );
-
-    /**
-     * @return mixed
-     */
-    public function getResult();
-
-    /**
-     * @param $name
-     */
-    public function delValue( $name );
-    
-    /**
-     * sets execution type.
-     *
-     * @param string $type
-     * @return $this
-     */
-    public function setExecType( $type );
-
-    /**
-     * gets the last inserted ID.
-     *
-     * @return string
-     */
-    public function getLastId();
-
+    // +----------------------------------------------------------------------+
+    //  constructing queries
+    // +----------------------------------------------------------------------+
     /**
      * sets table name and primary key.
      *
@@ -62,12 +34,6 @@ interface QueryInterface
      * @return \WScore\DbAccess\Query
      */
     public function setTable( $table, $id_name );
-
-    /**
-     * @param $name
-     * @param $value
-     */
-    public function setValue( $name, $value );
 
     /**
      * sets where condition.
@@ -80,12 +46,13 @@ interface QueryInterface
     public function condition( $column, $value, $type = 'eq' );
 
     /**
-     * executes the query.
-     *
-     * @return \WScore\DbAccess\Query
+     * @return mixed
      */
-    public function execute();
+    public function forUpdate();
 
+    // +----------------------------------------------------------------------+
+    //  managing values
+    // +----------------------------------------------------------------------+
     /**
      * @param $data
      * @return $this
@@ -93,7 +60,51 @@ interface QueryInterface
     public function setData( $data );
 
     /**
+     * @param $name
+     * @return mixed|null
+     */
+    public function getValue( $name=null );
+
+    /**
+     * @param $name
+     * @param $value
+     */
+    public function setValue( $name, $value );
+
+    /**
+     * @param $name
+     */
+    public function delValue( $name );
+
+    // +----------------------------------------------------------------------+
+    //  executing queries 
+    // +----------------------------------------------------------------------+
+    /**
+     * sets execution type.
+     *
+     * @param string $type
+     * @return $this
+     */
+    public function setExecType( $type );
+
+    /**
+     * executes the query.
+     *
+     * @return \WScore\DbAccess\Query
+     */
+    public function execute();
+
+    /**
+     * gets the last inserted ID.
+     *
+     * @return string
+     */
+    public function getLastId();
+
+    /**
      * @return mixed
      */
-    public function forUpdate();
+    public function getResult();
+
+    // +----------------------------------------------------------------------+
 }
