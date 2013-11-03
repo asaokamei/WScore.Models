@@ -1,17 +1,17 @@
 <?php
-namespace WScore\DataMapper\Filter;
+namespace WScore\DbGateway\Filter;
 
-use WScore\DataMapper\Model\Model;
+use WScore\DbGateway\Gateway;
 
 abstract class FilterAbstract implements FilterInterface
 {
     /**
-     * @var Model
+     * @var Gateway
      */
     protected $model;
 
     /**
-     * @param Model $model
+     * @param Gateway $model
      */
     public function setModel( $model ) {
         $this->model = $model;
@@ -22,7 +22,7 @@ abstract class FilterAbstract implements FilterInterface
      * @param mixed  $data
      * @return mixed
      */
-    public function apply( $event, $data )
+    public function apply( $event, &$data )
     {
         $method = 'on' . ucwords( $event );
         if( method_exists( $this, $method ) ) {
