@@ -1,17 +1,21 @@
 <?php
-namespace WScore\DataMapper\Model;
+namespace WScore\DbGateway;
 
 /**
  * base class for dao's for database tables.
  * a Table Data Gateway pattern.
  *
  */
-class Persistence
+class Gateway
 {
-    /** @var string                          name of database table          */
+    /**
+     * @var string                          name of database table
+     */
     protected $table;
 
-    /** @var string                          name of primary key             */
+    /**
+     * @var string                          name of primary key
+     */
     protected $id_name;
 
     /** 
@@ -20,11 +24,6 @@ class Persistence
      */
     public $query;
 
-    /**
-     * @var \WScore\DataMapper\Model\PropertySet
-     */
-    protected $property;
-    
     // +----------------------------------------------------------------------+
     //  Managing Object and Instances. 
     // +----------------------------------------------------------------------+
@@ -32,24 +31,29 @@ class Persistence
      */
     public function __construct()
     {
+        if( !$this->table ) $this->setTable();
+        if( !$this->id_name ) $this->setId();
     }
 
     /**
-     * @param string $table
-     * @param string $id_name
+     * @param null|string $table
      */
-    public function setTable( $table, $id_name )
+    public function setTable( $table=null )
     {
+        if( !$table ) {
+            $table = get_called_class();
+            $table = substr( $table, strrpos( $table, '\\' ) );
+        }
         $this->table   = $table;
-        $this->id_name = $id_name;
     }
 
     /**
-     * @param \WScore\DataMapper\Model\PropertySet $property
+     * @param null|string $id
      */
-    public function setProperty( $property )
+    public function setId( $id=null )
     {
-        $this->property = $property;
+        if( !$id ) $id = $this->table . '_id';
+        $this->id_name = $id;
     }
 
     /**
@@ -63,53 +67,49 @@ class Persistence
     //  Basic DataBase Access.
     // +----------------------------------------------------------------------+
     /**
+     * fetches data for given primary key $id. 
+     * 
+     * @param $id
+     * @return \PdoStatement
+     */
+    public function find( $id )
+    {
+        $this->query(); // reset query.
+        return $this->fetch( $id, $this->id_name );
+    }
+    
+    /**
      * fetches entities from simple condition.
      * use $select to specify column name to get only the column you want.
      * 
-     * packed: packs result to a simple array, i.e. [ 1, 2, 5,..].
-     *   false:  ignored,
-     *   true:   packs data with the selected column (id or $columnd)
-     *   string: packs data with the $pack column. 
-     *
      * @param string|array $value
      * @param null         $column
-     * @param bool|string  $packed
      * @return \PdoStatement
      */
-    public function fetch( $value, $column=null, $packed=false )
+    public function fetch( $value=null, $column=null )
     {
         $query = $this->query;
         if( !$column         ) $column = $this->id_name;
-        if( $packed === true ) $packed = $column;
-        if( is_null( $value ) ) {
-            $query->column( $packed );
-        } else {
-            $query->$column->eq( $value )->column( $packed );
+        if( !is_null( $value ) ) {
+            $query->$column->eq( $value );
         }
         $record = $query->select();
-        if( $packed ) {
-            return Helper::packToArray( $record, $packed );
-        }
         return $record;
     }
 
     /**
-     * update data. update( $entity ) or update( $id, $values ). 
+     * update data. update( $data ) or update( $data, $id ). 
      *
-     * @param array   $data
-     * @param null                     $extra
+     * @param array        $data
+     * @param null|string  $id
      * @return self
      */
-    public function update( $data, $extra=null )
+    public function update( $data, $id=null )
     {
-        if( $extra ) {
-            $id   = $data;
-            $data = $extra;
-        } else {
+        if( !$id ) {
             $id = $data[ $this->id_name ];
+            unset( $data[ $this->id_name ] );
         }
-        $data = $this->property->restrict( $data );
-        unset( $data[ $this->id_name ] );
         $this->query()->id( $id )->update( $data );
         return $this;
     }
@@ -122,9 +122,8 @@ class Persistence
      */
     public function insertValue( $data )
     {
-        $data = $this->property->restrict(  $data );
-        $this->query()->insert( $data );
-        $id = Helper::arrGet( $data, $this->id_name, true );
+        $this->insert( $data );
+        $id = array_key_exists( $this->id_name, $data ) ? $data[$this->id_name] : true;
         return $id;
     }
 
@@ -144,13 +143,21 @@ class Persistence
      * @param array   $data
      * @return string                 id of the inserted data
      */
-    public function insertId( $data )
+    public function insertId( &$data )
     {
         unset( $data[ $this->id_name ] );
-        $this->insertValue( $data );
+        $this->insert( $data );
         $id = $this->query->lastId();
         $data[ $this->id_name ] = $id;
         return $id;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function insert( $data )
+    {
+        $this->query()->insert( $data );
     }
     // +----------------------------------------------------------------------+
 }
