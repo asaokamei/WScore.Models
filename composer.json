@@ -1,0 +1,14 @@
+{
+    "name": "wscore/dbgateway",
+    "description": "database table gateway",
+    "authors": [
+        {
+            "name": "Asao",
+            "email": "kamei@workspot.jp"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "wscore/dbaccess": "dev-master"
+    }
+}
