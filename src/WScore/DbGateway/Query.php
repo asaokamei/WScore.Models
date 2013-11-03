@@ -35,6 +35,24 @@ class Query implements QueryInterface
         $this->query->values( $data );
         return $this;
     }
+
+    /**
+     * @param $name
+     * @return mixed|null
+     */
+    public function getValue( $name )
+    {
+        return $this->query->getValue( $name );
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     */
+    public function setValue( $name, $value )
+    {
+        $this->query->setValue( $name, $value );
+    }
     
     /**
      * gets the last inserted ID.

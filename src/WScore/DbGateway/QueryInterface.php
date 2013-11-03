@@ -22,13 +22,32 @@ interface QueryInterface
     const LIKE = 'like';
     const IS_NULL = 'isNull';
     const NOT_NULL = 'notNull';
-    
+
+    /**
+     * @param $name
+     * @return mixed|null
+     */
+    public function getValue( $name );
+
+    /**
+     * @return mixed
+     */
+    public function getResult();
+
     /**
      * sets execution type.
      *
      * @param string $type
+     * @return $this
      */
     public function setExecType( $type );
+
+    /**
+     * gets the last inserted ID.
+     *
+     * @return string
+     */
+    public function getLastId();
 
     /**
      * sets table name and primary key.
@@ -40,18 +59,10 @@ interface QueryInterface
     public function setTable( $table, $id_name );
 
     /**
-     * executes the query.
-     *
-     * @return \WScore\DbAccess\Query
+     * @param $name
+     * @param $value
      */
-    public function execute();
-
-    /**
-     * gets the last inserted ID.
-     *
-     * @return string
-     */
-    public function getLastId();
+    public function setValue( $name, $value );
 
     /**
      * sets where condition.
@@ -59,11 +70,20 @@ interface QueryInterface
      * @param string $column
      * @param string $value
      * @param string $type
+     * @return $this
      */
-    public function condition( $column, $value, $type = self::EQUALS );
+    public function condition( $column, $value, $type = 'eq' );
 
     /**
-     * @return mixed
+     * executes the query.
+     *
+     * @return \WScore\DbAccess\Query
      */
-    public function getResult();
+    public function execute();
+
+    /**
+     * @param $data
+     * @return $this
+     */
+    public function setData( $data );
 }
