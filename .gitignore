@@ -1,1 +1,7 @@
+# composer and other vendor's packages. 
 /vendor/
+
+# PHPStorm
+.idea/*
+
+
