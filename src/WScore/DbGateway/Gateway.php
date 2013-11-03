@@ -101,8 +101,8 @@ class Gateway
         }
         $query->execType( QueryInterface::SELECT );
         $this->filters->apply( 'query', $query );
-        $record = $query->exec(); 
-        return $record;
+        $query->exec(); 
+        return $query->result();
     }
 
     // +----------------------------------------------------------------------+

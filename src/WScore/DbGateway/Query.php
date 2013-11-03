@@ -93,5 +93,13 @@ class Query implements QueryInterface
     {
         return $this->query->exec();
     }
+
+    /**
+     * @return mixed
+     */
+    public function result()
+    {
+        return $this->query->getStmt();
+    }
     // +----------------------------------------------------------------------+
 }

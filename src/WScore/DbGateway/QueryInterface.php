@@ -61,4 +61,9 @@ interface QueryInterface
      * @param string $type
      */
     public function condition( $column, $value, $type = self::EQUALS );
+
+    /**
+     * @return mixed
+     */
+    public function result();
 }
