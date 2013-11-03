@@ -63,7 +63,7 @@ class Gateway
     }
 
     /**
-     * @return \WScore\DbAccess\Query
+     * @return \WScore\DbGateway\Query
      */
     public function query() {
         // set fetch mode after query is cloned in table() method.
@@ -97,9 +97,9 @@ class Gateway
         $query = $this->query;
         if( !$column         ) $column = $this->id_name;
         if( !is_null( $value ) ) {
-            $query->condition( $column, $value, 'eq' );
+            $query->condition( $column, $value, QueryInterface::EQUALS );
         }
-        $query->execType( 'select');
+        $query->execType( QueryInterface::SELECT );
         $this->filters->apply( 'query', $query );
         $record = $query->exec(); 
         return $record;
@@ -121,7 +121,7 @@ class Gateway
             $id = $data[ $this->id_name ];
             unset( $data[ $this->id_name ] );
         }
-        $this->query()->id( $id )->values( $data )->execType( 'Update' );
+        $this->query()->condition( $this->id_name, $id, QueryInterface::EQUALS )->values( $data )->execType( QueryInterface::UPDATE );
         $this->filters->apply( 'update', $query );
         $this->query->exec();
         return $this;
@@ -135,8 +135,8 @@ class Gateway
      */
     public function delete( $id )
     {
-        $this->query()->clearWhere()
-            ->id( $id )->limit(1)->execType( 'Delete' );
+        $this->query()
+            ->condition( $this->id_name, $id, QueryInterface::EQUALS )->execType( QueryInterface::DELETE );
         $this->filters->apply( 'delete', $query );
         $this->query->exec();
     }
