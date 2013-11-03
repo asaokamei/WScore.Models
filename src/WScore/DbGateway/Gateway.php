@@ -97,6 +97,9 @@ class Gateway
         return $record;
     }
 
+    // +----------------------------------------------------------------------+
+    //  Basic DataBase Access.
+    // +----------------------------------------------------------------------+
     /**
      * update data. update( $data ) or update( $data, $id ). 
      *
@@ -115,19 +118,6 @@ class Gateway
     }
 
     /**
-     * insert data into database.
-     *
-     * @param array   $data
-     * @return string|bool             id of the inserted data or true if id not exist.
-     */
-    public function insertValue( $data )
-    {
-        $this->insert( $data );
-        $id = array_key_exists( $this->id_name, $data ) ? $data[$this->id_name] : true;
-        return $id;
-    }
-
-    /**
      * deletes an id.
      * override this method (i.e. just tag some flag, etc.).
      *
@@ -140,13 +130,35 @@ class Gateway
     }
 
     /**
+     * @param $data
+     * @return string
+     */
+    public function insert( &$data ) 
+    {
+        return $this->insertId( $data );
+    }
+    
+    /**
+     * insert data into database.
+     *
+     * @param array   $data
+     * @return string|bool             id of the inserted data or true if id not exist.
+     */
+    public function insertValue( &$data )
+    {
+        $this->insertData( $data );
+        $id = array_key_exists( $this->id_name, $data ) ? $data[$this->id_name] : true;
+        return $id;
+    }
+
+    /**
      * @param array   $data
      * @return string                 id of the inserted data
      */
     public function insertId( &$data )
     {
         unset( $data[ $this->id_name ] );
-        $this->insert( $data );
+        $this->insertData( $data );
         $id = $this->query->lastId();
         $data[ $this->id_name ] = $id;
         return $id;
@@ -155,7 +167,7 @@ class Gateway
     /**
      * @param array $data
      */
-    public function insert( $data )
+    public function insertData( $data )
     {
         $this->query()->insert( $data );
     }
