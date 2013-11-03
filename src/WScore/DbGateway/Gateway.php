@@ -34,11 +34,13 @@ class Gateway
     //  Managing Object and Instances. 
     // +----------------------------------------------------------------------+
     /**
+     * @param null|string $table
+     * @param null|string $id
      */
-    public function __construct()
+    public function __construct( $table=null, $id=null )
     {
-        if( !$this->table ) $this->setTable();
-        if( !$this->id_name ) $this->setId();
+        if( !$this->table ) $this->setTable( $table );
+        if( !$this->id_name ) $this->setId( $id );
     }
 
     /**
@@ -68,6 +70,13 @@ class Gateway
     public function query() {
         // set fetch mode after query is cloned in table() method.
         return $this->query = $this->query->setTable( $this->table, $this->id_name );
+    }
+
+    /**
+     * @return FilterManager
+     */
+    public function filters() {
+        return $this->filters;
     }
     // +----------------------------------------------------------------------+
     //  Basic DataBase Access.
