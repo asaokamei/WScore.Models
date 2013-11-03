@@ -20,7 +20,7 @@ class Gateway
 
     /** 
      * @Inject
-     * @var \WScore\DbAccess\Query  
+     * @var \WScore\DbGateway\Query  
      */
     public $query;
 
@@ -97,10 +97,11 @@ class Gateway
         $query = $this->query;
         if( !$column         ) $column = $this->id_name;
         if( !is_null( $value ) ) {
-            $query->$column->eq( $value );
+            $query->condition( $column, $value, 'eq' );
         }
+        $query->execType( 'select');
         $this->filters->apply( 'query', $query );
-        $record = $query->select();
+        $record = $query->exec(); 
         return $record;
     }
 
