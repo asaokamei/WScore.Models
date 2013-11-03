@@ -40,9 +40,22 @@ class Query implements QueryInterface
      * @param $name
      * @return mixed|null
      */
-    public function getValue( $name )
+    public function getValue( $name=null )
     {
-        return $this->query->getValue( $name );
+        if( $name ) {
+            return $this->query->getValue( $name );
+        }
+        return $this->query->queryObject->values;
+    }
+
+    /**
+     * @param $name
+     */
+    public function delValue( $name )
+    {
+        if( array_key_exists( $name, $this->query->queryObject->values ) ) {
+            unset( $this->query->queryObject->values[ $name ] );
+        }
     }
 
     /**

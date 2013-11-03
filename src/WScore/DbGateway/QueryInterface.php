@@ -27,13 +27,18 @@ interface QueryInterface
      * @param $name
      * @return mixed|null
      */
-    public function getValue( $name );
+    public function getValue( $name=null );
 
     /**
      * @return mixed
      */
     public function getResult();
 
+    /**
+     * @param $name
+     */
+    public function delValue( $name );
+    
     /**
      * sets execution type.
      *
