@@ -7,6 +7,8 @@ class SetTimeUpdatedAt extends FilterAbstract
 {
     use SetTimeTrait;
 
+    protected $column_name = 'updated_at';
+
     /**
      * @param QueryInterface $query
      */

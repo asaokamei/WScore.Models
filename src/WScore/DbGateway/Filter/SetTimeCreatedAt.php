@@ -6,6 +6,8 @@ use WScore\DbGateway\QueryInterface;
 class SetTimeCreatedAt extends FilterAbstract
 {
     use SetTimeTrait;
+
+    protected $column_name = 'created_at';
     
     /**
      * @param QueryInterface $query
