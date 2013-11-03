@@ -24,6 +24,12 @@ class Gateway
      */
     public $query;
 
+    /**
+     * @Inject
+     * @var \WScore\DbGateway\FilterManager
+     */
+    public $filters;
+    
     // +----------------------------------------------------------------------+
     //  Managing Object and Instances. 
     // +----------------------------------------------------------------------+
@@ -93,6 +99,7 @@ class Gateway
         if( !is_null( $value ) ) {
             $query->$column->eq( $value );
         }
+        $this->filters->apply( 'query', $query );
         $record = $query->select();
         return $record;
     }
@@ -113,7 +120,9 @@ class Gateway
             $id = $data[ $this->id_name ];
             unset( $data[ $this->id_name ] );
         }
-        $this->query()->id( $id )->update( $data );
+        $this->query()->id( $id )->values( $data )->execType( 'Update' );
+        $this->filters->apply( 'update', $query );
+        $this->query->exec();
         return $this;
     }
 
@@ -126,9 +135,12 @@ class Gateway
     public function delete( $id )
     {
         $this->query()->clearWhere()
-            ->id( $id )->limit(1)->execType( 'Delete' )->exec();
+            ->id( $id )->limit(1)->execType( 'Delete' );
+        $this->filters->apply( 'delete', $query );
+        $this->query->exec();
     }
 
+    // +----------------------------------------------------------------------+
     /**
      * @param $data
      * @return string
@@ -169,7 +181,9 @@ class Gateway
      */
     public function insertData( $data )
     {
-        $this->query()->insert( $data );
+        $this->query()->values( $data );
+        $this->filters->apply( 'insert', $query );
+        $this->query->exec();
     }
     // +----------------------------------------------------------------------+
 }

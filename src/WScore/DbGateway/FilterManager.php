@@ -1,94 +1,69 @@
 <?php
 
-namespace WScore\DataMapper;
+namespace WScore\DbGateway;
 
-use Closure;
+use WScore\DbGateway\Filter\FilterInterface;
 
 class FilterManager
 {
     /**
-     * @var Model\Model
+     * @var Gateway
      */
     public $model;
     
     /**
-     * @var Filter\FilterInterface[][]|\Closure[][]
+     * @var FilterInterface[]
      */
     public $filters = array();
 
     /**
-     * @var Filter\FilterInterface[]|Closure[]
-     */
-    public $rules = array();
-
-
-    /**
-     * @param string                 $event
-     * @param Filter\FilterInterface $filter
+     * @param Gateway $model
      * @return $this
      */
-    public function addFilter( $event, $filter )
-    {
-        $this->filters[ $event ][] = $filter;
-        return $this;
-    }
-
-    /**
-     * @param Filter\FilterInterface $rule
-     * @return $this
-     */
-    public function addRule( $rule )
-    {
-        $name = get_class( $rule );
-        $this->rules[ $name ] = $rule;
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function clearRules() {
-        $this->rules = array();
-        return $this;
-    }
-
-    /**
-     * @param Model\Model $model
-     * @return $this
-     */
-    public function setModel( $model ) 
+    public function setModel( $model )
     {
         $this->model = $model;
         return $this;
     }
 
     /**
-     * @param string $event
-     * @param mixed $data
-     * @return mixed
+     * @param FilterInterface $filter
+     * @return $this
      */
-    public function event( $event, $data )
+    public function addFilter( $filter )
     {
-        $data   = $this->apply( $this->rules, $event, $data );
-        if( !isset( $this->filters[ $event ] ) ) return $data;
-        $data   = $this->apply( $this->filters[ $event ], $event, $data );
-        
-        return $data;
+        $name = get_class( $filter );
+        $this->filters[ $name ] = $filter;
+        return $this;
     }
 
     /**
-     * @param Filter\FilterInterface[] $filters
-     * @param                          $event
+     * @param null|FilterInterface $filter
+     * @return $this
+     */
+    public function clearFilters( $filter=null ) 
+    {
+        if( $filter ) {
+            $name = get_class( $filter );
+            if( isset( $this->filters[ $name ] ) ) unset( $this->filters[ $name ] );
+        } else {
+            $this->filters = array();
+        }
+        return $this;
+    }
+
+    /**
+     * @param string                   $event
      * @param                          $data
      */
-    private function apply( $filters, $event, $data )
+    public function apply( $event, &$data )
     {
-        if( !$filters || empty( $filters ) ) return $data;
-        foreach( $filters as $filter ) {
-            if( !$filter instanceof Filter\FilterInterface ) continue;
+        if( empty( $this->filters ) ) return;
+        foreach( $this->filters as $filter ) {
+            if( !$filter instanceof FilterInterface ) continue;
             $filter->setModel( $this->model );
             $data = $filter->apply( $event, $data );
         }
-        return $data;
+        return;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace WScore\DataMapper\Filter;
+namespace WScore\DbGateway\Filter;
 
 /**
  * Class FilterInterface
@@ -17,5 +17,5 @@ namespace WScore\DataMapper\Filter;
 interface FilterInterface
 {
     public function setModel( $model );
-    public function apply( $event, $data );
+    public function apply( $event, &$data );
 }
