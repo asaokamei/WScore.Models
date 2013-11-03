@@ -132,5 +132,14 @@ class Query implements QueryInterface
     {
         return $this->query->getStmt();
     }
+
+    /**
+     * @return mixed|void
+     */
+    public function forUpdate()
+    {
+        $this->query->forUpdate();
+        return $this;
+    }
     // +----------------------------------------------------------------------+
 }

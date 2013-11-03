@@ -91,4 +91,9 @@ interface QueryInterface
      * @return $this
      */
     public function setData( $data );
+
+    /**
+     * @return mixed
+     */
+    public function forUpdate();
 }

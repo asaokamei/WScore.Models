@@ -1,16 +1,17 @@
 <?php
 
-namespace WScore\DataMapper\Filter;
+namespace WScore\DbGateway\Filter;
+
+use WScore\DbGateway\QueryInterface;
 
 class ForUpdate extends FilterAbstract
 {
     /**
-     * @param \WScore\DbAccess\Query $query
+     * @param QueryInterface $query
      * @return \WScore\DbAccess\Query
      */
     public function onQuery( $query )
     {
         $query->forUpdate();
-        return $query;
     }
 }
