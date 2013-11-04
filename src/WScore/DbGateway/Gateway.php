@@ -78,6 +78,15 @@ class Gateway
     public function filters() {
         return $this->filters;
     }
+
+    /**
+     * @param $event
+     * @param $data
+     */
+    public function apply( $event, &$data )
+    {
+        $this->filters->apply( $event, $data );
+    }
     // +----------------------------------------------------------------------+
     //  Basic DataBase Access.
     // +----------------------------------------------------------------------+
@@ -109,7 +118,7 @@ class Gateway
             $query->condition( $column, $value, QueryInterface::EQUALS );
         }
         $query->setExecType( QueryInterface::SELECT );
-        $this->filters->apply( 'query', $query );
+        $this->apply( 'query', $query );
         $query->execute(); 
         return $query->getResult();
     }
@@ -134,7 +143,7 @@ class Gateway
             ->condition( $this->id_name, $id, QueryInterface::EQUALS )
             ->setData( $data )
             ->setExecType( QueryInterface::UPDATE );
-        $this->filters->apply( 'update', $query );
+        $this->apply( 'update', $query );
         $this->query->execute();
         return $this;
     }
@@ -150,7 +159,7 @@ class Gateway
         $this->query()
             ->condition( $this->id_name, $id, QueryInterface::EQUALS )
             ->setExecType( QueryInterface::DELETE );
-        $this->filters->apply( 'delete', $query );
+        $this->apply( 'delete', $query );
         $this->query->execute();
     }
 
@@ -196,7 +205,7 @@ class Gateway
     public function insertData( $data )
     {
         $this->query()->setData( $data );
-        $this->filters->apply( 'insert', $query );
+        $this->apply( 'insert', $query );
         $this->query->execute();
     }
     // +----------------------------------------------------------------------+
