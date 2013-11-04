@@ -17,4 +17,11 @@ class SetTimeUpdatedAt extends FilterAbstract
         $this->setTime( $query, $this->column_name );
     }
 
+    /**
+     * @param QueryInterface $query
+     */
+    protected function onInsert( $query )
+    {
+        $this->setTime( $query, $this->column_name );
+    }
 }
