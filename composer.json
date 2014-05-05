@@ -12,8 +12,8 @@
         "wscore/dbaccess": "dev-master"
     },
     "autoload": {
-        "psr-0": {
-            "WScore\\DbGateway": "src/"
+        "psr-4": {
+            "WScore\\DbGateway\\": "src/"
         }
     }
 }
