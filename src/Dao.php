@@ -1,5 +1,5 @@
 <?php
-namespace WScore\Dao;
+namespace WScore\DbGateway;
 
 
 use Illuminate\Database\Capsule\Manager;
@@ -226,7 +226,7 @@ class Dao
      * @param $type
      */
     protected function _setTime( $name, $type ) {
-        if( !$this->$name ) return;
+        if( !$name ) return;
         $this->formats[$name] = $this->date_formats[$type];
         $this->converts[$name] = 'getCurrentTime';
     }
