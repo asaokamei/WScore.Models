@@ -204,7 +204,7 @@ class Dao
         if( !$this->table ) {
             $name = get_class($this);
             if( false!==strpos($name, '\\') ) {
-                $name = substr( $name, strpos($name,'\\')+1 );
+                $name = substr( $name, strrpos($name,'\\')+1 );
             }
             $this->table = $name;
         }
