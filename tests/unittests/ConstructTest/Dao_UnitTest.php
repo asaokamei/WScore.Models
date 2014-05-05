@@ -70,4 +70,19 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('getCurrentTime', $converts['updated_at'] );
         $this->assertEquals('getCurrentTime', $converts['creation_date'] );
     }
+
+    /**
+     * @test
+     */
+    function _updateTimeStamps_sets_timestamp_object()
+    {
+        $stamps = array( 'test_stamp');
+        $data   = $orig = array( 'test' => 'testing' );
+        $this->dao->call_updateTimeStamps( $data, $stamps );
+        $this->assertEquals( $orig['test'], $data['test'] );
+        $this->assertTrue( isset( $data['test_stamp'] ) );
+        $this->assertTrue( is_object( $data['test_stamp'] ) );
+        $this->assertTrue( method_exists( $data['test_stamp'], 'format' ) );
+        $this->assertEquals( date('Y'), $data['test_stamp']->format('Y') );
+    }
 }
