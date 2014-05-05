@@ -50,12 +50,24 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function create_date_sets_format_and_convert()
+    function create_date_sets_format()
     {
         $formats = $this->dao->_getAny('formats');
         $this->assertEquals( 3, count( $formats ) );
         $this->assertEquals('Y-m-d H:i:s', $formats['created_at'] );
         $this->assertEquals('Y-m-d H:i:s', $formats['updated_at'] );
         $this->assertEquals('Y-m-d', $formats['creation_date'] );
+    }
+
+    /**
+     * @test
+     */
+    function create_date_sets_convert()
+    {
+        $converts = $this->dao->_getAny('converts');
+        $this->assertEquals( 3, count( $converts ) );
+        $this->assertEquals('getCurrentTime', $converts['created_at'] );
+        $this->assertEquals('getCurrentTime', $converts['updated_at'] );
+        $this->assertEquals('getCurrentTime', $converts['creation_date'] );
     }
 }
