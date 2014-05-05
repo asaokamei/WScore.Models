@@ -5,6 +5,8 @@ use WScore\DbGateway\Dao;
 
 class TestDao extends Dao
 {
+    protected $created_date = 'creation_date';
+    
     public function _setAny( $name, $value ) {
         $this->$name = $value;
     }
