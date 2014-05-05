@@ -9,7 +9,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "wscore/dbaccess": "dev-master"
+        "illuminate/database": "dev-master"
     },
     "autoload": {
         "psr-4": {
