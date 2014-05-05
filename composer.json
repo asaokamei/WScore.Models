@@ -11,6 +11,9 @@
     "require": {
         "illuminate/database": "dev-master"
     },
+    "require-dev": {
+        "mockery/mockery": "dev-master@dev"
+    },
     "autoload": {
         "psr-4": {
             "WScore\\DbGateway\\": "src/"
