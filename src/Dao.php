@@ -535,7 +535,7 @@ class Dao
      * @param $name
      * @return array|mixed|string
      */
-    protected function toString( &$data, $name=null )
+    protected function toString( $data, $name=null )
     {
         if( !$name ) {
             $list = $this->getColumns( $data );

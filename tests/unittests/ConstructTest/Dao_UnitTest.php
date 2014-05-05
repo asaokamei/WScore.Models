@@ -83,6 +83,43 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( isset( $data['test_stamp'] ) );
         $this->assertTrue( is_object( $data['test_stamp'] ) );
         $this->assertTrue( method_exists( $data['test_stamp'], 'format' ) );
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->assertEquals( date('Y'), $data['test_stamp']->format('Y') );
+    }
+
+    /**
+     * @test
+     */
+    function updateTimeStamps_and_toString_convert_date_insert()
+    {
+        $data   = array( 'test' => 'testing' );
+        $this->dao->callUpdateTimeStamps( $data, true );
+        $value  = $this->dao->callToString( $data );
+        $this->assertEquals( 4, count( $value ) );
+        $this->assertEquals( $data['test'], $value['test'] );
+        $this->assertTrue( isset( $value['created_at']));
+        $this->assertTrue( isset( $value['creation_date']));
+        $this->assertTrue( isset( $value['updated_at']));
+        // checking datetime contents
+        $date1 = new \DateTime($value['created_at']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertEquals( $date1->format('YmdHis'), $data['created_at']->format('YmdHis') );
+    }
+
+    /**
+     * @test
+     */
+    function updateTimeStamps_and_toString_convert_date_update()
+    {
+        $data   = array( 'test' => 'testing' );
+        $this->dao->callUpdateTimeStamps( $data );
+        $value  = $this->dao->callToString( $data );
+        $this->assertEquals( 2, count( $value ) );
+        $this->assertEquals( $data['test'], $value['test'] );
+        $this->assertTrue( isset( $value['updated_at']));
+        // checking datetime contents
+        $date1 = new \DateTime($value['updated_at']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertEquals( $date1->format('YmdHis'), $data['updated_at']->format('YmdHis') );
     }
 }

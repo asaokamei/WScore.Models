@@ -7,6 +7,29 @@ class TestDao extends Dao
 {
     protected $created_date = 'creation_date';
 
+    /**
+     * testing updateTimeStamps
+     *
+     * @param      $data
+     * @param bool $insert
+     */
+    public function callUpdateTimeStamps( &$data, $insert=false ) {
+        $this->updateTimeStamps( $data, $insert );
+    }
+
+    /**
+     * testing toString
+     * @param $data
+     * @return array|mixed|string
+     */
+    public function callToString( $data ) {
+        return $this->toString( $data );
+    }
+    /**
+     * testing _updateTimeStamps
+     * @param $data
+     * @param $stamps
+     */
     public function call_updateTimeStamps( &$data, $stamps ) {
         $this->_updateTimeStamps( $data, $stamps );
     }
