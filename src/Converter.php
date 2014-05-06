@@ -221,6 +221,10 @@ class Converter
         return $value;
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     protected function Up( $name )
     {
         $list = explode( '_', $name );
