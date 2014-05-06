@@ -29,4 +29,47 @@ use composer to get it as "wscore/dbgateway". name may change.
 Basic Usage
 -----------
 
+### constructing of Dao
+
+```php
+class YourDao extends Dao
+{
+    protected $table = 'TableName';
+    protected $primaryKey = 'The_Primary_Key';
+}
+$capsule = new Manager();
+$dao = new YourDao(
+    $capsule, new Converter()
+)
+```
+
+Please refer to Illuminate/database for setting up "Capsule", a database manager. 
+
+note:
+
+*   if $table is not set, class name is used as table name. 
+*   if $primaryKey is not set, tableName_id is used as primary key.
+
+### CRUD
+
+```php
+$data = $dao->where( 'X', '=', 'Y' )->select();
+$dao->insert( $data );
+$dao->where( 'X', '=', 'Y' )->update( [ 'A' => 'b' ] );
+```
+
+simple access for data.
+
+```php
+$id = $dao->addDatum( $data );
+$data = $dao->getDatum( $id );
+$dao->modDatum( $id, $data );
+```
+
+Advanced Topic
+--------------
+
+### Scope
+
+### Convert to Object and Entity
 
