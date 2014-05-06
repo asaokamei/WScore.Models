@@ -56,7 +56,7 @@ use Illuminate\Database\Query\Builder;
  * @method  Dao   getBindings
  * @method  Dao   skip
  * @method  Dao   orWhereRaw
- * @method  Dao Dao  where
+ * @method  Dao   where
  * @method  Dao   joinWhere
  * @method  Dao   newQuery
  * @method  Dao   count
@@ -221,13 +221,13 @@ class Dao implements DaoInterface
      */
     public function __call( $method, $args )
     {
-        if( $this->lastQuery && method_exists( $this->lastQuery, $method ) ) {
-            call_user_func_array( [$this->lastQuery, $method ], $args );
-            return $this;
-        }
-        elseif( method_exists( $this, $scope = 'scope'.ucfirst($method) ) )
+        if( method_exists( $this, $scope = 'scope'.ucfirst($method) ) )
         {
             call_user_func_array( [$this, $scope], $args );
+            return $this;
+        }
+        elseif( $this->lastQuery && method_exists( $this->lastQuery, $method ) ) {
+            call_user_func_array( [$this->lastQuery, $method ], $args );
             return $this;
         }
         throw new \RuntimeException( 'no such method: '.$method );
@@ -371,7 +371,7 @@ class Dao implements DaoInterface
      */
     public function addDatum( $data )
     {
-        return $this->insert( $data );
+        return $this->query()->insert( $data );
     }
 
     /**
@@ -381,7 +381,7 @@ class Dao implements DaoInterface
      */
     public function modDatum( $id, $data )
     {
-        $this->lastQuery->where( $this->primaryKey, '=', $id );
+        $this->query()->where( $this->primaryKey, '=', $id );
         return $this->update( $data );
     }
 
@@ -391,7 +391,7 @@ class Dao implements DaoInterface
      */
     public function getDatum( $id )
     {
-        $this->lastQuery->where( $this->primaryKey, '=', $id );
+        $this->query()->where( $this->primaryKey, '=', $id );
         return $this->select();
     }
 
@@ -400,7 +400,7 @@ class Dao implements DaoInterface
      */
     public function delDatum( $id )
     {
-        $this->delete($id);
+        $this->query()->delete($id);
     }
     // +----------------------------------------------------------------------+
     //  managing data
