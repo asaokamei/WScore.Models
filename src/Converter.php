@@ -196,7 +196,7 @@ class Converter
      * @param $value
      * @return array|mixed|string
      */
-    public function convertToString( $name, $value )
+    protected function convertToString( $name, $value )
     {
         if( is_object( $value ) ) {
             if( $value instanceof \DateTime ) {
