@@ -221,10 +221,6 @@ class Dao
         $this->convert->setDao( $this );
         $this->convert->setDateTime( $this->created_at,   $this->date_formats['datetime'] );
         $this->convert->setDateTime( $this->updated_at,   $this->date_formats['datetime'] );
-        $this->convert->setDateTime( $this->created_date, $this->date_formats['date'] );
-        $this->convert->setDateTime( $this->updated_date, $this->date_formats['date'] );
-        $this->convert->setDateTime( $this->created_time, $this->date_formats['time'] );
-        $this->convert->setDateTime( $this->updated_time, $this->date_formats['time'] );
         $this->query();
         $this->hooks( 'constructed' );
     }
@@ -365,28 +361,26 @@ class Dao
      */
     protected function updateTimeStamps( &$data, $insert=false)
     {
-        $this->_updateTimeStamps( $data,
-            [ $this->updated_at, $this->updated_date, $this->updated_time ]
-        );
+        $now = $this->getCurrentTime();
+        if( $this->updated_at ) {
+            $data[$this->updated_at] = $now->format($this->date_formats['datetime']);
+        }
+        if( $this->updated_date ) {
+            $data[$this->updated_date] = $now->format($this->date_formats['date']);
+        }
+        if( $this->updated_time ) {
+            $data[$this->updated_time] = $now->format($this->date_formats['time']);
+        }
         if( !$insert ) return;
 
-        $this->_updateTimeStamps( $data,
-            [ $this->created_at, $this->created_date, $this->created_time ]
-        );
-    }
-
-    /**
-     * @param $data
-     * @param $stamps
-     */
-    protected function _updateTimeStamps( &$data, $stamps )
-    {
-        foreach( $stamps as $col )
-        {
-            if( $col ) {
-                $now = $this->getCurrentTime();
-                $data = $this->convert->set( $data, $col, $now );
-            }
+        if( $this->created_at ) {
+            $data[$this->created_at] = $now->format($this->date_formats['datetime']);
+        }
+        if( $this->created_date ) {
+            $data[$this->created_date] = $now->format($this->date_formats['date']);
+        }
+        if( $this->created_time ) {
+            $data[$this->created_time] = $now->format($this->date_formats['time']);
         }
     }
 

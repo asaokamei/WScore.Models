@@ -35,14 +35,6 @@ class TestDao extends Dao
     public function callToString( $data ) {
         return $this->toString( $data );
     }
-    /**
-     * testing _updateTimeStamps
-     * @param $data
-     * @param $stamps
-     */
-    public function call_updateTimeStamps( &$data, $stamps ) {
-        $this->_updateTimeStamps( $data, $stamps );
-    }
     
     public function _setAny( $name, $value ) {
         $this->$name = $value;

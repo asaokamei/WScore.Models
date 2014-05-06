@@ -52,22 +52,6 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function _updateTimeStamps_sets_timestamp_object()
-    {
-        $stamps = array( 'test_stamp');
-        $data   = $orig = array( 'test' => 'testing' );
-        $this->dao->call_updateTimeStamps( $data, $stamps );
-        $this->assertEquals( $orig['test'], $data['test'] );
-        $this->assertTrue( isset( $data['test_stamp'] ) );
-        $this->assertTrue( is_object( $data['test_stamp'] ) );
-        $this->assertTrue( method_exists( $data['test_stamp'], 'format' ) );
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( date('Y'), $data['test_stamp']->format('Y') );
-    }
-
-    /**
-     * @test
-     */
     function updateTimeStamps_and_toString_convert_date_insert()
     {
         $data   = array( 'test' => 'testing' );
@@ -81,7 +65,7 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         // checking datetime contents
         $date1 = new \DateTime($value['created_at']);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $date1->format('YmdHis'), $data['created_at']->format('YmdHis') );
+        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $data['created_at'] );
     }
 
     /**
@@ -98,7 +82,7 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         // checking datetime contents
         $date1 = new \DateTime($value['updated_at']);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $date1->format('YmdHis'), $data['updated_at']->format('YmdHis') );
+        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $data['updated_at'] );
     }
 
     /**
