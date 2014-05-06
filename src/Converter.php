@@ -116,6 +116,12 @@ class Converter
     protected function convertToObject( $name, $value )
     {
         if( !is_string( $value ) ) return $value;
+        $method = 'set'.$this->up($name);
+        if( method_exists( $this, $method ) ) {
+            // primitive setter defined in Converter class. 
+            // for entity objects, define such setter in its entity class. 
+            return $this->$method( $value );
+        }
         if( array_key_exists( $name, $this->converts ) ) {
             $converter = $this->converts[$name];
             if( is_callable( $converter ) ) {
@@ -142,7 +148,7 @@ class Converter
             $data[ $name ] = $value;
             return;
         }
-        $method = 'set'.ucwords($name);
+        $method = 'set'.$this->up($name);
         if( is_object( $data ) && method_exists( $data, $method ) ) {
             $data->$method( $$value );
             return;
@@ -181,7 +187,7 @@ class Converter
         if( is_array( $data ) ) {
             return $data[ $name ];
         }
-        $method = 'get'.ucwords($name);
+        $method = 'get'.$this->up($name);
         if( is_object( $data ) && method_exists( $data, $method ) ) {
             $data->$method();
         }
@@ -215,6 +221,15 @@ class Converter
         return $value;
     }
 
+    protected function Up( $name )
+    {
+        $list = explode( '_', $name );
+        $up = '';
+        foreach( $list as $w ) {
+            $up .= ucfirst( $w );
+        }
+        return $up;
+    }
     // +----------------------------------------------------------------------+
 
 }
