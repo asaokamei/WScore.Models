@@ -109,7 +109,7 @@ use Illuminate\Database\Query\Builder;
  * @method    aggregate
  * @method    chunk
  */
-class Dao
+class Dao implements DaoInterface
 {
     /**
      * @var Manager
