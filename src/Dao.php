@@ -380,7 +380,7 @@ class Dao implements DaoInterface
     public function modDatum( $id, $data )
     {
         $this->lastQuery->where( $this->primaryKey, '=', $id );
-        return $this->insert( $data );
+        return $this->update( $data );
     }
 
     /**
