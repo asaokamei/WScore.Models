@@ -66,9 +66,9 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
     {
         $converts = $this->dao->_getAny('converts');
         $this->assertEquals( 3, count( $converts ) );
-        $this->assertEquals('getCurrentTime', $converts['created_at'] );
-        $this->assertEquals('getCurrentTime', $converts['updated_at'] );
-        $this->assertEquals('getCurrentTime', $converts['creation_date'] );
+        $this->assertEquals('toDateTime', $converts['created_at'] );
+        $this->assertEquals('toDateTime', $converts['updated_at'] );
+        $this->assertEquals('toDateTime', $converts['creation_date'] );
     }
 
     /**
@@ -121,5 +121,20 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         $date1 = new \DateTime($value['updated_at']);
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertEquals( $date1->format('YmdHis'), $data['updated_at']->format('YmdHis') );
+    }
+
+    /**
+     * @test
+     */
+    function toObject_converts_createdAt_to_datetime_object()
+    {
+        $now = '2014-05-06 12:30:00';
+        $data = array(
+            $this->dao->_getAny( 'created_at' ) => $now
+        );
+        $this->dao->callToObject( $data );
+        $this->assertEquals( 'DateTime', get_class( $data['created_at'] ) );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertEquals( $now, $data['created_at']->format('Y-m-d H:i:s') );
     }
 }

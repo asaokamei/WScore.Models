@@ -8,6 +8,15 @@ class TestDao extends Dao
     protected $created_date = 'creation_date';
 
     /**
+     * testing toObject
+     * 
+     * @param $data
+     * @param $name
+     */
+    public function callToObject( &$data, $name=null  ) {
+        $this->toObject( $data, $name );
+    }
+    /**
      * testing updateTimeStamps
      *
      * @param      $data
