@@ -152,11 +152,7 @@ class Dao implements DaoInterface
      *
      * @var array
      */
-    protected $date_formats = array(
-        'datetime' => 'Y-m-d H:i:s',
-        'date'     => 'Y-m-d',
-        'time'     => 'H:i:s',
-    );
+    protected $date_formats = 'Y-m-d H:i:s';
 
     /**
      * list of columns as array.
@@ -199,8 +195,8 @@ class Dao implements DaoInterface
             $this->primaryKey = $this->table . '_id';
         }
         $this->convert->setDao( $this );
-        $this->convert->setDateTime( $this->created_at,   $this->date_formats['datetime'] );
-        $this->convert->setDateTime( $this->updated_at,   $this->date_formats['datetime'] );
+        $this->convert->setDateTime( $this->created_at,   $this->date_formats );
+        $this->convert->setDateTime( $this->updated_at,   $this->date_formats );
         $this->query();
         $this->hooks( 'constructed' );
     }
@@ -343,24 +339,24 @@ class Dao implements DaoInterface
     {
         $now = $this->getCurrentTime();
         if( $this->updated_at ) {
-            $data[$this->updated_at] = $now->format($this->date_formats['datetime']);
+            $data[$this->updated_at] = $now->format($this->date_formats);
         }
         if( $this->updated_date ) {
-            $data[$this->updated_date] = $now->format($this->date_formats['date']);
+            $data[$this->updated_date] = $now->format('Y-m-d');
         }
         if( $this->updated_time ) {
-            $data[$this->updated_time] = $now->format($this->date_formats['time']);
+            $data[$this->updated_time] = $now->format('H:i:s');
         }
         if( !$insert ) return;
 
         if( $this->created_at ) {
-            $data[$this->created_at] = $now->format($this->date_formats['datetime']);
+            $data[$this->created_at] = $now->format($this->date_formats);
         }
         if( $this->created_date ) {
-            $data[$this->created_date] = $now->format($this->date_formats['date']);
+            $data[$this->created_date] = $now->format('Y-m-d');
         }
         if( $this->created_time ) {
-            $data[$this->created_time] = $now->format($this->date_formats['time']);
+            $data[$this->created_time] = $now->format('H:i:s');
         }
     }
 
