@@ -9,12 +9,13 @@ class TestDao extends Dao
 
     /**
      * testing toObject
-     * 
+     *
      * @param $data
      * @param $name
+     * @return array|object
      */
     public function callToObject( &$data, $name=null  ) {
-        $this->toObject( $data, $name );
+        return $this->toObject( $data, $name );
     }
     /**
      * testing updateTimeStamps

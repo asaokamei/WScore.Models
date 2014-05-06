@@ -48,7 +48,7 @@ class Converter
      * @param $name
      * @param $format
      */
-    protected function setDateTime( $name, $format ) {
+    public function setDateTime( $name, $format ) {
         if( !$name ) return;
         $this->formats[$name] = $format;
         $this->converts[$name] = 'toDateTime';
@@ -79,9 +79,24 @@ class Converter
         $list = $this->dao->getColumns( $data );
         $entity = $this->getNewEntity();
         foreach( $list as $name ) {
-            $object = $this->convertToObject( $name, $data[$name] );
-            $this->setRawAttribute( $entity, $name, $object );
+            if( is_array( $entity ) ) {
+                $entity = $this->set( $entity, $name, $data[$name] );
+            } else {
+                $this->set( $entity, $name, $data[$name] );
+            }
         }
+        return $entity;
+    }
+
+    /**
+     * @param $entity
+     * @param $name
+     * @param $value
+     */
+    public function set( $entity, $name, $value )
+    {
+        $object = $this->convertToObject( $name, $value );
+        $this->setRawAttribute( $entity, $name, $object );
         return $entity;
     }
 
@@ -177,13 +192,12 @@ class Converter
     }
 
     /**
-     * @param $data
      * @param $name
+     * @param $value
      * @return array|mixed|string
      */
-    public function convertToString( $data, $name )
+    public function convertToString( $name, $value )
     {
-        $value = $this->getRawAttribute( $data, $name );
         if( is_object( $value ) ) {
             if( $value instanceof \DateTime ) {
                 $format = isset( $this->formats[$name] ) ? $this->formats[$name]: '';

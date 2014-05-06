@@ -2,6 +2,7 @@
 namespace tests\ConstructTest;
 
 use Mockery as m;
+use WScore\DbGateway\Converter;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 require_once( __DIR__ . '/TestDao.php' );
@@ -19,7 +20,8 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         $db = m::mock( 'Illuminate\Database\Capsule\Manager' );
         $db->shouldReceive('table')->once();
         $this->dao = new TestDao(
-            $db
+            $db,
+            new Converter()
         );
     }
 
@@ -45,30 +47,6 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
     function auto_table_sets_primaryKey()
     {
         $this->assertEquals( 'TestDao_id', $this->dao->_getAny('primaryKey') );
-    }
-
-    /**
-     * @test
-     */
-    function create_date_sets_format()
-    {
-        $formats = $this->dao->_getAny('formats');
-        $this->assertEquals( 3, count( $formats ) );
-        $this->assertEquals('Y-m-d H:i:s', $formats['created_at'] );
-        $this->assertEquals('Y-m-d H:i:s', $formats['updated_at'] );
-        $this->assertEquals('Y-m-d', $formats['creation_date'] );
-    }
-
-    /**
-     * @test
-     */
-    function create_date_sets_convert()
-    {
-        $converts = $this->dao->_getAny('converts');
-        $this->assertEquals( 3, count( $converts ) );
-        $this->assertEquals('toDateTime', $converts['created_at'] );
-        $this->assertEquals('toDateTime', $converts['updated_at'] );
-        $this->assertEquals('toDateTime', $converts['creation_date'] );
     }
 
     /**
@@ -132,9 +110,9 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         $data = array(
             $this->dao->_getAny( 'created_at' ) => $now
         );
-        $this->dao->callToObject( $data );
-        $this->assertEquals( 'DateTime', get_class( $data['created_at'] ) );
+        $entity = $this->dao->callToObject( $data );
+        $this->assertEquals( 'DateTime', get_class( $entity['created_at'] ) );
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $now, $data['created_at']->format('Y-m-d H:i:s') );
+        $this->assertEquals( $now, $entity['created_at']->format('Y-m-d H:i:s') );
     }
 }

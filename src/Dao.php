@@ -117,6 +117,11 @@ class Dao
     protected $db;
 
     /**
+     * @var Converter
+     */
+    protected $convert;
+
+    /**
      * @var Builder
      */
     protected $lastQuery;
@@ -195,11 +200,13 @@ class Dao
     // +----------------------------------------------------------------------+
     /**
      * @param Manager $db
+     * @param Converter $convert
      */
-    public function __construct( $db )
+    public function __construct( $db, $convert )
     {
         $this->hooks( 'constructing' );
         $this->db = $db;
+        $this->convert = $convert;
 
         if( !$this->table ) {
             $name = get_class($this);
@@ -211,24 +218,15 @@ class Dao
         if( !$this->primaryKey ) {
             $this->primaryKey = $this->table . '_id';
         }
-        $this->_setTime( $this->created_at,   'datetime' );
-        $this->_setTime( $this->updated_at,   'datetime' );
-        $this->_setTime( $this->created_date, 'date' );
-        $this->_setTime( $this->updated_date, 'date' );
-        $this->_setTime( $this->created_time, 'time' );
-        $this->_setTime( $this->updated_time, 'time' );
+        $this->convert->setDao( $this );
+        $this->convert->setDateTime( $this->created_at,   $this->date_formats['datetime'] );
+        $this->convert->setDateTime( $this->updated_at,   $this->date_formats['datetime'] );
+        $this->convert->setDateTime( $this->created_date, $this->date_formats['date'] );
+        $this->convert->setDateTime( $this->updated_date, $this->date_formats['date'] );
+        $this->convert->setDateTime( $this->created_time, $this->date_formats['time'] );
+        $this->convert->setDateTime( $this->updated_time, $this->date_formats['time'] );
         $this->query();
         $this->hooks( 'constructed' );
-    }
-
-    /**
-     * @param $name
-     * @param $type
-     */
-    protected function _setTime( $name, $type ) {
-        if( !$name ) return;
-        $this->formats[$name] = $this->date_formats[$type];
-        $this->converts[$name] = 'toDateTime';
     }
 
     /**
@@ -274,15 +272,6 @@ class Dao
     }
 
     /**
-     * @param $date
-     * @return \DateTime
-     */
-    protected function toDateTime( $date )
-    {
-        return new \DateTime($date);
-    }
-
-    /**
      * dumb hooks for various events. $data are all string.
      * available events are:
      * - creating, created, newQuery,
@@ -315,8 +304,8 @@ class Dao
         $values = $this->toString( $data );
         if( $this->insertSerial ) {
             $id = $this->lastQuery->insertGetId( $values );
-            $this->setRawAttribute( $values, $this->primaryKey, $id );
-            $this->setRawAttribute( $data, $this->primaryKey, $id );
+            $this->convert->set( $values, $this->primaryKey, $id );
+            $this->convert->set( $data, $this->primaryKey, $id );
         } else {
             $this->lastQuery->insert( $values );
             $id = true;
@@ -396,7 +385,7 @@ class Dao
         {
             if( $col ) {
                 $now = $this->getCurrentTime();
-                $this->setRawAttribute( $data, $col, $now );
+                $data = $this->convert->set( $data, $col, $now );
             }
         }
     }
@@ -453,146 +442,24 @@ class Dao
         if( $this->columns ) return $this->columns;
         return array_keys( $data );
     }
-    /**
-     * get attribute from $data, while converting to a proper data type.
-     *
-     * @param $data
-     * @param $name
-     * @return mixed
-     */
-    public function get( $data, $name )
-    {
-        $value = $this->getRawAttribute( $data, $name );
-        $value = $this->convertToObject( $name, $value );
-        return $value;
-    }
 
     /**
-     * set attribute to $data, while converting to a proper data type.
-     *
-     * @param $data
-     * @param $name
-     * @param $value
+     * @param array $data
+     * @return array|object
      */
-    public function set( &$data, $name, $value )
+    protected function toObject( $data )
     {
-        $value = $this->convertToObject( $name, $value );
-        $this->setRawAttribute( $data, $name, $value );
-    }
-
-    /**
-     * @param array|object $data
-     * @param string $name
-     * @param mixed $value
-     */
-    protected function setRawAttribute( &$data, $name, $value )
-    {
-        if( is_array( $data ) ) {
-            $data[ $name ] = $value;
-            return;
-        }
-        $method = 'set'.ucwords($name);
-        if( is_object( $data ) && method_exists( $data, $method ) ) {
-            $data->$method( $$value );
-            return;
-        }
-        if( $data instanceof \ArrayAccess ) {
-            $data[$name] = $value;
-            return;
-        }
-    }
-
-    /**
-     * @param array|object $data
-     * @param string $name
-     * @return mixed
-     */
-    protected function getRawAttribute( $data, $name )
-    {
-        if( is_array( $data ) ) {
-            return $data[ $name ];
-        }
-        $method = 'get'.ucwords($name);
-        if( is_object( $data ) && method_exists( $data, $method ) ) {
-            $data->$method();
-        }
-        if( $data instanceof \ArrayAccess ) {
-            $data[$name];
-        }
-        return null;
+        return $this->convert->toEntity( $data );
     }
 
     /**
      * @param $data
-     * @param null $name
-     */
-    protected function toObject( &$data, $name=null )
-    {
-        if( !$name ) {
-            $list = $this->getColumns( $data );
-            foreach( $list as $name ) {
-                $this->toObject( $data, $name );
-            }
-            return;
-        }
-        $value = $this->getRawAttribute( $data, $name );
-        $this->set( $data, $name, $value );
-    }
-
-    /**
-     * @param $data
-     * @param $name
      * @return array|mixed|string
      */
-    protected function toString( $data, $name=null )
+    protected function toString( $data )
     {
-        if( !$name ) {
-            $list = $this->getColumns( $data );
-            $values = array();
-            foreach( $list as $name ) {
-                $values[$name] = $this->toString( $data, $name );
-            }
-            return $values;
-        }
-        $value = $this->getRawAttribute( $data, $name );
-        if( is_object( $value ) ) {
-            if( $value instanceof \DateTime ) {
-                $format = isset( $this->formats[$name] ) ? $this->formats[$name]: '';
-                $value = $value->format($format);
-            }
-            elseif( method_exists( $value, 'format' ) ) {
-                $format = isset( $this->formats[$name] ) ? $this->formats[$name]: '';
-                $value = $value->format($format);
-            }
-            elseif( method_exists( $value, '__toString' ) ) {
-                $value = $value->__toString();
-            }
-            $this->setRawAttribute($data, $name, $value );
-        }
-        return $value;
+        return $this->convert->toArray( $data );
     }
 
-    /**
-     * @param $name
-     * @param $value
-     * @return mixed
-     */
-    protected function convertToObject( $name, $value )
-    {
-        if( !is_string( $value ) ) return $value;
-        if( array_key_exists( $name, $this->converts ) ) {
-            $converter = $this->converts[$name];
-            if( is_callable( $converter ) ) {
-                return $converter($value);
-            }
-            if( is_string( $converter ) && method_exists( $this, $converter ) ) {
-                return $this->$converter($value);
-            }
-            if( is_string( $converter ) && class_exists( $converter ) ) {
-                return new $converter($value);
-            }
-        }
-        return $value;
-    }
     // +----------------------------------------------------------------------+
 }
