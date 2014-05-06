@@ -228,7 +228,7 @@ class Dao
     protected function _setTime( $name, $type ) {
         if( !$name ) return;
         $this->formats[$name] = $this->date_formats[$type];
-        $this->converts[$name] = 'getCurrentTime';
+        $this->converts[$name] = 'toDateTime';
     }
 
     /**
@@ -271,6 +271,15 @@ class Dao
         static $now;
         if( !$now ) $now = new \DateTime();
         return $now;
+    }
+
+    /**
+     * @param $date
+     * @return \DateTime
+     */
+    protected function toDateTime( $date )
+    {
+        return new \DateTime($date);
     }
 
     /**
