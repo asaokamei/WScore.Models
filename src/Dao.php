@@ -159,31 +159,11 @@ class Dao implements DaoInterface
     );
 
     /**
-     * specify the format to convert an object to a string.
-     * @var array
-     */
-    protected $formats = array();
-
-    /**
      * list of columns as array.
      *
      * @var array
      */
     protected $columns = array();
-
-    /**
-     * specify how a value maybe converted to an object.
-     *
-     * usage:
-     * [ name_of_column => converter ]
-     * where converter is
-     * - callable function (or closure object),
-     * - method name in the model,
-     * - class name to create as new.
-     *
-     * @var array
-     */
-    protected $converts = array();
 
     /*
      * fields for automated datetime columns.
