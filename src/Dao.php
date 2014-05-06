@@ -9,105 +9,107 @@ use Illuminate\Database\Query\Builder;
  * Class Dao
  * @package WScore\Dao
  *
- * @method    paginate
- * @method    first
- * @method    latest
- * @method    getProcessor
- * @method    orWhere
- * @method    take
- * @method    unionAll
- * @method    getPaginationCount
- * @method    whereDay
- * @method    orWhereNotExists
- * @method    lock
- * @method    orWhereNotBetween
- * @method    insertGetId
- * @method    orderByRaw
- * @method    lists
- * @method    find
- * @method    sharedLock
- * @method    offset
- * @method    whereIn
- * @method    groupBy
- * @method    forPage
- * @method    whereNested
- * @method    getGrammar
- * @method    from
- * @method    whereNotIn
- * @method    sum
- * @method    remember
- * @method    orWhereBetween
+ * methods supported by __call using QueryBuilder in Illuminate/Database.
+ *          
+ * @method  Dao   paginate
+ * @method  Dao   first
+ * @method  Dao   latest
+ * @method  Dao   getProcessor
+ * @method  Dao   orWhere
+ * @method  Dao   take
+ * @method  Dao   unionAll
+ * @method  Dao   getPaginationCount
+ * @method  Dao   whereDay
+ * @method  Dao   orWhereNotExists
+ * @method  Dao   lock
+ * @method  Dao   orWhereNotBetween
+ * @method  Dao   insertGetId
+ * @method  Dao   orderByRaw
+ * @method  Dao   lists
+ * @method  Dao   find
+ * @method  Dao   sharedLock
+ * @method  Dao   offset
+ * @method  Dao   whereIn
+ * @method  Dao   groupBy
+ * @method  Dao   forPage
+ * @method  Dao   whereNested
+ * @method  Dao   getGrammar
+ * @method  Dao   from
+ * @method  Dao   whereNotIn
+ * @method  Dao   sum
+ * @method  Dao   remember
+ * @method  Dao   orWhereBetween
  * @ method    update
- * @method    raw
- * @method    oldest
- * @method    orderBy
- * @method    mergeWheres
- * @method    mergeBindings
- * @method    havingRaw
+ * @method  Dao   raw
+ * @method  Dao   oldest
+ * @method  Dao   orderBy
+ * @method  Dao   mergeWheres
+ * @method  Dao   mergeBindings
+ * @method  Dao   havingRaw
  * @ method    select
  * @ method    get
- * @method    orHavingRaw
- * @method    getCached
- * @method    avg
- * @method    whereExists
- * @method    generateCacheKey
- * @method    getBindings
- * @method    skip
- * @method    orWhereRaw
- * @method    where
- * @method    joinWhere
- * @method    newQuery
- * @method    count
- * @method    selectRaw
+ * @method  Dao   orHavingRaw
+ * @method  Dao   getCached
+ * @method  Dao   avg
+ * @method  Dao   whereExists
+ * @method  Dao   generateCacheKey
+ * @method  Dao   getBindings
+ * @method  Dao   skip
+ * @method  Dao   orWhereRaw
+ * @method  Dao Dao  where
+ * @method  Dao   joinWhere
+ * @method  Dao   newQuery
+ * @method  Dao   count
+ * @method  Dao   selectRaw
  * @ method    insert
- * @method    orWhereNotNull
- * @method    having
- * @method    exists
- * @method    addBinding
- * @method    addNestedWhereQuery
- * @method    simplePaginate
- * @method    join
- * @method    whereRaw
- * @method    max
- * @method    min
- * @method    orWhereIn
- * @method    whereNull
- * @method    dynamicWhere
- * @method    getConnection
+ * @method  Dao   orWhereNotNull
+ * @method  Dao   having
+ * @method  Dao   exists
+ * @method  Dao   addBinding
+ * @method  Dao   addNestedWhereQuery
+ * @method  Dao   simplePaginate
+ * @method  Dao   join
+ * @method  Dao   whereRaw
+ * @method  Dao   max
+ * @method  Dao   min
+ * @method  Dao   orWhereIn
+ * @method  Dao   whereNull
+ * @method  Dao   dynamicWhere
+ * @method  Dao   getConnection
  * @ method    delete
- * @method    union
- * @method    whereNotNull
- * @method    cacheDriver
- * @method    orWhereExists
- * @method    whereMonth
- * @method    getCacheKey
- * @method    lockForUpdate
- * @method    cacheTags
- * @method    truncate
- * @method    implode
- * @method    whereNotBetween
- * @method    leftJoin
- * @method    orWhereNull
- * @method    addSelect
- * @method    getFresh
- * @method    rememberForever
- * @method    increment
- * @method    limit
- * @method    whereYear
- * @method    orHaving
- * @method    decrement
- * @method    leftJoinWhere
- * @method    getRawBindings
- * @method    whereNotExists
- * @method    orWhereNotIn
- * @method    setBindings
- * @method    buildRawPaginator
- * @method    toSql
- * @method    distinct
- * @method    pluck
- * @method    whereBetween
- * @method    aggregate
- * @method    chunk
+ * @method  Dao   union
+ * @method  Dao   whereNotNull
+ * @method  Dao   cacheDriver
+ * @method  Dao   orWhereExists
+ * @method  Dao   whereMonth
+ * @method  Dao   getCacheKey
+ * @method  Dao   lockForUpdate
+ * @method  Dao   cacheTags
+ * @method  Dao   truncate
+ * @method  Dao   implode
+ * @method  Dao   whereNotBetween
+ * @method  Dao   leftJoin
+ * @method  Dao   orWhereNull
+ * @method  Dao   addSelect
+ * @method  Dao   getFresh
+ * @method  Dao   rememberForever
+ * @method  Dao   increment
+ * @method  Dao   limit
+ * @method  Dao   whereYear
+ * @method  Dao   orHaving
+ * @method  Dao   decrement
+ * @method  Dao   leftJoinWhere
+ * @method  Dao   getRawBindings
+ * @method  Dao   whereNotExists
+ * @method  Dao   orWhereNotIn
+ * @method  Dao   setBindings
+ * @method  Dao   buildRawPaginator
+ * @method  Dao   toSql
+ * @method  Dao   distinct
+ * @method  Dao   pluck
+ * @method  Dao   whereBetween
+ * @method  Dao   aggregate
+ * @method  Dao   chunk
  */
 class Dao implements DaoInterface
 {
