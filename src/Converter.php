@@ -1,6 +1,9 @@
 <?php
 namespace WScore\DbGateway;
 
+use ArrayObject;
+use DateTime;
+
 /**
  * Class Converter
  *
@@ -65,11 +68,11 @@ class Converter
 
     /**
      * @param $date
-     * @return \DateTime
+     * @return DateTime
      */
     protected function toDateTime( $date )
     {
-        return new \DateTime($date);
+        return new DateTime($date);
     }
 
     /**
@@ -90,7 +93,7 @@ class Converter
     // +----------------------------------------------------------------------+
     /**
      * @param array $data
-     * @return array|object
+     * @return ArrayObject
      */
     public function toEntity( $data )
     {
@@ -107,9 +110,10 @@ class Converter
     }
 
     /**
-     * @param $entity
-     * @param $name
-     * @param $value
+     * @param ArrayObject|array $entity
+     * @param string $name
+     * @param mixed $value
+     * @return ArrayObject
      */
     public function set( $entity, $name, $value )
     {
@@ -119,7 +123,7 @@ class Converter
     }
 
     /**
-     * @return array
+     * @return array|ArrayObject
      */
     protected function getNewEntity()
     {
@@ -181,8 +185,8 @@ class Converter
     //  convert from entity object to an array.
     // +----------------------------------------------------------------------+
     /**
-     * @param $data
-     * @return array|mixed|string
+     * @param ArrayObject $data
+     * @return array
      */
     public function toArray( $data )
     {
@@ -227,7 +231,7 @@ class Converter
                 $format = $this->formats[$name];
                 $value = $value->format($format);
             }
-            elseif( $value instanceof \DateTime ) {
+            elseif( $value instanceof DateTime ) {
                 $format = isset( $this->formats['datetime'] ) ? $this->formats['datetime']: '';
                 $value = $value->format($format);
             }
