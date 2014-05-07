@@ -17,7 +17,11 @@ class Converter
      * specify the format to convert an object to a string.
      * @var array
      */
-    protected $formats = array();
+    protected $formats = array(
+        'datetime' => 'Y-m-d H:i:s'
+    );
+
+    protected $entityClass = '\\ArrayObject';
 
     /**
      * specify how a value maybe converted to an object.
@@ -48,8 +52,9 @@ class Converter
      * @param $name
      * @param $format
      */
-    public function setDateTime( $name, $format ) {
+    public function setDateTime( $name, $format=null ) {
         if( !$name ) return;
+        if( !$format ) $format = $this->formats['datetime'];
         $this->formats[$name] = $format;
         $this->converts[$name] = 'toDateTime';
     }
@@ -67,6 +72,19 @@ class Converter
         return new \DateTime($date);
     }
 
+    /**
+     * @param array|object $data
+     * @return array
+     */
+    protected function listColumns( $data )
+    {
+        if( $this->dao ) {
+            $list = $this->dao->getColumns( $data );
+        } else {
+            $list = array_keys($data);
+        }
+        return $list;
+    }
     // +----------------------------------------------------------------------+
     //  convert from array to entity object.
     // +----------------------------------------------------------------------+
@@ -76,7 +94,7 @@ class Converter
      */
     public function toEntity( $data )
     {
-        $list = $this->dao->getColumns( $data );
+        $list = $this->listColumns( $data );
         $entity = $this->getNewEntity();
         foreach( $list as $name ) {
             if( is_array( $entity ) ) {
@@ -105,7 +123,7 @@ class Converter
      */
     protected function getNewEntity()
     {
-        return array();
+        return new $this->entityClass;
     }
 
     /**
@@ -168,7 +186,7 @@ class Converter
      */
     public function toArray( $data )
     {
-        $list = $this->dao->getColumns( $data );
+        $list = $this->listColumns( $data );
         $array = array();
         foreach( $list as $name ) {
             $value = $this->getRawAttribute( $data, $name );
@@ -205,12 +223,12 @@ class Converter
     protected function convertToString( $name, $value )
     {
         if( is_object( $value ) ) {
-            if( $value instanceof \DateTime ) {
-                $format = isset( $this->formats[$name] ) ? $this->formats[$name]: '';
+            if( isset( $this->formats[$name] ) && method_exists( $value, 'format' ) ) {
+                $format = $this->formats[$name];
                 $value = $value->format($format);
             }
-            elseif( method_exists( $value, 'format' ) ) {
-                $format = isset( $this->formats[$name] ) ? $this->formats[$name]: '';
+            elseif( $value instanceof \DateTime ) {
+                $format = isset( $this->formats['datetime'] ) ? $this->formats['datetime']: '';
                 $value = $value->format($format);
             }
             elseif( method_exists( $value, '__toString' ) ) {
