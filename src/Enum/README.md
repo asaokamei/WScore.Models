@@ -45,9 +45,9 @@ echo $someOneGender->is( Gender::MALE );   // false;
 echo $someOneGender->is( Gender::FEMALE ); // true;
 echo $someOneGender->isMale();             // false;
 echo $someOneGender->isFemale();           // true;
-echo $someOneGender->exists( 'X' );        // false;
 
 // getting the list of possible values
+echo $someOneGender::exists( 'X' );        // false;
 $list = Gender::getValues(); // [ 'M', 'F' ]
 $list = Gender::getChoices();   // [ 'M' => 'Male', 'F' => 'Female' ]
 ```

@@ -1,5 +1,5 @@
 <?php
-namespace Sandbox\Enum;
+namespace WScore\DbGateway\Enum;
 
 /**
  * Class Enum
@@ -14,65 +14,29 @@ abstract class Enum implements EnumInterface
 {
     /**
      * Enum value
+     *
      * @var mixed
      */
     protected $value;
 
     /**
-     * Store existing constants in a static cache per object.
+     * values that can be selected.
+     * [ value => string name, ... ]
+     *
      * @var array
      */
-    private static $constantsCache = array();
+    protected static $choices = array();
 
     /**
-     * Store instances of enum objects. 
-     * 
-     * @var Enum[]
-     */
-    private static $instances = array();
-    
-    /**
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * @param $value
-     * @return EnumInterface
-     */
-    public function __invoke( $value )
-    {
-        return static::set( $value );
-    }
-
-    /**
-     * @param $value
+     * @param string $value
      * @throws \InvalidArgumentException
-     * @return EnumInterface
      */
-    public static function set( $value )
+    public function __construct( $value )
     {
-        $possibleValues = self::toArray();
-        if (! in_array($value, $possibleValues)) {
-            throw new \InvalidArgumentException();
+        if( !$this->exists($value) ) {
+            throw new \InvalidArgumentException( "no such value: ".$value );
         }
-        $class = get_called_class();
-        $name  = (string) $value;
-        if( !isset( self::$instances[$class][$name] ) ) {
-            $enum = new $class( $value );
-            $enum->value = $value;
-            self::$instances[$class][$name] = $enum;
-        }
-        return self::$instances[$class][$name];
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function toRaw()
-    {
-        return $this->value;
+        $this->value = $value;
     }
 
     /**
@@ -80,20 +44,88 @@ abstract class Enum implements EnumInterface
      */
     public function __toString()
     {
+        return $this->get();
+    }
+
+    /**
+     * @param string $method
+     * @param array $args
+     * @return bool|mixed
+     * @throws \InvalidArgumentException
+     */
+    public function __call( $method, $args )
+    {
+        if( substr( $method, 0, 2 ) == 'is' ) {
+            $const = strtoupper( substr( $method, 2 ) );
+            if( defined( "static::{$const}" ) ) {
+                return $this->is( constant( "static::{$const}" ) );
+            }
+            return false;
+        }
+        throw new \InvalidArgumentException( "no such method: ".$method );
+    }
+
+    /**
+     * Returns all possible values and strings as an array
+     *
+     * @return array Constant name in key, constant value in value
+     */
+    public static function getChoices()
+    {
+        return static::$choices;
+    }
+
+    /**
+     * Returns all possible values as an array.
+     *
+     * @return mixed
+     */
+    public static function getValues()
+    {
+        return array_keys( static::$choices );
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public static function exists( $value )
+    {
+        return isset( static::$choices[$value] );
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public static function choose( $value )
+    {
+        return isset( static::$choices[$value] ) ? static::$choices[$value] : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function get()
+    {
         return (string) $this->value;
     }
 
     /**
-     * Returns all possible values as an array
-     * @return array Constant name in key, constant value in value
+     * @return string
      */
-    public static function toArray()
+    public function show()
     {
-        $calledClass = get_called_class();
-        if(!array_key_exists($calledClass, self::$constantsCache)) {
-            $reflection = new \ReflectionClass($calledClass);
-            self::$constantsCache[$calledClass] = $reflection->getConstants();
-        }
-        return self::$constantsCache[$calledClass];
+        return array_key_exists( $this->value, static::$choices ) ?
+            static::$choices[$this->value] : null;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public function is( $value )
+    {
+        return $value === $this->value;
     }
 }
