@@ -284,6 +284,7 @@ class Dao implements DaoInterface
         $this->data = $data;
         $this->updateTimeStamps( true );
         $values = $this->toString();
+        // insert data
         $this->hooks( 'inserting', $values );
         if( $this->insertSerial ) {
             $id = $this->lastQuery->insertGetId( $values );
@@ -307,9 +308,11 @@ class Dao implements DaoInterface
         $this->data = $data;
         $this->updateTimeStamps();
         $values = $this->toString();
+        // update data
         $this->hooks( 'updating', $values );
         $ok = $this->lastQuery->update( $values );
         $this->hooks( 'updated', $values );
+
         $this->query();
         return $ok;
     }
@@ -322,6 +325,7 @@ class Dao implements DaoInterface
     {
         $this->hooks( 'selecting' );
         $data = $this->lastQuery->select( $columns )->get();
+        // select data
         $this->hooks( 'selected', $data );
         foreach( $data as &$td ) { // danger!
             $this->toObject( $td );
@@ -382,7 +386,7 @@ class Dao implements DaoInterface
      */
     public function addDatum( $data )
     {
-        return $this->query()->insert( $data );
+        return $this->insert( $data );
     }
 
     /**
@@ -392,7 +396,7 @@ class Dao implements DaoInterface
      */
     public function modDatum( $id, $data )
     {
-        $this->query()->where( $this->primaryKey, '=', $id );
+        $this->lastQuery->where( $this->primaryKey, '=', $id );
         return $this->update( $data );
     }
 
@@ -402,9 +406,9 @@ class Dao implements DaoInterface
      */
     public function getDatum( $id )
     {
-        $this->query()->where( $this->primaryKey, '=', $id );
+        $this->lastQuery->where( $this->primaryKey, '=', $id );
         $data = $this->select();
-        if( $data ) {
+        if( count( $data ) === 1 ){
             return $data[0];
         }
         return array();
