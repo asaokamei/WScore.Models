@@ -367,7 +367,6 @@ class Dao implements DaoInterface
 
         if( $this->created_at ) {
             $this->convert->set( $this->data, $this->created_at, $now->format($this->date_formats) );
-            $this->data[$this->created_at] = $now->format($this->date_formats);
         }
         if( $this->created_date ) {
             $this->convert->set( $this->data, $this->created_date, $now->format('Y-m-d') );
