@@ -193,7 +193,7 @@ class Converter
         $list = $this->listColumns( $data );
         $array = array();
         foreach( $list as $name ) {
-            $value = $this->getRawAttribute( $data, $name );
+            $value = $this->get( $data, $name );
             $array[$name] = $this->convertToString( $name, $value );
         }
         return $array;
@@ -204,7 +204,7 @@ class Converter
      * @param string $name
      * @return mixed
      */
-    protected function getRawAttribute( $data, $name )
+    public function get( $data, $name )
     {
         if( is_array( $data ) ) {
             return $data[ $name ];
