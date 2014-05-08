@@ -1,7 +1,7 @@
 <?php
 namespace tests\EnumTest;
 
-use WScore\DbGateway\Enum\Enum;
+use WScore\DbGateway\Enum\AbstractEnum;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 
@@ -12,7 +12,7 @@ require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
  * @method bool isMale
  * @method bool isFemale
  */
-class Gender extends Enum
+class Gender extends AbstractEnum
 {
     const MALE   = 'M',
           FEMALE = 'F';

@@ -10,7 +10,7 @@ namespace WScore\DbGateway\Enum;
  *
  *
  */
-abstract class Enum implements EnumInterface
+abstract class AbstractEnum implements EnumInterface
 {
     /**
      * Enum value
@@ -27,6 +27,9 @@ abstract class Enum implements EnumInterface
      */
     protected static $choices = array();
 
+    // +----------------------------------------------------------------------+
+    //  construction
+    // +----------------------------------------------------------------------+
     /**
      * @param string $value
      * @throws \InvalidArgumentException
@@ -37,32 +40,6 @@ abstract class Enum implements EnumInterface
             throw new \InvalidArgumentException( "no such value: ".$value );
         }
         $this->value = $value;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->get();
-    }
-
-    /**
-     * @param string $method
-     * @param array $args
-     * @return bool|mixed
-     * @throws \InvalidArgumentException
-     */
-    public function __call( $method, $args )
-    {
-        if( substr( $method, 0, 2 ) == 'is' ) {
-            $const = strtoupper( substr( $method, 2 ) );
-            if( defined( "static::{$const}" ) ) {
-                return $this->is( constant( "static::{$const}" ) );
-            }
-            return false;
-        }
-        throw new \InvalidArgumentException( "no such method: ".$method );
     }
 
     /**
@@ -103,6 +80,35 @@ abstract class Enum implements EnumInterface
         return isset( static::$choices[$value] ) ? static::$choices[$value] : null;
     }
 
+    // +----------------------------------------------------------------------+
+    //  object method
+    // +----------------------------------------------------------------------+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->get();
+    }
+
+    /**
+     * @param string $method
+     * @param array $args
+     * @return bool|mixed
+     * @throws \InvalidArgumentException
+     */
+    public function __call( $method, $args )
+    {
+        if( substr( $method, 0, 2 ) == 'is' ) {
+            $const = strtoupper( substr( $method, 2 ) );
+            if( defined( "static::{$const}" ) ) {
+                return $this->is( constant( "static::{$const}" ) );
+            }
+            return false;
+        }
+        throw new \InvalidArgumentException( "no such method: ".$method );
+    }
+
     /**
      * @return string
      */
@@ -128,4 +134,5 @@ abstract class Enum implements EnumInterface
     {
         return $value === $this->value;
     }
+    // +----------------------------------------------------------------------+
 }
