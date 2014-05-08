@@ -1,6 +1,15 @@
 <?php
 namespace Sandbox\Enum;
 
+/**
+ * Class Enum
+ * @package Sandbox\Enum
+ *
+ * most likely, this class is from the repository:
+ * https://github.com/myclabs/php-enum
+ *
+ *
+ */
 abstract class Enum implements EnumInterface
 {
     /**
