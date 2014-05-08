@@ -2,6 +2,7 @@
 namespace WScore\DbGateway;
 
 
+use ArrayObject;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 
@@ -163,6 +164,13 @@ class Dao implements DaoInterface
      */
     protected $columns = array();
 
+    /**
+     * keep the last data to be inserted, updated, or selected.
+     *
+     * @var array|ArrayObject|mixed
+     */
+    protected $data;
+
     /*
      * fields for automated datetime columns.
      */
@@ -253,9 +261,9 @@ class Dao implements DaoInterface
      * - updating, updated, deleting, deleted,
      *
      * @param string $event
-     * @param array  $data
+     * @param array  $values
      */
-    protected function hooks( $event, &$data=array() )
+    protected function hooks( $event, $values=array() )
     {
         /* example of a hook.
         if( $event == 'updating' ) {
@@ -273,13 +281,14 @@ class Dao implements DaoInterface
      */
     public function insert( $data )
     {
-        $this->updateTimeStamps( $data, true );
-        $this->hooks( 'inserting', $data );
-        $values = $this->toString( $data );
+        $this->data = $data;
+        $this->updateTimeStamps( true );
+        $values = $this->toString();
+        $this->hooks( 'inserting', $values );
         if( $this->insertSerial ) {
             $id = $this->lastQuery->insertGetId( $values );
             $this->convert->set( $values, $this->primaryKey, $id );
-            $this->convert->set( $data, $this->primaryKey, $id );
+            $this->convert->set( $this->data, $this->primaryKey, $id );
         } else {
             $this->lastQuery->insert( $values );
             $id = true;
@@ -291,13 +300,14 @@ class Dao implements DaoInterface
 
     /**
      * @param array $data
-     * @return $this
+     * @return int
      */
     public function update( $data )
     {
-        $this->updateTimeStamps( $data );
-        $this->hooks( 'updating', $data );
-        $values = $this->toString( $data );
+        $this->data = $data;
+        $this->updateTimeStamps();
+        $values = $this->toString();
+        $this->hooks( 'updating', $values );
         $ok = $this->lastQuery->update( $values );
         $this->hooks( 'updated', $values );
         $this->query();
@@ -316,6 +326,7 @@ class Dao implements DaoInterface
         foreach( $data as &$td ) { // danger!
             $this->toObject( $td );
         }
+        $this->data = $data;
         $this->query();
         return $data;
     }
@@ -334,31 +345,31 @@ class Dao implements DaoInterface
     }
 
     /**
-     * @param $data
      * @param bool $insert
      */
-    protected function updateTimeStamps( &$data, $insert=false)
+    protected function updateTimeStamps( $insert=false )
     {
         $now = $this->getCurrentTime();
         if( $this->updated_at ) {
-            $data[$this->updated_at] = $now->format($this->date_formats);
+            $this->convert->set( $this->data, $this->updated_at, $now->format($this->date_formats) );
         }
         if( $this->updated_date ) {
-            $data[$this->updated_date] = $now->format('Y-m-d');
+            $this->convert->set( $this->data, $this->updated_date, $now->format('Y-m-d') );
         }
         if( $this->updated_time ) {
-            $data[$this->updated_time] = $now->format('H:i:s');
+            $this->convert->set( $this->data, $this->updated_time, $now->format('H:i:s') );
         }
         if( !$insert ) return;
 
         if( $this->created_at ) {
-            $data[$this->created_at] = $now->format($this->date_formats);
+            $this->convert->set( $this->data, $this->created_at, $now->format($this->date_formats) );
+            $this->data[$this->created_at] = $now->format($this->date_formats);
         }
         if( $this->created_date ) {
-            $data[$this->created_date] = $now->format('Y-m-d');
+            $this->convert->set( $this->data, $this->created_date, $now->format('Y-m-d') );
         }
         if( $this->created_time ) {
-            $data[$this->created_time] = $now->format('H:i:s');
+            $this->convert->set( $this->data, $this->created_time, $now->format('H:i:s') );
         }
     }
 
@@ -377,7 +388,7 @@ class Dao implements DaoInterface
     /**
      * @param $id
      * @param $data
-     * @return bool|string
+     * @return int
      */
     public function modDatum( $id, $data )
     {
@@ -387,12 +398,16 @@ class Dao implements DaoInterface
 
     /**
      * @param $id
-     * @return bool|string
+     * @return array
      */
     public function getDatum( $id )
     {
         $this->query()->where( $this->primaryKey, '=', $id );
-        return $this->select();
+        $data = $this->select();
+        if( $data ) {
+            return $data[0];
+        }
+        return array();
     }
 
     /**
@@ -416,21 +431,19 @@ class Dao implements DaoInterface
     }
 
     /**
-     * @param array $data
      * @return array|object
      */
-    protected function toObject( $data )
+    protected function toObject()
     {
-        return $this->convert->toEntity( $data );
+        return $this->convert->toEntity( $this->data );
     }
 
     /**
-     * @param $data
      * @return array|mixed|string
      */
-    protected function toString( $data )
+    protected function toString()
     {
-        return $this->convert->toArray( $data );
+        return $this->convert->toArray( $this->data );
     }
 
     // +----------------------------------------------------------------------+

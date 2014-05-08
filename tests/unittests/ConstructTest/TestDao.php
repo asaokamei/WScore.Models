@@ -11,11 +11,11 @@ class TestDao extends Dao
      * testing toObject
      *
      * @param $data
-     * @param $name
      * @return array|object
      */
-    public function callToObject( &$data, $name=null  ) {
-        return $this->toObject( $data, $name );
+    public function callToObject( &$data ) {
+        $this->data = $data;
+        return $this->toObject();
     }
     /**
      * testing updateTimeStamps
@@ -24,7 +24,8 @@ class TestDao extends Dao
      * @param bool $insert
      */
     public function callUpdateTimeStamps( &$data, $insert=false ) {
-        $this->updateTimeStamps( $data, $insert );
+        $this->data = & $data;
+        $this->updateTimeStamps( $insert );
     }
 
     /**
@@ -33,7 +34,8 @@ class TestDao extends Dao
      * @return array|mixed|string
      */
     public function callToString( $data ) {
-        return $this->toString( $data );
+        $this->data = & $data;
+        return $this->toString();
     }
     
     public function _setAny( $name, $value ) {

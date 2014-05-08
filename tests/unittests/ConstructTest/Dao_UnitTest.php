@@ -82,7 +82,7 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         // checking datetime contents
         $date1 = new \DateTime($value['updated_at']);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $data['updated_at'] );
+        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $value['updated_at'] );
     }
 
     /**

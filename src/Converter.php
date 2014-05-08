@@ -115,7 +115,7 @@ class Converter
      * @param mixed $value
      * @return ArrayObject
      */
-    public function set( $entity, $name, $value )
+    public function set( & $entity, $name, $value )
     {
         $object = $this->convertToObject( $name, $value );
         $this->setRawAttribute( $entity, $name, $object );
