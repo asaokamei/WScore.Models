@@ -234,8 +234,11 @@ class Dao implements DaoInterface
             return $this;
         }
         elseif( $this->lastQuery && method_exists( $this->lastQuery, $method ) ) {
-            call_user_func_array( [$this->lastQuery, $method ], $args );
-            return $this;
+            $returned = call_user_func_array( [$this->lastQuery, $method ], $args );
+            if( $returned instanceof Builder ) {
+                return $this;
+            }
+            return $returned;
         }
         throw new \RuntimeException( 'no such method: '.$method );
     }
@@ -325,7 +328,7 @@ class Dao implements DaoInterface
      * @param array $columns
      * @return bool|string
      */
-    public function select( $columns=array() )
+    public function select( $columns=array('*') )
     {
         $this->hooks( 'selecting' );
         $data = $this->lastQuery->select( $columns )->get();

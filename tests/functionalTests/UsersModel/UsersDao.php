@@ -6,6 +6,10 @@ use WScore\DbGateway\Dao;
 
 class UsersDao extends Dao
 {
+    protected $table = 'users';
+    
+    protected $primaryKey = 'user_id';
+    
     /**
      * @param $db
      * @return static
