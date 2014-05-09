@@ -28,17 +28,25 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Users
+     * @return array
      */
-    function createUser()
+    function getUserData()
     {
-        $user = Users::create([
+        return [
             'status' => 1,
             'gender' => 'F',
             'name'   => 'name:'.mt_rand(1000,9999),
             'birth_date' => '1989-01-23',
             'email'  => 'm'.mt_rand(1000,9999).'@example.com',
-        ]);
+        ];
+    }
+    
+    /**
+     * @return Users
+     */
+    function createUser()
+    {
+        $user = Users::create( $this->getUserData() );
         return $user;
     }
     
@@ -77,5 +85,16 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( is_array( $daoUser ) );
         $this->assertEquals( $pKey, $daoUser['user_id'] );
         $this->assertEquals( $user->name, $daoUser['name'] );
+    }
+
+    /**
+     * @test
+     */
+    function UserDao_inset_add_new_data()
+    {
+        $data = $this->getUserData();
+        $id   = $this->dao->insert( $data );
+        $user = Users::find($id);
+        $this->assertEquals( $data['name'], $user['name'] );
     }
 }
