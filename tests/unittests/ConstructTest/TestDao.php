@@ -7,6 +7,8 @@ class TestDao extends Dao
 {
     protected $created_date = 'creation_date';
 
+    public $lastValue;
+
     /**
      * testing toObject
      *
@@ -26,6 +28,23 @@ class TestDao extends Dao
     public function callUpdateTimeStamps( &$data, $insert=false ) {
         $this->data = & $data;
         $this->updateTimeStamps( $insert );
+    }
+
+    /**
+     * hooks to keep the last (converted) value for update/insert.
+     *
+     * @param string $event
+     * @param array $value
+     */
+    protected function hooks( $event, $value=array() )
+    {
+        switch( $event ) {
+            case 'inserted':
+            case 'updated':
+                $this->lastValue = $value;
+                break;
+            default:
+        }
     }
 
     /**

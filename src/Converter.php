@@ -211,10 +211,10 @@ class Converter
         }
         $method = 'get'.$this->up($name);
         if( is_object( $data ) && method_exists( $data, $method ) ) {
-            $data->$method();
+            return $data->$method();
         }
         if( $data instanceof \ArrayAccess ) {
-            $data[$name];
+            return $data[$name];
         }
         return null;
     }

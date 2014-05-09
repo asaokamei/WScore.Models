@@ -146,4 +146,27 @@ class DaoQuery_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'ArrayObject', get_class( $data[0] ));
         $this->assertEquals( 'tested', $data[0]['test'] );
     }
+
+    /**
+     * @test
+     */
+    function insert_converts_DateTime_object_to_string()
+    {
+        $data = new \ArrayObject( ['test'=> new \DateTime('2014-05-09 11:23:45')] );
+        $dao = $this->setDao();
+        $this->db->shouldReceive('table')->once();
+        $this->query->shouldReceive('insertGetId')->andReturn('testID');
+        $id = $dao->insert( $data );
+        $this->assertEquals( 'testID', $id );
+        $value = $this->dao->lastValue;
+        $this->assertTrue( isset( $value['test'] ) );
+        $this->assertTrue( isset( $value['updated_at'] ) );
+        $this->assertTrue( isset( $value['created_at'] ) );
+        $this->assertTrue( isset( $value['creation_date'] ) );
+        $this->assertEquals( '2014-05-09 11:23:45', $value['test'] );
+        $this->assertTrue( is_string( $value['updated_at'] ) );
+        $this->assertTrue( is_string( $value['created_at'] ) );
+        $this->assertTrue( is_string( $value['creation_date'] ) );
+        $this->assertEquals( 'testID', $value['TestDao_id'] );
+    }
 }
