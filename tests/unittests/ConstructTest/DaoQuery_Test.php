@@ -95,6 +95,17 @@ class DaoQuery_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'testID', $data2['TestDao_id'] );
     }
 
+    /**
+     * @test
+     */
+    function delete_calls_query_insert_and_other_stuff()
+    {
+        $dao = $this->setDao();
+        $this->db->shouldReceive('table')->once();
+        $this->query->shouldReceive('delete')->with('testID');
+        $dao->delete('testID');
+        $this->assertTrue(true);
+    }
 
     /**
      * @test
