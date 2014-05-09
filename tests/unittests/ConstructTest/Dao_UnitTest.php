@@ -25,6 +25,10 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function tearDown() {
+        m::close();
+    }
+
     /**
      * @test
      */
@@ -65,7 +69,7 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         // checking datetime contents
         $date1 = new \DateTime($value['created_at']);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $data['created_at'] );
+        $this->assertEquals( $date1, $data['created_at'] );
     }
 
     /**

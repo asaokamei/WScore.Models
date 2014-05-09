@@ -276,7 +276,7 @@ class Dao implements DaoInterface
     //  Basic CRUD methods.
     // +----------------------------------------------------------------------+
     /**
-     * @param array $data
+     * @param array|ArrayObject $data
      * @return bool
      */
     public function insert( $data )
@@ -300,7 +300,7 @@ class Dao implements DaoInterface
     }
 
     /**
-     * @param array $data
+     * @param array|ArrayObject $data
      * @return int
      */
     public function update( $data )
@@ -327,8 +327,10 @@ class Dao implements DaoInterface
         $data = $this->lastQuery->select( $columns )->get();
         // select data
         $this->hooks( 'selected', $data );
-        foreach( $data as &$td ) { // danger!
-            $this->toObject( $td );
+        foreach( $data as $key => $td ) {
+            $this->data = $td;
+            $this->toObject();
+            $data[$key] = $this->data;
         }
         $this->data = $data;
         $this->query();
@@ -430,7 +432,7 @@ class Dao implements DaoInterface
     public function getColumns( $data=array() )
     {
         if( $this->columns ) return $this->columns;
-        return array_keys( $data );
+        return array_keys( (array) $data );
     }
 
     /**
@@ -438,7 +440,7 @@ class Dao implements DaoInterface
      */
     protected function toObject()
     {
-        return $this->convert->toEntity( $this->data );
+        return $this->data = $this->convert->toEntity( $this->data );
     }
 
     /**
