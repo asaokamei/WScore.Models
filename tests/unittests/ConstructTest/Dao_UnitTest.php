@@ -103,4 +103,15 @@ class Dao_UnitTest extends \PHPUnit_Framework_TestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertEquals( $now, $entity['created_at']->format('Y-m-d H:i:s') );
     }
+
+    /**
+     * @test
+     */
+    function testHooks_fires_test_event_and_invoke_onTest()
+    {
+        $this->assertEquals( null, $this->dao->lastValue );
+        $this->dao->testHooks( 'tested' );
+        $this->assertEquals( 'hook-tested:tested', $this->dao->lastValue );
+    }
+
 }

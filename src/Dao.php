@@ -265,7 +265,9 @@ class Dao implements DaoInterface
     protected function hooks( $event, $values=null )
     {
         if( method_exists( $this, $scope = 'on'.ucfirst($event) ) ) {
-            call_user_func_array( [$this, $scope], $values );
+            $args = func_get_args();
+            array_shift($args);
+            call_user_func_array( [$this, $scope], $args );
         }
         /* example of a hook.
         if( $event == 'updating' ) {

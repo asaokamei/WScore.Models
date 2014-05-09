@@ -180,4 +180,40 @@ class DaoQuery_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue( is_string( $value['creation_date'] ) );
         $this->assertEquals( 'testID', $value['TestDao_id'] );
     }
+
+    /**
+     * @test
+     */
+    function scopeTest_add_column_when_insert()
+    {
+        $data = new \ArrayObject( ['test'=> new \DateTime('2014-05-09 11:23:45')] );
+        $dao = $this->setDao();
+        $this->db->shouldReceive('table')->once();
+        $this->query->shouldReceive('insertGetId')->andReturn('testID');
+        $this->query->shouldReceive('where')->with('scope-test');
+        $id = $dao->scopeTest()->insert( $data );
+        $this->assertEquals( 'testID', $id );
+        $value = $this->dao->lastValue;
+        $this->assertTrue( isset( $value['test'] ) );
+        $this->assertEquals( '2014-05-09 11:23:45', $value['test'] );
+        $this->assertEquals( 'testID', $value['TestDao_id'] );
+    }
+
+    /**
+     * @test
+     */
+    function dao_method_chain_works()
+    {
+        $data = new \ArrayObject( ['test'=> new \DateTime('2014-05-09 11:23:45')] );
+        $dao = $this->setDao();
+        $this->db->shouldReceive('table')->once();
+        $this->query->shouldReceive('insertGetId')->andReturn('testID');
+        $this->query->shouldReceive('where')->with('chain-test');
+        $id = $dao->where('chain-test')->insert( $data );
+        $this->assertEquals( 'testID', $id );
+        $value = $this->dao->lastValue;
+        $this->assertTrue( isset( $value['test'] ) );
+        $this->assertEquals( '2014-05-09 11:23:45', $value['test'] );
+        $this->assertEquals( 'testID', $value['TestDao_id'] );
+    }
 }

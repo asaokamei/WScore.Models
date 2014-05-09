@@ -9,6 +9,35 @@ class TestDao extends Dao
 
     public $lastValue;
 
+    // +---------------------+
+    /**
+     * hooks for test event.
+     * @param null $value
+     */
+    protected function onTest( $value=null )
+    {
+        $this->lastValue = 'hook-tested:'.$value;
+    }
+
+    /**
+     * fire 'test' event.
+     * @param $value
+     */
+    public function testHooks( $value )
+    {
+        $this->hooks( 'test', $value );
+    }
+
+    // +---------------------+
+    /**
+     * for testing scope.
+     */
+    protected function scopeScopeTest()
+    {
+        $this->lastQuery->where( 'scope-test' );
+    }
+
+    // +---------------------+
     /**
      * testing toObject
      *
@@ -38,6 +67,7 @@ class TestDao extends Dao
      */
     protected function hooks( $event, $value=null )
     {
+        parent::hooks( $event, $value );
         switch( $event ) {
             case 'inserted':
             case 'updated':
