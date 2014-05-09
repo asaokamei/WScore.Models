@@ -71,6 +71,22 @@ Advanced Topic
 
 ### Scope
 
+Scope is, essentially the same as Query Scope in Laravel framework.
+In fact, it is almost a dead copy of how things work. It is a very
+useful feature, so here's how to use it.
+
+Create scope{Scope} methods in your Dao class.
+
+```php
+class YourDao extends Dao {
+    protected function scopeType( $value ) {
+        $this->lastQuery->where( 'type', '=', $value );
+    }
+}
+$dao = new YourDao(..);
+$list_of_M = $dao->type('M')->select();
+```
+
 ### Hooks (events)
 
 create on{Events} methods in your Dao class.
