@@ -97,4 +97,17 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
         $user = Users::find($id);
         $this->assertEquals( $data['name'], $user['name'] );
     }
+
+    /**
+     * @test
+     */
+    function UserDao_update_modifies_user_data()
+    {
+        $data = $this->getUserData();
+        $name = 'update tested';
+        $id   = $this->dao->insert( $data );
+        $this->dao->where( 'user_id','=', $id )->update(['name'=>$name]);
+        $user = Users::find($id);
+        $this->assertEquals( $name, $user['name'] );
+    }
 }
