@@ -208,7 +208,7 @@ class DaoQuery_UnitTest extends \PHPUnit_Framework_TestCase
         $dao = $this->setDao();
         $this->db->shouldReceive('table')->once();
         $this->query->shouldReceive('insertGetId')->andReturn('testID');
-        $this->query->shouldReceive('where')->with('chain-test');
+        $this->query->shouldReceive('where')->with('chain-test')->andReturn(new \stdClass());
         $id = $dao->where('chain-test')->insert( $data );
         $this->assertEquals( 'testID', $id );
         $value = $this->dao->lastValue;

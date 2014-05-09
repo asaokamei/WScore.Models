@@ -235,7 +235,7 @@ class Dao implements DaoInterface
         }
         elseif( $this->lastQuery && method_exists( $this->lastQuery, $method ) ) {
             $returned = call_user_func_array( [$this->lastQuery, $method ], $args );
-            if( $returned instanceof Builder ) {
+            if( is_object( $returned ) ) {
                 return $this;
             }
             return $returned;
