@@ -283,7 +283,7 @@ class Dao implements DaoInterface
     {
         $this->data = $data;
         $this->updateTimeStamps( true );
-        $values = $this->toString();
+        $values = $this->toString( $this->data );
         // insert data
         $this->hooks( 'inserting', $values );
         if( $this->insertSerial ) {
@@ -307,7 +307,7 @@ class Dao implements DaoInterface
     {
         $this->data = $data;
         $this->updateTimeStamps();
-        $values = $this->toString();
+        $values = $this->toString( $this->data );
         // update data
         $this->hooks( 'updating', $values );
         $ok = $this->lastQuery->update( $values );
@@ -328,9 +328,7 @@ class Dao implements DaoInterface
         // select data
         $this->hooks( 'selected', $data );
         foreach( $data as $key => $td ) {
-            $this->data = $td;
-            $this->toObject();
-            $data[$key] = $this->data;
+            $data[$key] = $this->toObject( $td );
         }
         $this->data = $data;
         $this->query();
@@ -436,19 +434,21 @@ class Dao implements DaoInterface
     }
 
     /**
+     * @param array $data
      * @return array|object
      */
-    protected function toObject()
+    protected function toObject( $data )
     {
-        return $this->data = $this->convert->toEntity( $this->data );
+        return $this->convert->toEntity( $data );
     }
 
     /**
-     * @return array|mixed|string
+     * @param array|ArrayObject $data
+     * @return array
      */
-    protected function toString()
+    protected function toString( $data )
     {
-        return $this->convert->toArray( $this->data );
+        return $this->convert->toArray( $data );
     }
 
     // +----------------------------------------------------------------------+

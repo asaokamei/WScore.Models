@@ -17,7 +17,7 @@ class TestDao extends Dao
      */
     public function callToObject( &$data ) {
         $this->data = $data;
-        return $this->toObject();
+        return $this->toObject($data);
     }
     /**
      * testing updateTimeStamps
@@ -54,7 +54,7 @@ class TestDao extends Dao
      */
     public function callToString( $data ) {
         $this->data = & $data;
-        return $this->toString();
+        return $this->toString( $data );
     }
     
     public function _setAny( $name, $value ) {
