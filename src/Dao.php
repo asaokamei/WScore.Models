@@ -375,51 +375,6 @@ class Dao implements DaoInterface
             $this->convert->set( $this->data, $this->created_time, $now->format('H:i:s') );
         }
     }
-
-    // +----------------------------------------------------------------------+
-    //  Basic CRUD for Datum.
-    // +----------------------------------------------------------------------+
-    /**
-     * @param $data
-     * @return bool|string
-     */
-    public function addDatum( $data )
-    {
-        return $this->insert( $data );
-    }
-
-    /**
-     * @param $id
-     * @param $data
-     * @return int
-     */
-    public function modDatum( $id, $data )
-    {
-        $this->lastQuery->where( $this->primaryKey, '=', $id );
-        return $this->update( $data );
-    }
-
-    /**
-     * @param $id
-     * @return array
-     */
-    public function getDatum( $id )
-    {
-        $this->lastQuery->where( $this->primaryKey, '=', $id );
-        $data = $this->select();
-        if( count( $data ) === 1 ){
-            return $data[0];
-        }
-        return array();
-    }
-
-    /**
-     * @param string $id
-     */
-    public function delDatum( $id )
-    {
-        $this->query()->delete($id);
-    }
     // +----------------------------------------------------------------------+
     //  managing data
     // +----------------------------------------------------------------------+

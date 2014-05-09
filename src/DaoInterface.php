@@ -51,33 +51,6 @@ interface DaoInterface
     public function delete($id=null);
 
     /**
-     * @param $data
-     * @return bool|string
-     */
-    public function addDatum( $data );
-
-
-    /**
-     * @param $id
-     * @param $data
-     * @return bool|string
-     */
-    public function modDatum( $id, $data );
-
-
-    /**
-     * @param $id
-     * @return bool|string
-     */
-    public function getDatum( $id );
-
-
-    /**
-     * @param string $id
-     */
-    public function delDatum( $id );
-
-    /**
      * @param array $data
      * @return array
      */
