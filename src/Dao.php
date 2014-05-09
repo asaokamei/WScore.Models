@@ -261,9 +261,9 @@ class Dao implements DaoInterface
      * - updating, updated, deleting, deleted,
      *
      * @param string $event
-     * @param array  $values
+     * @param mixed  $values
      */
-    protected function hooks( $event, $values=array() )
+    protected function hooks( $event, $values=null )
     {
         /* example of a hook.
         if( $event == 'updating' ) {

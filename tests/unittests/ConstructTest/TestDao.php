@@ -36,7 +36,7 @@ class TestDao extends Dao
      * @param string $event
      * @param array $value
      */
-    protected function hooks( $event, $value=array() )
+    protected function hooks( $event, $value=null )
     {
         switch( $event ) {
             case 'inserted':
