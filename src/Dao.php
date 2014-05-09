@@ -229,8 +229,7 @@ class Dao implements DaoInterface
      */
     public function __call( $method, $args )
     {
-        if( method_exists( $this, $scope = 'scope'.ucfirst($method) ) )
-        {
+        if( method_exists( $this, $scope = 'scope'.ucfirst($method) ) ) {
             call_user_func_array( [$this, $scope], $args );
             return $this;
         }
@@ -256,7 +255,7 @@ class Dao implements DaoInterface
     /**
      * dumb hooks for various events. $data are all string.
      * available events are:
-     * - creating, created, newQuery,
+     * - constructing, constructed, newQuery,
      * - selecting, selected, inserting, inserted,
      * - updating, updated, deleting, deleted,
      *
@@ -265,6 +264,9 @@ class Dao implements DaoInterface
      */
     protected function hooks( $event, $values=null )
     {
+        if( method_exists( $this, $scope = 'on'.ucfirst($event) ) ) {
+            call_user_func_array( [$this, $scope], $values );
+        }
         /* example of a hook.
         if( $event == 'updating' ) {
             $this->lastQuery->lockForUpdate();

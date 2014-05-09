@@ -71,5 +71,35 @@ Advanced Topic
 
 ### Scope
 
+### Hooks (events)
+
+create on{Events} methods in your Dao class.
+
+```php
+class YourDao extends Dao {
+    protected onUpdating( $value ) {
+        // do your stuff.
+    }
+}
+```
+
+or extend hooks method like:
+
+```php
+protected function hooks( $event, $values=null ) {
+    parent::hooks( $event, $values ); // make sure to call parent hooks.
+    switch( $event ) {
+        case 'inserted':
+            // do some stuff.
+            break;
+    }
+}
+```
+
+available events are:
+
+*   constructing, constructed, newQuery, selecting, selected,
+    inserting, inserted, updating, updated, deleting, deleted
+
 ### Convert to Object and Entity
 
