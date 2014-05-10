@@ -409,7 +409,9 @@ class Dao implements DaoInterface
      */
     protected function toObject( $data )
     {
-        return $this->convert->toEntity( $data );
+        return $this->convert ? 
+            $this->convert->toEntity( $data ):
+            $data;
     }
 
     /**
@@ -418,7 +420,9 @@ class Dao implements DaoInterface
      */
     protected function toString( $data )
     {
-        return $this->convert->toArray( $data );
+        return $this->convert ?
+            $this->convert->toArray( $data ) :
+            (array) $data;
     }
 
     /**
