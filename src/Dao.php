@@ -439,6 +439,7 @@ class Dao implements DaoInterface
         }
         if( is_array( $data ) || (is_object($data)&&$data instanceof ArrayAccess ) ) {
             $data[$name] = $value;
+            return;
         }
         throw new RuntimeException( 'cannot set value to object.' );
     }
