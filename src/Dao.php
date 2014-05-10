@@ -1,10 +1,10 @@
 <?php
 namespace WScore\DbGateway;
 
-
-use ArrayObject;
+use ArrayAccess;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
+use RuntimeException;
 
 /**
  * Class Dao
@@ -167,7 +167,7 @@ class Dao implements DaoInterface
     /**
      * keep the last data to be inserted, updated, or selected.
      *
-     * @var array|ArrayObject|mixed
+     * @var array|ArrayAccess|mixed
      */
     protected $data;
 
@@ -188,11 +188,10 @@ class Dao implements DaoInterface
      * @param Manager $db
      * @param Converter $convert
      */
-    public function __construct( $db, $convert )
+    public function __construct( $db, $convert=null )
     {
         $this->hooks( 'constructing' );
         $this->db = $db;
-        $this->convert = $convert;
 
         if( !$this->table ) {
             $name = get_class($this);
@@ -204,13 +203,22 @@ class Dao implements DaoInterface
         if( !$this->primaryKey ) {
             $this->primaryKey = $this->table . '_id';
         }
-        $this->convert->setDao( $this );
-        $this->convert->setDateTime( $this->created_at,   $this->date_formats );
-        $this->convert->setDateTime( $this->updated_at,   $this->date_formats );
+        $convert && $this->setConverter( $convert );
         $this->query();
         $this->hooks( 'constructed' );
     }
 
+    /**
+     * @param Converter $converter
+     */
+    public function setConverter( $converter )
+    {
+        $this->convert = $converter;
+        $this->convert->setDao( $this );
+        $this->convert->setDateTime( $this->created_at,   $this->date_formats );
+        $this->convert->setDateTime( $this->updated_at,   $this->date_formats );
+    }
+    
     /**
      * @return Builder
      */
@@ -225,7 +233,7 @@ class Dao implements DaoInterface
      * @param $method
      * @param $args
      * @return $this
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function __call( $method, $args )
     {
@@ -240,7 +248,7 @@ class Dao implements DaoInterface
             }
             return $returned;
         }
-        throw new \RuntimeException( 'no such method: '.$method );
+        throw new RuntimeException( 'no such method: '.$method );
     }
 
     /**
@@ -283,7 +291,7 @@ class Dao implements DaoInterface
     //  Basic CRUD methods.
     // +----------------------------------------------------------------------+
     /**
-     * @param array|ArrayObject $data
+     * @param array|ArrayAccess $data
      * @return bool
      */
     public function insert( $data )
@@ -295,8 +303,8 @@ class Dao implements DaoInterface
         $this->hooks( 'inserting', $values );
         if( $this->insertSerial ) {
             $id = $this->lastQuery->insertGetId( $values );
-            $this->convert->set( $values, $this->primaryKey, $id );
-            $this->convert->set( $this->data, $this->primaryKey, $id );
+            $this->set( $values, $this->primaryKey, $id );
+            $this->set( $this->data, $this->primaryKey, $id );
         } else {
             $this->lastQuery->insert( $values );
             $id = true;
@@ -307,7 +315,7 @@ class Dao implements DaoInterface
     }
 
     /**
-     * @param array|ArrayObject $data
+     * @param array|ArrayAccess $data
      * @return int
      */
     public function update( $data )
@@ -362,24 +370,24 @@ class Dao implements DaoInterface
     {
         $now = $this->getCurrentTime();
         if( $this->updated_at ) {
-            $this->convert->set( $this->data, $this->updated_at, $now->format($this->date_formats) );
+            $this->set( $this->data, $this->updated_at, $now->format($this->date_formats) );
         }
         if( $this->updated_date ) {
-            $this->convert->set( $this->data, $this->updated_date, $now->format('Y-m-d') );
+            $this->set( $this->data, $this->updated_date, $now->format('Y-m-d') );
         }
         if( $this->updated_time ) {
-            $this->convert->set( $this->data, $this->updated_time, $now->format('H:i:s') );
+            $this->set( $this->data, $this->updated_time, $now->format('H:i:s') );
         }
         if( !$insert ) return;
 
         if( $this->created_at ) {
-            $this->convert->set( $this->data, $this->created_at, $now->format($this->date_formats) );
+            $this->set( $this->data, $this->created_at, $now->format($this->date_formats) );
         }
         if( $this->created_date ) {
-            $this->convert->set( $this->data, $this->created_date, $now->format('Y-m-d') );
+            $this->set( $this->data, $this->created_date, $now->format('Y-m-d') );
         }
         if( $this->created_time ) {
-            $this->convert->set( $this->data, $this->created_time, $now->format('H:i:s') );
+            $this->set( $this->data, $this->created_time, $now->format('H:i:s') );
         }
     }
     // +----------------------------------------------------------------------+
@@ -405,12 +413,30 @@ class Dao implements DaoInterface
     }
 
     /**
-     * @param array|ArrayObject $data
+     * @param array|ArrayAccess $data
      * @return array
      */
     protected function toString( $data )
     {
         return $this->convert->toArray( $data );
+    }
+
+    /**
+     * @param array|ArrayAccess $data
+     * @param $name
+     * @param $value
+     * @throws RuntimeException
+     */
+    protected function set( & $data, $name, $value )
+    {
+        if( $this->convert ) {
+            $this->convert->set( $data, $name, $value );
+            return;
+        }
+        if( is_array( $data ) || (is_object($data)&&$data instanceof ArrayAccess ) ) {
+            $data[$name] = $value;
+        }
+        throw new RuntimeException( 'cannot set value to object.' );
     }
 
     // +----------------------------------------------------------------------+
