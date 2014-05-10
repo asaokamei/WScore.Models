@@ -76,17 +76,17 @@ class Converter
     }
 
     /**
+     * returns the list of columns. 
+     * 
      * @param array|object $data
      * @return array
      */
     protected function listColumns( $data )
     {
-        if( $this->dao ) {
-            $list = $this->dao->getColumns( $data );
-        } else {
-            $list = array_keys($data);
+        if( is_array( $data ) || !$this->dao ) {
+            return array_keys($data);
         }
-        return $list;
+        return $this->dao->getColumns( $data );
     }
     // +----------------------------------------------------------------------+
     //  convert from array to entity object.
@@ -207,7 +207,7 @@ class Converter
     public function get( $data, $name )
     {
         if( is_array( $data ) ) {
-            return $data[ $name ];
+            return isset($data[ $name ]) ? $data[ $name ]: null ;
         }
         $method = 'get'.$this->up($name);
         if( is_object( $data ) && method_exists( $data, $method ) ) {
