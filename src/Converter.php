@@ -137,7 +137,7 @@ class Converter
      */
     protected function convertToObject( $name, $value )
     {
-        if( !is_string( $value ) ) return $value;
+        if( is_object( $value ) ) return $value;
         $method = 'set'.$this->up($name);
         if( method_exists( $this, $method ) ) {
             // primitive setter defined in Converter class. 
