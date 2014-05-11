@@ -3,6 +3,8 @@
 require_once( dirname(__DIR__).'/autoload.php' );
 require_once( __DIR__ . '/UsersModel/Users.php' );
 require_once( __DIR__ . '/UsersModel/UsersDao.php' );
+require_once( __DIR__ . '/UsersModel/UserStatus.php' );
+require_once( __DIR__ . '/UsersModel/UserGender.php' );
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager;

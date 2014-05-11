@@ -3,6 +3,7 @@ namespace tests\ConstructTest;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Users;
+use WScore\functionalTests\UsersModel\UserGender;
 use WScore\functionalTests\UsersModel\UsersDao;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
@@ -63,15 +64,19 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
      */
     function UserDao_finds_a_user_data()
     {
-        $user = $this->createUser();
-        $pKey = $user->getKey();
+        $user_data = $this->createUser();
+        $pKey = $user_data->getKey();
         $found = $this->dao->where( 'user_id', '=', $pKey )->select();
         $this->assertEquals( 1, count( $found ) );
-        $daoUser = $found[0];
-        $this->assertTrue( is_object( $daoUser ) );
-        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserEntity', get_class( $daoUser ) );
-        $this->assertEquals( $pKey, $daoUser['user_id'] );
-        $this->assertEquals( $user->name, $daoUser['name'] );
+        $user = $found[0];
+        $this->assertTrue( is_object( $user ) );
+        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserEntity', get_class( $user ) );
+        $this->assertEquals( $pKey, $user['user_id'] );
+        $this->assertEquals( $user_data->name, $user['name'] );
+        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserStatus', get_class($user['status'] ) );
+        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserGender', get_class($user['gender'] ) );
+        $this->assertTrue( $user['status']->isActive() );
+        $this->assertTrue( $user['gender']->is( UserGender::FEMALE ) );
     }
 
     /**
