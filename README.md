@@ -12,10 +12,10 @@ MIT License
 depends on "Illuminate/database", a Laravel's database component.
 
 Laravel has an excellent ORM called Eloquent, but
-I wanted some thing more simple Data Access Object.
+I wanted a simple Data Access Object implementation.
 
 Also, I needed something very configurable so that I can
-use it for old legacy projects.
+use it for --outdated-- legacy projects.
 
 Lots of nice ideas, such as scope, are from Laravel's code.
 
@@ -34,21 +34,20 @@ Basic Usage
 ```php
 class YourDao extends Dao
 {
-    protected $table = 'TableName';
-    protected $primaryKey = 'The_Primary_Key';
+    protected $table = 'our_user';
+    protected $primaryKey = 'user_id';
+    protected $columns = [ 'user_id', 'status', 'name',... ];
 }
 $capsule = new Manager();
-$dao = new YourDao(
-    $capsule, new Converter()
-)
+$dao = new YourDao( $capsule );
 ```
 
-Please refer to Illuminate/database for setting up "Capsule", a database manager. 
-
-note:
+Please refer to Illuminate/database for setting up "Capsule",
+a database manager. please note:
 
 *   if $table is not set, class name is used as table name. 
 *   if $primaryKey is not set, tableName_id is used as primary key.
+*   if $column is not set, dao tries to save all the data to db.
 
 ### CRUD
 
@@ -117,5 +116,84 @@ available events are:
 *   constructing, constructed, newQuery, selecting, selected,
     inserting, inserted, updating, updated, deleting, deleted
 
-### Convert to Object and Entity
+Converter for Entity and Value Object
+-------------------------------------
 
+Converter is an object for each dao, that converts an array
+data to/from entity objects, as well as mutate the value into
+value objects. (mutate is the word used in Laravel4...)
+
+### Defining Value Objects
+
+Value objects maybe any class but they must have either of
+\_\_toString or format methods. They are used to convert the
+value object to a string when saving data to db.
+
+This repository contain a handy enum abstract class to
+create a value object.
+
+```php
+class UserStatus extends AbstractEnum {
+    const ACTIVE  = '1';
+    const DELETED = '9'
+    protected static $choices = [
+        self::ACTIVE  => 'active user',
+        self::DELETED => 'inactive user',
+    ];
+}
+```
+
+### Defining Entity Objects
+
+Entity objects maybe any class but they must have setter/getter
+methods or implements ArrayAccess to access their properties.
+
+a sample implementation of an entity class is:
+
+```php
+class UserEntity extends ArrayObject {
+    public function __construct() {
+        parent::__construct(array(), ArrayObject::ARRAY_AS_PROPS);
+    }
+    public function getUserId() {
+        return $this->user_id;
+    }
+    public function getStatus() {
+        return $this->status;
+    }
+    public function setStatus( UserStatus $value ) {
+        $this->status = $value;
+    }
+}
+```
+
+use carmel case name for setter/getter (i.e. getCarmelCase);
+the converter will find the appropriate name as necessary.
+
+
+### Defining Converter
+
+Finally, a converter class.
+
+
+
+```php
+class UsersConverter extends Converter {
+    protected $entityClass = 'UserEntity';
+    protected function setStatus( $value ) {
+        return new UserStatus( $value );
+    }
+}
+```
+
+### Putting things together
+
+```php
+$dao = new YourDao( $capsule, new UsersConverter );
+$entities = $dao->where('status','=',UserStatus::DELETED)->select();
+$user = $entities[0];
+echo $user->status->show(); // echos 'inactive user'.
+$user->setStatus( new UserStatus( UserStatus::ACTIVE ) );
+$dao->update( $user );
+
+```
