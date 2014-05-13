@@ -36,6 +36,7 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'status' => 1,
+            'password' => '',
             'gender' => 'F',
             'name'   => 'name:'.mt_rand(1000,9999),
             'birth_date' => '1989-01-23',

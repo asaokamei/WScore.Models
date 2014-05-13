@@ -13,7 +13,7 @@ class UsersDao extends DaoEntity
     protected $primaryKey = 'user_id';
 
     protected $columns = [
-        'user_id', 'status', 'gender', 'name', 'birth_date', 'email'
+        'user_id', 'status', 'password', 'gender', 'name', 'birth_date', 'email'
     ];
     
     /**
