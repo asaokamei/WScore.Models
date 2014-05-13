@@ -49,7 +49,7 @@ a database manager. please note:
 *   if $primaryKey is not set, tableName_id is used as primary key.
 *   if $column is not set, dao tries to save all the data to db.
 
-### CRUD
+### Basic CRUD
 
 ```php
 $data = $dao->where( 'X', '=', 'Y' )->select();
@@ -57,13 +57,6 @@ $dao->insert( $data );
 $dao->where( 'X', '=', 'Y' )->update( [ 'A' => 'b' ] );
 ```
 
-simple access for data.
-
-```php
-$id = $dao->addDatum( $data );
-$data = $dao->getDatum( $id );
-$dao->modDatum( $id, $data );
-```
 
 Advanced Topic
 --------------
@@ -175,8 +168,6 @@ the converter will find the appropriate name as necessary.
 
 Finally, a converter class.
 
-
-
 ```php
 class UsersConverter extends Converter {
     protected $entityClass = 'UserEntity';
@@ -190,10 +181,14 @@ class UsersConverter extends Converter {
 
 ```php
 $dao = new YourDao( $capsule, new UsersConverter );
-$entities = $dao->where('status','=',UserStatus::DELETED)->select();
-$user = $entities[0];
+
+// get existing user entity. 
+$user = $dao->load(1);
 echo $user->status->show(); // echos 'inactive user'.
 $user->setStatus( new UserStatus( UserStatus::ACTIVE ) );
-$dao->update( $user );
+$dao->save( $user );
 
+// create a new user
+$user = $dao->create( ['status'=> UserStatus::INACTIVE, 'name' => 'new user' ] );
+$dao->save( $user );
 ```
