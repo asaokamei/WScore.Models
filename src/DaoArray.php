@@ -11,108 +11,108 @@ use RuntimeException;
  * @package WScore\Dao
  *
  * methods supported by __call using QueryBuilder in Illuminate/Database.
- *          
- * @method  Dao   paginate
- * @method  Dao   first
- * @method  Dao   latest
- * @method  Dao   getProcessor
- * @method  Dao   orWhere
- * @method  Dao   take
- * @method  Dao   unionAll
- * @method  Dao   getPaginationCount
- * @method  Dao   whereDay
- * @method  Dao   orWhereNotExists
- * @method  Dao   lock
- * @method  Dao   orWhereNotBetween
- * @method  Dao   insertGetId
- * @method  Dao   orderByRaw
- * @method  Dao   lists
- * @method  Dao   find
- * @method  Dao   sharedLock
- * @method  Dao   offset
- * @method  Dao   whereIn
- * @method  Dao   groupBy
- * @method  Dao   forPage
- * @method  Dao   whereNested
- * @method  Dao   getGrammar
- * @method  Dao   from
- * @method  Dao   whereNotIn
- * @method  Dao   sum
- * @method  Dao   remember
- * @method  Dao   orWhereBetween
+ *
+ * @method  $this   paginate
+ * @method  $this   first
+ * @method  $this   latest
+ * @method  $this   getProcessor
+ * @method  $this   orWhere
+ * @method  $this   take
+ * @method  $this   unionAll
+ * @method  $this   getPaginationCount
+ * @method  $this   whereDay
+ * @method  $this   orWhereNotExists
+ * @method  $this   lock
+ * @method  $this   orWhereNotBetween
+ * @method  $this   insertGetId
+ * @method  $this   orderByRaw
+ * @method  $this   lists
+ * @method  $this   find
+ * @method  $this   sharedLock
+ * @method  $this   offset
+ * @method  $this   whereIn
+ * @method  $this   groupBy
+ * @method  $this   forPage
+ * @method  $this   whereNested
+ * @method  $this   getGrammar
+ * @method  $this   from
+ * @method  $this   whereNotIn
+ * @method  $this   sum
+ * @method  $this   remember
+ * @method  $this   orWhereBetween
  * @ method    update
- * @method  Dao   raw
- * @method  Dao   oldest
- * @method  Dao   orderBy
- * @method  Dao   mergeWheres
- * @method  Dao   mergeBindings
- * @method  Dao   havingRaw
+ * @method  $this   raw
+ * @method  $this   oldest
+ * @method  $this   orderBy
+ * @method  $this   mergeWheres
+ * @method  $this   mergeBindings
+ * @method  $this   havingRaw
  * @ method    select
  * @ method    get
- * @method  Dao   orHavingRaw
- * @method  Dao   getCached
- * @method  Dao   avg
- * @method  Dao   whereExists
- * @method  Dao   generateCacheKey
- * @method  Dao   getBindings
- * @method  Dao   skip
- * @method  Dao   orWhereRaw
- * @method  Dao   where
- * @method  Dao   joinWhere
- * @method  Dao   newQuery
- * @method  Dao   count
- * @method  Dao   selectRaw
+ * @method  $this   orHavingRaw
+ * @method  $this   getCached
+ * @method  $this   avg
+ * @method  $this   whereExists
+ * @method  $this   generateCacheKey
+ * @method  $this   getBindings
+ * @method  $this   skip
+ * @method  $this   orWhereRaw
+ * @method  $this   where
+ * @method  $this   joinWhere
+ * @method  $this   newQuery
+ * @method  $this   count
+ * @method  $this   selectRaw
  * @ method    insert
- * @method  Dao   orWhereNotNull
- * @method  Dao   having
- * @method  Dao   exists
- * @method  Dao   addBinding
- * @method  Dao   addNestedWhereQuery
- * @method  Dao   simplePaginate
- * @method  Dao   join
- * @method  Dao   whereRaw
- * @method  Dao   max
- * @method  Dao   min
- * @method  Dao   orWhereIn
- * @method  Dao   whereNull
- * @method  Dao   dynamicWhere
- * @method  Dao   getConnection
+ * @method  $this   orWhereNotNull
+ * @method  $this   having
+ * @method  $this   exists
+ * @method  $this   addBinding
+ * @method  $this   addNestedWhereQuery
+ * @method  $this   simplePaginate
+ * @method  $this   join
+ * @method  $this   whereRaw
+ * @method  $this   max
+ * @method  $this   min
+ * @method  $this   orWhereIn
+ * @method  $this   whereNull
+ * @method  $this   dynamicWhere
+ * @method  $this   getConnection
  * @ method    delete
- * @method  Dao   union
- * @method  Dao   whereNotNull
- * @method  Dao   cacheDriver
- * @method  Dao   orWhereExists
- * @method  Dao   whereMonth
- * @method  Dao   getCacheKey
- * @method  Dao   lockForUpdate
- * @method  Dao   cacheTags
- * @method  Dao   truncate
- * @method  Dao   implode
- * @method  Dao   whereNotBetween
- * @method  Dao   leftJoin
- * @method  Dao   orWhereNull
- * @method  Dao   addSelect
- * @method  Dao   getFresh
- * @method  Dao   rememberForever
- * @method  Dao   increment
- * @method  Dao   limit
- * @method  Dao   whereYear
- * @method  Dao   orHaving
- * @method  Dao   decrement
- * @method  Dao   leftJoinWhere
- * @method  Dao   getRawBindings
- * @method  Dao   whereNotExists
- * @method  Dao   orWhereNotIn
- * @method  Dao   setBindings
- * @method  Dao   buildRawPaginator
- * @method  Dao   toSql
- * @method  Dao   distinct
- * @method  Dao   pluck
- * @method  Dao   whereBetween
- * @method  Dao   aggregate
- * @method  Dao   chunk
+ * @method  $this   union
+ * @method  $this   whereNotNull
+ * @method  $this   cacheDriver
+ * @method  $this   orWhereExists
+ * @method  $this   whereMonth
+ * @method  $this   getCacheKey
+ * @method  $this   lockForUpdate
+ * @method  $this   cacheTags
+ * @method  $this   truncate
+ * @method  $this   implode
+ * @method  $this   whereNotBetween
+ * @method  $this   leftJoin
+ * @method  $this   orWhereNull
+ * @method  $this   addSelect
+ * @method  $this   getFresh
+ * @method  $this   rememberForever
+ * @method  $this   increment
+ * @method  $this   limit
+ * @method  $this   whereYear
+ * @method  $this   orHaving
+ * @method  $this   decrement
+ * @method  $this   leftJoinWhere
+ * @method  $this   getRawBindings
+ * @method  $this   whereNotExists
+ * @method  $this   orWhereNotIn
+ * @method  $this   setBindings
+ * @method  $this   buildRawPaginator
+ * @method  $this   toSql
+ * @method  $this   distinct
+ * @method  $this   pluck
+ * @method  $this   whereBetween
+ * @method  $this   aggregate
+ * @method  $this   chunk
  */
-class Dao implements DaoInterface
+class DaoArray implements DaoInterface
 {
     /**
      * @var Manager
@@ -120,14 +120,9 @@ class Dao implements DaoInterface
     protected $db;
 
     /**
-     * @var Converter
-     */
-    protected $convert;
-
-    /**
      * @var Builder
      */
-    protected $lastQuery;
+    protected $query;
 
     /**
      * table name of the db.
@@ -164,13 +159,6 @@ class Dao implements DaoInterface
      */
     protected $columns = array();
 
-    /**
-     * keep the last data to be inserted, updated, or selected.
-     *
-     * @var array|ArrayAccess|mixed
-     */
-    protected $data;
-
     /*
      * fields for automated datetime columns.
      */
@@ -186,9 +174,8 @@ class Dao implements DaoInterface
     // +----------------------------------------------------------------------+
     /**
      * @param Manager $db
-     * @param Converter $convert
      */
-    public function __construct( $db, $convert=null )
+    public function __construct( $db )
     {
         $this->hooks( 'constructing' );
         $this->db = $db;
@@ -203,30 +190,21 @@ class Dao implements DaoInterface
         if( !$this->primaryKey ) {
             $this->primaryKey = $this->table . '_id';
         }
-        $convert && $this->setConverter( $convert );
         $this->query();
         $this->hooks( 'constructed' );
     }
 
     /**
-     * @param Converter $converter
-     */
-    public function setConverter( $converter )
-    {
-        $this->convert = $converter;
-        $this->convert->setDao( $this );
-        $this->convert->setDateTime( $this->created_at,   $this->date_formats );
-        $this->convert->setDateTime( $this->updated_at,   $this->date_formats );
-    }
-    
-    /**
+     * @param bool $new
      * @return Builder
      */
-    public function query()
+    public function query( $new=true )
     {
-        $this->lastQuery = $this->db->table( $this->table );
-        $this->hooks( 'newQuery' );
-        return $this->lastQuery;
+        if( $new ) {
+            $this->query = $this->db->table( $this->table );
+            $this->hooks( 'newQuery' );
+        }
+        return $this->query;
     }
 
     /**
@@ -241,8 +219,8 @@ class Dao implements DaoInterface
             call_user_func_array( [$this, $scope], $args );
             return $this;
         }
-        elseif( $this->lastQuery && method_exists( $this->lastQuery, $method ) ) {
-            $returned = call_user_func_array( [$this->lastQuery, $method ], $args );
+        elseif( $this->query && method_exists( $this->query, $method ) ) {
+            $returned = call_user_func_array( [$this->query, $method ], $args );
             if( is_object( $returned ) ) {
                 return $this;
             }
@@ -271,9 +249,8 @@ class Dao implements DaoInterface
      * - updating, updated, deleting, deleted,
      *
      * @param string $event
-     * @param mixed  $values
      */
-    protected function hooks( $event, $values=null )
+    protected function hooks( $event )
     {
         if( method_exists( $this, $scope = 'on'.ucfirst($event) ) ) {
             $args = func_get_args();
@@ -291,61 +268,58 @@ class Dao implements DaoInterface
     //  Basic CRUD methods.
     // +----------------------------------------------------------------------+
     /**
-     * @param array|ArrayAccess $data
+     * @param array $data
      * @return bool
      */
     public function insert( $data )
     {
-        $this->data = $data;
-        $this->updateTimeStamps( true );
-        $values = $this->toString( $this->data );
+        $this->updateTimeStamps( $data, true );
         // insert data
-        $this->hooks( 'inserting', $values );
+        $this->hooks( 'inserting', $data );
         if( $this->insertSerial ) {
-            $id = $this->lastQuery->insertGetId( $values );
-            $this->set( $values, $this->primaryKey, $id );
-            $this->set( $this->data, $this->primaryKey, $id );
+            $id = $this->query->insertGetId( $data );
+            $this->set( $data, $this->primaryKey, $id );
         } else {
-            $this->lastQuery->insert( $values );
+            $this->query->insert( $data );
             $id = true;
         }
-        $this->hooks( 'inserted', $values );
+        $this->hooks( 'inserted', $data );
         $this->query();
         return $id;
     }
 
     /**
+     * alternative parameters: update( $id, $data )
+     *
      * @param array|ArrayAccess $data
      * @return int
      */
     public function update( $data )
     {
-        $this->data = $data;
-        $this->updateTimeStamps();
-        $values = $this->toString( $this->data );
+        if( func_num_args() >= 2 ) {
+            $id = func_get_arg(0);
+            $data = func_get_arg(1);
+            $this->setId( $id );
+        }
+        $this->updateTimeStamps( $data );
         // update data
-        $this->hooks( 'updating', $values );
-        $ok = $this->lastQuery->update( $values );
-        $this->hooks( 'updated', $values );
-
+        $this->hooks( 'updating', $data );
+        $ok = $this->query->update( $data );
+        $this->hooks( 'updated', $data );
         $this->query();
         return $ok;
     }
 
     /**
      * @param array $columns
-     * @return bool|string
+     * @return array
      */
     public function select( $columns=array('*') )
     {
         $this->hooks( 'selecting' );
-        $data = $this->lastQuery->select( $columns )->get();
+        $data = $this->query->select( $columns )->get();
         // select data
         $this->hooks( 'selected', $data );
-        foreach( $data as $key => $td ) {
-            $data[$key] = $this->toObject( $td );
-        }
-        $this->data = $data;
         $this->query();
         return $data;
     }
@@ -357,39 +331,40 @@ class Dao implements DaoInterface
     public function delete($id=null)
     {
         $this->hooks( 'deleting', $id );
-        $result = $this->lastQuery->delete($id);
+        $result = $this->query->delete($id);
         $this->hooks( 'deleted', $id );
         $this->query();
         return $result;
     }
 
     /**
+     * @param string|array $id
+     */
+    public function setId($id)
+    {
+        if( is_array($id) ) {
+            $id = $id[$this->primaryKey];
+        }
+        $this->query->where( $this->primaryKey, '=', $id );
+    }
+
+    /**
+     * @param array $data
      * @param bool $insert
      */
-    protected function updateTimeStamps( $insert=false )
+    protected function updateTimeStamps( &$data, $insert=false )
     {
         $now = $this->getCurrentTime();
-        if( $this->updated_at ) {
-            $this->set( $this->data, $this->updated_at, $now->format($this->date_formats) );
-        }
-        if( $this->updated_date ) {
-            $this->set( $this->data, $this->updated_date, $now->format('Y-m-d') );
-        }
-        if( $this->updated_time ) {
-            $this->set( $this->data, $this->updated_time, $now->format('H:i:s') );
-        }
+        $this->set( $data, $this->updated_at, $now->format($this->date_formats) );
+        $this->set( $data, $this->updated_date, $now->format('Y-m-d') );
+        $this->set( $data, $this->updated_time, $now->format('H:i:s') );
         if( !$insert ) return;
 
-        if( $this->created_at ) {
-            $this->set( $this->data, $this->created_at, $now->format($this->date_formats) );
-        }
-        if( $this->created_date ) {
-            $this->set( $this->data, $this->created_date, $now->format('Y-m-d') );
-        }
-        if( $this->created_time ) {
-            $this->set( $this->data, $this->created_time, $now->format('H:i:s') );
-        }
+        $this->set( $data, $this->created_at, $now->format($this->date_formats) );
+        $this->set( $data, $this->created_date, $now->format('Y-m-d') );
+        $this->set( $data, $this->created_time, $now->format('H:i:s') );
     }
+
     // +----------------------------------------------------------------------+
     //  managing data
     // +----------------------------------------------------------------------+
@@ -404,44 +379,31 @@ class Dao implements DaoInterface
     }
 
     /**
-     * @param array $data
-     * @return array|object
-     */
-    protected function toObject( $data )
-    {
-        return $this->convert ? 
-            $this->convert->toEntity( $data ):
-            $data;
-    }
-
-    /**
-     * @param array|ArrayAccess $data
-     * @return array
-     */
-    protected function toString( $data )
-    {
-        return $this->convert ?
-            $this->convert->toArray( $data ) :
-            (array) $data;
-    }
-
-    /**
-     * @param array|ArrayAccess $data
-     * @param $name
-     * @param $value
+     * @param array  $data
+     * @param string $name
+     * @param mixed  $value
      * @throws RuntimeException
      */
-    protected function set( & $data, $name, $value )
+    public function set( & $data, $name, $value )
     {
-        if( $this->convert ) {
-            $this->convert->set( $data, $name, $value );
-            return;
-        }
+        if( !$name ) return;
         if( is_array( $data ) || (is_object($data)&&$data instanceof ArrayAccess ) ) {
             $data[$name] = $value;
             return;
         }
         throw new RuntimeException( 'cannot set value to object.' );
+    }
+
+    /**
+     * @param array  $data
+     * @param string $name
+     * @return mixed
+     */
+    public function get( $data, $name )
+    {
+        if( !$name ) return null;
+        if( !array_key_exists( $name, $data ) ) return null;
+        return $data[ $name ];
     }
 
     // +----------------------------------------------------------------------+
