@@ -11,6 +11,8 @@ require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
  *
  * @method bool isMale
  * @method bool isFemale
+ * @method bool isWhat
+ * @method bool bad_method
  */
 class Gender extends AbstractEnum
 {
@@ -83,7 +85,7 @@ class Enum_Test extends \PHPUnit_Framework_TestCase
      * @test
      * @expectedException \InvalidArgumentException
      */
-    function enum_thorws_exception_for_bad_method()
+    function enum_throws_exception_for_bad_method()
     {
         $this->enum->bad_method();
     }

@@ -1,6 +1,7 @@
 <?php
 namespace tests\ConverterTest;
 
+use DateTime;
 use WScore\DbGateway\Converter;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
@@ -69,6 +70,8 @@ class Converter_Test extends \PHPUnit_Framework_TestCase
         $this->convert->setDateTime( 'test' );
         $entity = $this->convert->toEntity($input);
         $this->assertEquals( true, is_object($entity['test'] ) );
-        $this->assertSame( $input['test'], $entity['test']->format('Y-m-d H:i:s') );
+        /** @var DateTime $testDate */
+        $testDate = $entity['test'];
+        $this->assertSame( $input['test'], $testDate->format('Y-m-d H:i:s') );
     }
 }
