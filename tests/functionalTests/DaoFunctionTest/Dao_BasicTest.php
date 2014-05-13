@@ -5,6 +5,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Users;
 use WScore\functionalTests\UsersModel\UserGender;
 use WScore\functionalTests\UsersModel\UsersDao;
+use WScore\functionalTests\UsersModel\UserStatus;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 require_once( dirname( __DIR__ ) . '/config.php' );
@@ -62,11 +63,11 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function UserDao_finds_a_user_data()
+    function load_finds_a_user_entity_and_converts_some_value_to_enum()
     {
         $user_data = $this->createUser();
         $pKey = $user_data->getKey();
-        $found = $this->dao->where( 'user_id', '=', $pKey )->select();
+        $found = $this->dao->where( 'user_id', '=', $pKey )->load();
         $this->assertEquals( 1, count( $found ) );
         $user = $found[0];
         $this->assertTrue( is_object( $user ) );
@@ -75,27 +76,18 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $user_data->name, $user['name'] );
         $this->assertEquals( 'WScore\functionalTests\UsersModel\UserStatus', get_class($user['status'] ) );
         $this->assertEquals( 'WScore\functionalTests\UsersModel\UserGender', get_class($user['gender'] ) );
-        $this->assertTrue( $user['status']->isActive() );
-        $this->assertTrue( $user['gender']->is( UserGender::FEMALE ) );
+        /** @var UserStatus $status */
+        $status=$user['status'];
+        /** @var UserGender $gender */
+        $gender=$user['gender'];
+        $this->assertTrue( $status->isActive() );
+        $this->assertTrue( $gender->is( UserGender::FEMALE ) );
     }
 
     /**
      * @test
      */
-    function UserDao_find_returns_user_data()
-    {
-        $user = $this->createUser();
-        $pKey = $user->getKey();
-        $daoUser = $this->dao->where( 'user_id', '=', $pKey )->first();
-        $this->assertTrue( is_array( $daoUser ) );
-        $this->assertEquals( $pKey, $daoUser['user_id'] );
-        $this->assertEquals( $user->name, $daoUser['name'] );
-    }
-
-    /**
-     * @test
-     */
-    function UserDao_inset_add_new_data()
+    function inset_adds_a_new_data()
     {
         $data = $this->getUserData();
         $id   = $this->dao->insert( $data );
@@ -106,7 +98,7 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function UserDao_update_modifies_user_data()
+    function update_modifies_user_data()
     {
         $data = $this->getUserData();
         $name = 'update tested';
@@ -114,5 +106,49 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
         $this->dao->where( 'user_id','=', $id )->update(['name'=>$name]);
         $user = Users::find($id);
         $this->assertEquals( $name, $user['name'] );
+    }
+
+    /**
+     * @test
+     */
+    function create_returns_user_entity_object()
+    {
+        $data = $this->getUserData();
+        $user = $this->dao->create( $data );
+        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserEntity', get_class( $user ) );
+        $this->assertEquals( $user->name, $data['name'] );
+        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserStatus', get_class($user['status'] ) );
+        $this->assertEquals( 'WScore\functionalTests\UsersModel\UserGender', get_class($user['gender'] ) );
+    }
+
+    /**
+     * @test
+     */
+    function save_inserts_a_created_entity()
+    {
+        $data = $this->getUserData();
+        $user = $this->dao->create( $data );
+        $this->dao->save( $user );
+        $this->assertTrue( isset( $user->user_id ) );
+        
+        // check
+        $saved = Users::find( $user->user_id );
+        $this->assertEquals( $user->name, $saved->name );
+    }
+
+    /**
+     * @test
+     */
+    function save_updates_a_loaded_entity()
+    {
+        $created_user = $this->createUser();
+        $user_id = $created_user->user_id;
+        $user = $this->dao->load($user_id);
+        $user->name = 'testing-load-and=save';
+        $this->dao->save($user);
+
+        // check
+        $saved = Users::find( $user_id );
+        $this->assertEquals( $user['name'], $saved['name'] );
     }
 }

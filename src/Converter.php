@@ -213,7 +213,7 @@ class Converter
         if( is_object( $data ) && method_exists( $data, $method ) ) {
             return $data->$method();
         }
-        if( $data instanceof \ArrayAccess ) {
+        if( $data instanceof \ArrayAccess && isset( $data[$name]) ) {
             return $data[$name];
         }
         return null;
