@@ -67,7 +67,7 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
     {
         $user_data = $this->createUser();
         $pKey = $user_data->getKey();
-        $found = $this->dao->where( 'user_id', '=', $pKey )->load();
+        $found = $this->dao->q()->where( 'user_id', '=', $pKey )->load();
         $this->assertEquals( 1, count( $found ) );
         $user = $found[0];
         $this->assertTrue( is_object( $user ) );
@@ -103,7 +103,7 @@ class Dao_BasicTest extends \PHPUnit_Framework_TestCase
         $data = $this->getUserData();
         $name = 'update tested';
         $id   = $this->dao->insert( $data );
-        $this->dao->where( 'user_id','=', $id )->update(['name'=>$name]);
+        $this->dao->q()->where( 'user_id','=', $id )->update(['name'=>$name]);
         $user = Users::find($id);
         $this->assertEquals( $name, $user['name'] );
     }

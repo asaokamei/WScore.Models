@@ -4,6 +4,7 @@ namespace WScore\DbGateway;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use RuntimeException;
+use WScore\DbGateway\Query\Eloquent;
 
 /**
  * Class Dao
@@ -193,6 +194,14 @@ class DaoArray implements DaoInterface
         $this->hooks( 'constructed' );
     }
 
+    /**
+     * @return Eloquent
+     */
+    public function q()
+    {
+        return $this;
+    }
+    
     /**
      * @param bool $new
      * @return Builder

@@ -2,17 +2,23 @@
 namespace WScore\DbGateway\Query;
 
 use Illuminate\Database\Query\Builder;
-use WScore\DbGateway\DaoArray;
+use WScore\DbGateway\DaoEntity;
 
+/**
+ * Class Eloquent
+ * a dummy class for DaoEntity/DaoArray.
+ *
+ * @package WScore\DbGateway\Query
+ */
 class Eloquent extends Builder
 {
     /**
-     * @var DaoArray
+     * @var DaoEntity
      */
     protected $_wscore_dao;
 
     /**
-     * @param DaoArray $dao
+     * @param DaoEntity $dao
      */
     public function setWScoreDao( $dao )
     {
@@ -53,5 +59,22 @@ class Eloquent extends Builder
     public function delete( $id=null )
     {
         return $this->_wscore_dao->delete($id);
+    }
+
+    /**
+     * @param null|string|int $id
+     * @return object[]
+     */
+    public function load( $id=null )
+    {
+        return $this->_wscore_dao->load($id);
+    }
+
+    /**
+     * @param object $entity
+     */
+    public function save($entity)
+    {
+        return $this->_wscore_dao->save($entity);
     }
 }
