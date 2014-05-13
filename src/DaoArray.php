@@ -1,7 +1,6 @@
 <?php
 namespace WScore\DbGateway;
 
-use ArrayAccess;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use RuntimeException;
@@ -278,7 +277,7 @@ class DaoArray implements DaoInterface
         $this->hooks( 'inserting', $data );
         if( $this->insertSerial ) {
             $id = $this->query->insertGetId( $data );
-            $this->set( $data, $this->primaryKey, $id );
+            $data[ $this->primaryKey ] = $id;
         } else {
             $this->query->insert( $data );
             $id = true;
@@ -291,7 +290,7 @@ class DaoArray implements DaoInterface
     /**
      * alternative parameters: update( $id, $data )
      *
-     * @param array|ArrayAccess $data
+     * @param array $data
      * @return int
      */
     public function update( $data )
@@ -355,14 +354,14 @@ class DaoArray implements DaoInterface
     protected function updateTimeStamps( &$data, $insert=false )
     {
         $now = $this->getCurrentTime();
-        $this->set( $data, $this->updated_at, $now->format($this->date_formats) );
-        $this->set( $data, $this->updated_date, $now->format('Y-m-d') );
-        $this->set( $data, $this->updated_time, $now->format('H:i:s') );
+        $this->updated_at    && $data[$this->updated_at]   = $now->format($this->date_formats);
+        $this->updated_date  && $data[$this->updated_date] = $now->format('Y-m-d');
+        $this->updated_time  && $data[$this->updated_time] = $now->format('H:i:s');
         if( !$insert ) return;
 
-        $this->set( $data, $this->created_at, $now->format($this->date_formats) );
-        $this->set( $data, $this->created_date, $now->format('Y-m-d') );
-        $this->set( $data, $this->created_time, $now->format('H:i:s') );
+        $this->created_at    && $data[$this->created_at]   = $now->format($this->date_formats);
+        $this->created_date  && $data[$this->created_date] = $now->format('Y-m-d');
+        $this->created_time  && $data[$this->created_time] = $now->format('H:i:s');
     }
 
     // +----------------------------------------------------------------------+
@@ -376,34 +375,6 @@ class DaoArray implements DaoInterface
     {
         if( $this->columns ) return $this->columns;
         return array_keys( (array) $data );
-    }
-
-    /**
-     * @param array  $data
-     * @param string $name
-     * @param mixed  $value
-     * @throws RuntimeException
-     */
-    public function set( & $data, $name, $value )
-    {
-        if( !$name ) return;
-        if( is_array( $data ) || (is_object($data)&&$data instanceof ArrayAccess ) ) {
-            $data[$name] = $value;
-            return;
-        }
-        throw new RuntimeException( 'cannot set value to object.' );
-    }
-
-    /**
-     * @param array  $data
-     * @param string $name
-     * @return mixed
-     */
-    public function get( $data, $name )
-    {
-        if( !$name ) return null;
-        if( !array_key_exists( $name, $data ) ) return null;
-        return $data[ $name ];
     }
 
     // +----------------------------------------------------------------------+
