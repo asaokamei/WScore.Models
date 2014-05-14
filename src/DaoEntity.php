@@ -104,9 +104,12 @@ class DaoEntity extends DaoArray
      */
     public function remove( $entity )
     {
+        $this->entity = $entity;
         $key = $this->get( $entity, $this->primaryKey );
+        $this->hooks( 'removing', $key );
         $this->delete($key);
         $this->deletedEntity[] = spl_object_hash($entity);
+        $this->hooks( 'removed', $key );
     }
     // +----------------------------------------------------------------------+
     //  converting entity to/from array data.
