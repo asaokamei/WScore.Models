@@ -25,6 +25,13 @@ class DaoEntity extends DaoArray
      */
     protected $loadedEntity = array();
 
+    /**
+     * list of deleted entities object hash. 
+     * 
+     * @var array
+     */
+    protected $deletedEntity = array();
+
     // +----------------------------------------------------------------------+
     //  entity related methods
     // +----------------------------------------------------------------------+
@@ -59,7 +66,7 @@ class DaoEntity extends DaoArray
         $this->entity = $entity;
         $data = $this->convert->toArray($entity);
         $this->hooks( 'saving', $data );
-        if( $this->isHashed($entity) ) {
+        if( $this->isRetrieved($entity) ) {
             $id = $this->get( $entity, $this->primaryKey );
             $this->update( $id, $data );
         } else {
@@ -92,6 +99,15 @@ class DaoEntity extends DaoArray
         return $list;
     }
 
+    /**
+     * @param $entity
+     */
+    public function remove( $entity )
+    {
+        $key = $this->get( $entity, $this->primaryKey );
+        $this->delete($key);
+        $this->deletedEntity[] = spl_object_hash($entity);
+    }
     // +----------------------------------------------------------------------+
     //  converting entity to/from array data.
     // +----------------------------------------------------------------------+
@@ -130,8 +146,16 @@ class DaoEntity extends DaoArray
      * @param object $entity
      * @return bool
      */
-    protected function isHashed($entity) {
+    public function isRetrieved($entity) {
         return in_array( spl_object_hash($entity), $this->loadedEntity );
+    }
+
+    /**
+     * @param object $entity
+     * @return bool
+     */
+    public function isDeleted($entity) {
+        return in_array( spl_object_hash($entity), $this->deletedEntity );
     }
     // +----------------------------------------------------------------------+
 }
