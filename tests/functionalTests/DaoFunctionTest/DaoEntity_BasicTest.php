@@ -10,7 +10,7 @@ use WScore\functionalTests\UsersModel\UserStatus;
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 require_once( dirname( __DIR__ ) . '/config.php' );
 
-class Dao_BasicTest extends \PHPUnit_Framework_TestCase
+class DaoEntity_BasicTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var UsersDao

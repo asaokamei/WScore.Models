@@ -9,7 +9,7 @@ class DbGateway_tests
         $suite->addTestFile( __DIR__.'/unitTests/EnumTest/Enum_Test.php' );
         $suite->addTestFile( __DIR__.'/unitTests/DaoTest/Dao_BasicTest.php' );
         $suite->addTestFile( __DIR__.'/unitTests/DaoArrayTest/DaoArray_UnitTest.php' );
-        $suite->addTestFile( __DIR__.'/FunctionalTests/DaoFunctionTest/Dao_BasicTest.php' );
+        $suite->addTestFile( __DIR__.'/FunctionalTests/DaoFunctionTest/DaoEntity_BasicTest.php' );
         return $suite;
     }
 }
