@@ -3,12 +3,12 @@ namespace tests\DaoTest;
 
 use WScore\DbGateway\Dao;
 
-class StaticDao
+class MoreDao
 {
     public static function getInstance()
     {
         $self = new self(null);
-        Dao::_setDaoObject( $self );
+        Dao::_setDaoObject( $self, 'more' );
         return $self;
     }
 }

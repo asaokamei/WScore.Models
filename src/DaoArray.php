@@ -285,5 +285,12 @@ class DaoArray implements DaoInterface
         return array_keys( (array) $data );
     }
 
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
     // +----------------------------------------------------------------------+
 }
