@@ -3,6 +3,18 @@ namespace WScore\Models\Dao;
 
 use WScore\Models\Entity\Magic;
 
+/**
+ * Class TimeStamp
+ * 
+ * available types are 
+ * - created_at, created_date, created_time, 
+ * - updated_at, updated_date, updated_time. 
+ * probably should just create a simple rule. 
+ * 
+ * only created_at and updated_at columns are converted to DateTime object.
+ *
+ * @package WScore\Models\Dao
+ */
 class TimeStamp
 {
     const COLUMN = 0;
@@ -16,6 +28,11 @@ class TimeStamp
     protected $time_stamps = array();
     
     /**
+     * format: 
+     * [ type => [ column, format ], 
+     *   type => column, ]
+     * if format is omitted, standard date time format is used. 
+     * 
      * @param array $stamps
      */
     public function setTimeStamps( $stamps )

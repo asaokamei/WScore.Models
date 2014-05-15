@@ -68,6 +68,9 @@ class DaoArray implements DaoInterface
     protected $hooks = array();
 
     /**
+     * time stamps config.
+     * [ type => [ column, format ], type => column ]
+     * 
      * @var array
      */
     protected $timeStamps = array(
