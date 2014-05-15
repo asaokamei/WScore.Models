@@ -7,13 +7,22 @@ class TimeStamp
 {
     const COLUMN = 0;
     const FORMAT = 1;
-    protected $created_at   = '';
-    protected $created_date = '';
-    protected $created_time = '';
-    protected $updated_at   = '';
-    protected $updated_date = '';
-    protected $updated_time = '';
 
+    public $date_time_format = 'Y-m-d H:i:s';
+    
+    /**
+     * @var array
+     */
+    protected $time_stamps = array();
+    
+    /**
+     * @param array $stamps
+     */
+    public function setTimeStamps( $stamps )
+    {
+        $this->time_stamps = $stamps;
+    }
+    
     /**
      * bad method! must rewrite!
      *
@@ -27,69 +36,15 @@ class TimeStamp
     }
 
     /**
-     * @param string $column
-     * @param string $format
-     */
-    public function setUpdatedAt( $column, $format )
-    {
-        $this->updated_at = [ self::COLUMN => $column, self::FORMAT => $format ];
-    }
-
-    /**
-     * @param string $column
-     * @param string $format
-     */
-    public function setUpdatedDate( $column, $format )
-    {
-        $this->updated_date = [ self::COLUMN => $column, self::FORMAT => $format ];
-    }
-
-    /**
-     * @param string $column
-     * @param string $format
-     */
-    public function setUpdatedTime( $column, $format )
-    {
-        $this->updated_time = [ self::COLUMN => $column, self::FORMAT => $format ];
-    }
-
-    /**
-     * @param string $column
-     * @param string $format
-     */
-    public function setCreatedAt( $column, $format )
-    {
-        $this->created_at = [ self::COLUMN => $column, self::FORMAT => $format ];
-    }
-
-    /**
-     * @param string $column
-     * @param string $format
-     */
-    public function setCreatedDate( $column, $format )
-    {
-        $this->created_date = [ self::COLUMN => $column, self::FORMAT => $format ];
-    }
-
-    /**
-     * @param string $column
-     * @param string $format
-     */
-    public function setCreatedTime( $column, $format )
-    {
-        $this->created_time = [ self::COLUMN => $column, self::FORMAT => $format ];
-    }
-
-    /**
      * @param array $data
      * @return array
      */
     public function onInsertingFilter( $data )
     {
         $data = $this->onUpdatingFilter( $data );
-        $this->setTimeStamp( $data, $this->created_at );
-        $this->setTimeStamp( $data, $this->created_date );
-        $this->setTimeStamp( $data, $this->created_time );
+        $this->setTimeStamp( $data, 'created_at' );
+        $this->setTimeStamp( $data, 'created_date' );
+        $this->setTimeStamp( $data, 'created_time' );
         return $data;
     }
 
@@ -99,9 +54,9 @@ class TimeStamp
      */
     public function onUpdatingFilter( $data )
     {
-        $this->setTimeStamp( $data, $this->updated_at );
-        $this->setTimeStamp( $data, $this->updated_date );
-        $this->setTimeStamp( $data, $this->updated_time );
+        $this->setTimeStamp( $data, 'updated_at' );
+        $this->setTimeStamp( $data, 'updated_date' );
+        $this->setTimeStamp( $data, 'updated_time' );
         return $data;
     }
 
@@ -111,9 +66,15 @@ class TimeStamp
      */
     protected function setTimeStamp( & $data, $info )
     {
-        if( !$info ) return;
-        $column = $info[ self::COLUMN ];
-        $format = $info[ self::FORMAT ];
+        if( !isset( $this->time_stamps[$info] ) ) return;
+        $info = $this->time_stamps[$info];
+        if( is_array( $info ) ) {
+            $column = $info[ self::COLUMN ];
+            $format = $info[ self::FORMAT ];
+        } else {
+            $column = $info;
+            $format = $this->date_time_format;
+        }
         $now    = $this->getCurrentTime();
         Magic::set( $data, $column, $now->format( $format ) );
     }
@@ -124,8 +85,8 @@ class TimeStamp
      */
     public function onSelectedFilter( $data )
     {
-        $this->setDateTime( $data, $this->created_at );
-        $this->setDateTime( $data, $this->updated_at );
+        $this->setDateTime( $data, 'created_at' );
+        $this->setDateTime( $data, 'updated_at' );
         return $data;
     }
 
@@ -135,8 +96,13 @@ class TimeStamp
      */
     protected function setDateTime( & $data, $info ) 
     {
-        if( !$info ) return;
-        $column = $info[self::COLUMN];
+        if( !isset( $this->time_stamps[$info] ) ) return;
+        $info = $this->time_stamps[$info];
+        if( is_array( $info ) ) {
+            $column = $info[ self::COLUMN ];
+        } else {
+            $column = $info;
+        }
         if( $time = Magic::get( $data, $column ) ) {
             Magic::set( $data, $column, new \DateTime($time) );
         }

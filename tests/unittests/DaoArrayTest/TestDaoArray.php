@@ -5,10 +5,17 @@ use WScore\Models\DaoArray;
 
 class TestDaoArray extends DaoArray
 {
-    protected $created_date = 'creation_date';
+    /**
+     * @var array
+     */
+    protected $timeStamps = array(
+        'created_at' => [ 'created_at', 'Y-m-d H:i:s' ],
+        'updated_at' => 'updated_at',
+        'created_date' => [ 'creation_date', 'Y-m-d' ],
+    );
 
     public $lastValue;
-
+    
     // +---------------------+
     /**
      * hooks for test event.

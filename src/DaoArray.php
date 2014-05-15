@@ -66,16 +66,14 @@ class DaoArray implements DaoInterface
      * @var array
      */
     protected $hooks = array();
-    
-    /*
-     * fields for automated datetime columns.
+
+    /**
+     * @var array
      */
-    protected $created_at   = 'created_at';
-    protected $created_date = '';
-    protected $created_time = '';
-    protected $updated_at   = 'updated_at';
-    protected $updated_date = '';
-    protected $updated_time = '';
+    protected $timeStamps = array(
+        'created_at' => [ 'created_at', 'Y-m-d H:i:s' ],
+        'updated_at' => 'updated_at', 
+    );
 
     // +----------------------------------------------------------------------+
     //  managing object.
@@ -101,12 +99,7 @@ class DaoArray implements DaoInterface
         $this->query();
         $this->hooks[] = $this;
         $this->hooks[] = $stamp = new TimeStamp();
-        $stamp->setCreatedAt(   $this->created_at, $this->date_formats );
-        $stamp->setCreatedDate( $this->created_date, 'Y-m-d' );
-        $stamp->setCreatedTime( $this->created_time, 'H:i:s' );
-        $stamp->setUpdatedAt(   $this->updated_at, $this->date_formats );
-        $stamp->setUpdatedDate( $this->updated_date, 'Y-m-d' );
-        $stamp->setUpdatedTime( $this->updated_time, 'H:i:s' );
+        $stamp->setTimeStamps( $this->timeStamps );
         $this->hooks( 'constructed' );
     }
 
