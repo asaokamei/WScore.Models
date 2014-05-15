@@ -209,6 +209,18 @@ class DaoArray implements DaoInterface
         $this->updated_time  && $data[$this->updated_time] = $now->format('H:i:s');
         return $data;
     }
+    
+    protected function onSelectedFilter( $data )
+    {
+        $set = function( & $data, $name ) {
+            if( $time = Magic::get( $data, $name ) ) {
+                Magic::set( $data, $name, new \DateTime($time) );
+            }
+        };
+        $set( $data, $this->created_at );
+        $set( $data, $this->updated_at );
+        return $data;
+    }
 
     // +----------------------------------------------------------------------+
     //  Basic CRUD methods.
@@ -261,7 +273,7 @@ class DaoArray implements DaoInterface
     {
         $this->hooks( 'selecting' );
         $data = $this->query->select( $columns )->get();
-        $this->hooks( 'selected', $data );
+        $data = $this->hooks( 'selected', $data );
         $this->query();
         return $data;
     }

@@ -42,8 +42,6 @@ class DaoEntity extends DaoArray
     {
         $this->convert = $converter;
         $this->convert->setDao( $this );
-        $this->convert->setDateTime( $this->created_at,   $this->date_formats );
-        $this->convert->setDateTime( $this->updated_at,   $this->date_formats );
     }
 
     /**

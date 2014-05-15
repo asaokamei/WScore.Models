@@ -3,7 +3,8 @@ namespace WScore\Models\Entity;
 
 class Magic
 {
-
+    static public $dateTimeFormat = 'Y-m-d H:i:s';
+    
     /**
      * get a value from array or entity
      * 
@@ -81,7 +82,7 @@ class Magic
             return $value->format($format);
         }
         if( $value instanceof \DateTime ) {
-            return $value->format(\DateTime::ISO8601);
+            return $value->format( static::$dateTimeFormat );
         }
         elseif( method_exists( $value, '__toString' ) ) {
             return $value->__toString();

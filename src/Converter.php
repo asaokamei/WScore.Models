@@ -52,17 +52,6 @@ class Converter
         $this->dao = $dao;
     }
 
-    /**
-     * @param $name
-     * @param $format
-     */
-    public function setDateTime( $name, $format=null ) {
-        if( !$name ) return;
-        if( !$format ) $format = $this->formats['datetime'];
-        $this->formats[$name] = $format;
-        $this->converts[$name] = 'toDateTime';
-    }
-
     // +----------------------------------------------------------------------+
     //  some converters
     // +----------------------------------------------------------------------+
@@ -184,9 +173,6 @@ class Converter
         $format = null;
         if( isset( $this->formats[$name] ) ) {
             $format = $this->formats[$name];
-        }
-        elseif( $value instanceof DateTime ) {
-            $format = isset( $this->formats['datetime'] ) ? $this->formats['datetime']: '';
         }
         return Magic::evaluate( $value, $format );
     }
