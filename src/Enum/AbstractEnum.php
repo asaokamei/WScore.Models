@@ -1,5 +1,5 @@
 <?php
-namespace WScore\DbGateway\Enum;
+namespace WScore\Models\Enum;
 
 /**
  * Class Enum

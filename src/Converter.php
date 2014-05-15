@@ -1,5 +1,5 @@
 <?php
-namespace WScore\DbGateway;
+namespace WScore\Models;
 
 use ArrayObject;
 use DateTime;
@@ -7,7 +7,7 @@ use DateTime;
 /**
  * Class Converter
  *
- * @package WScore\DbGateway
+ * @package WScore\Models
  */
 class Converter
 {

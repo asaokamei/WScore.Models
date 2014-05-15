@@ -5,7 +5,7 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use Mockery as m;
 use Mockery\MockInterface;
-use WScore\DbGateway\Converter;
+use WScore\Models\Converter;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 require_once( __DIR__ . '/TestDaoArray.php' );
@@ -29,7 +29,7 @@ class DaoArray_UnitTest extends \PHPUnit_Framework_TestCase
     
     function setup()
     {
-        class_exists( 'WScore\DbGateway\TestDaoArray' );
+        class_exists( 'WScore\Models\TestDaoArray' );
         $this->dao = $this->setDao();
     }
 

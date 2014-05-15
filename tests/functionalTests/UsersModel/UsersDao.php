@@ -1,7 +1,7 @@
 <?php
 namespace WScore\functionalTests\UsersModel;
 
-use WScore\DbGateway\DaoEntity;
+use WScore\Models\DaoEntity;
 
 require_once( __DIR__.'/UsersConverter.php' );
 require_once( __DIR__.'/UserEntity.php' );

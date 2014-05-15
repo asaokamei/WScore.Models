@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WScore\\DbGateway\\": "src/"
+            "WScore\\Models\\": "src/"
         }
     }
 }

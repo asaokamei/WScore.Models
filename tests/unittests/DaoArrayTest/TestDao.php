@@ -1,7 +1,7 @@
 <?php
 namespace tests\ConstructTest;
 
-use WScore\DbGateway\Dao;
+use WScore\Models\Dao;
 
 class TestDao extends Dao
 {

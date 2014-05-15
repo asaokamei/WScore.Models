@@ -5,7 +5,7 @@
  * Date: 2013/11/26
  * Time: 23:44
  */
-namespace WScore\DbGateway\Enum;
+namespace WScore\Models\Enum;
 
 interface EnumInterface
 {

@@ -1,7 +1,7 @@
 <?php
 namespace WScore\functionalTests\UsersModel;
 
-use WScore\DbGateway\Converter;
+use WScore\Models\Converter;
 
 class UsersConverter extends Converter
 {

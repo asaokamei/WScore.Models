@@ -1,5 +1,5 @@
 <?php
-namespace WScore\DbGateway;
+namespace WScore\Models;
 
 use ArrayAccess;
 use RuntimeException;

@@ -1,5 +1,5 @@
 <?php
-namespace WScore\DbGateway;
+namespace WScore\Models;
 
 use RuntimeException;
 
@@ -16,7 +16,7 @@ class Dao
     protected static $instances = array();
 
     /**
-     * @param \WScore\DbGateway\DaoArray|\WScore\DbGateway\DaoEntity $dao
+     * @param \WScore\Models\DaoArray|\WScore\Models\DaoEntity $dao
      * @param string| null $name
      */
     public static function _setDaoObject( $dao, $name=null )

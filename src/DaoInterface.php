@@ -5,7 +5,7 @@
  * Date: 2014/05/07
  * Time: 5:57
  */
-namespace WScore\DbGateway;
+namespace WScore\Models;
 
 use Illuminate\Database\Query\Builder;
 

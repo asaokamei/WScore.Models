@@ -1,7 +1,7 @@
 <?php
 namespace WScore\functionalTests\UsersModel;
 
-use WScore\DbGateway\Enum\AbstractEnum;
+use WScore\Models\Enum\AbstractEnum;
 
 /**
  * Class UserStatus

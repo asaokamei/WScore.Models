@@ -1,7 +1,7 @@
 <?php
 namespace tests\DaoTest;
 
-use WScore\DbGateway\Dao;
+use WScore\Models\Dao;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 

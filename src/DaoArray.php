@@ -1,10 +1,10 @@
 <?php
-namespace WScore\DbGateway;
+namespace WScore\Models;
 
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use RuntimeException;
-use WScore\DbGateway\Query\Eloquent;
+use WScore\Models\Query\Eloquent;
 
 /**
  * Class Dao

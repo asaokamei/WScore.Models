@@ -1,14 +1,14 @@
 <?php
-namespace WScore\DbGateway\Query;
+namespace WScore\Models\Query;
 
 use Illuminate\Database\Query\Builder;
-use WScore\DbGateway\DaoEntity;
+use WScore\Models\DaoEntity;
 
 /**
  * Class Eloquent
  * a dummy class for DaoEntity/DaoArray.
  *
- * @package WScore\DbGateway\Query
+ * @package WScore\Models\Query
  */
 class Eloquent extends Builder
 {

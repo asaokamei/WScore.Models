@@ -2,7 +2,7 @@
 namespace tests\ConverterTest;
 
 use DateTime;
-use WScore\DbGateway\Converter;
+use WScore\Models\Converter;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 
@@ -15,13 +15,13 @@ class Converter_Test extends \PHPUnit_Framework_TestCase
 
     function setup()
     {
-        class_exists( 'WScore\DbGateway\Converter' );
+        class_exists( 'WScore\Models\Converter' );
         $this->convert = new Converter();
     }
 
     function test0()
     {
-        $this->assertEquals( 'WScore\DbGateway\Converter', get_class($this->convert ) );
+        $this->assertEquals( 'WScore\Models\Converter', get_class($this->convert ) );
     }
 
     /**

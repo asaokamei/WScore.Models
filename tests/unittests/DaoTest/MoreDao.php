@@ -1,7 +1,7 @@
 <?php
 namespace tests\DaoTest;
 
-use WScore\DbGateway\Dao;
+use WScore\Models\Dao;
 
 class MoreDao
 {

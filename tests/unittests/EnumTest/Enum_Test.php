@@ -1,7 +1,7 @@
 <?php
 namespace tests\EnumTest;
 
-use WScore\DbGateway\Enum\AbstractEnum;
+use WScore\Models\Enum\AbstractEnum;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 
