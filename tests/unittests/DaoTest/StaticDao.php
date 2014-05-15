@@ -11,4 +11,11 @@ class StaticDao
         Dao::_setDaoObject( $self );
         return $self;
     }
+
+    /**
+     * @return string
+     */
+    public function callMe() {
+        return 'you called me up';
+    }
 }

@@ -47,4 +47,13 @@ class DaoTest extends \PHPUnit_Framework_TestCase
     {
         Dao::notExist();
     }
+
+    /**
+     * @test
+     */
+    function callMe_calls_callMe_methods_of_object()
+    {
+        StaticDao::getInstance();
+        $called = Dao::StaticDao()->callMe();
+    }
 }
