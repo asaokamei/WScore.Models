@@ -1,7 +1,8 @@
-WScore.DbGateway
+WScore.Models
 ================
 
-Data Access Object, a gateway object to database storage. 
+Models for database access as DAO (Data Access Object), 
+a gateway object to database storage. 
 
 ### License
 

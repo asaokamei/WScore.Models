@@ -1,5 +1,5 @@
 {
-    "name": "wscore/dbgateway",
+    "name": "wscore/models",
     "description": "database table gateway",
     "authors": [
         {
