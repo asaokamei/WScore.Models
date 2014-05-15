@@ -5,7 +5,7 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use RuntimeException;
 use WScore\Models\Entity\Magic;
-use WScore\Models\Query\Eloquent;
+use WScore\Models\Dao\Eloquent;
 
 /**
  * Class Dao

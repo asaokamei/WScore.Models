@@ -1,5 +1,5 @@
 <?php
-namespace WScore\Models\Query;
+namespace WScore\Models\Dao;
 
 use Illuminate\Database\Query\Builder;
 use WScore\Models\DaoEntity;
