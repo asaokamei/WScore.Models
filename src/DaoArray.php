@@ -4,6 +4,7 @@ namespace WScore\Models;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use RuntimeException;
+use WScore\Models\Dao\TimeStamp;
 use WScore\Models\Entity\Magic;
 use WScore\Models\Dao\Eloquent;
 
@@ -99,6 +100,13 @@ class DaoArray implements DaoInterface
         }
         $this->query();
         $this->hooks[] = $this;
+        $this->hooks[] = $stamp = new TimeStamp();
+        $stamp->setCreatedAt(   $this->created_at, $this->date_formats );
+        $stamp->setCreatedDate( $this->created_date, 'Y-m-d' );
+        $stamp->setCreatedTime( $this->created_time, 'H:i:s' );
+        $stamp->setUpdatedAt(   $this->updated_at, $this->date_formats );
+        $stamp->setUpdatedDate( $this->updated_date, 'Y-m-d' );
+        $stamp->setUpdatedTime( $this->updated_time, 'H:i:s' );
         $this->hooks( 'constructed' );
     }
 
@@ -146,18 +154,6 @@ class DaoArray implements DaoInterface
     }
 
     /**
-     * bad method! must rewrite!
-     *
-     * @return \DateTime
-     */
-    protected function getCurrentTime()
-    {
-        static $now;
-        if( !$now ) $now = new \DateTime();
-        return $now;
-    }
-
-    /**
      * dumb hooks for various events. $data are all string.
      * available events are:
      * - constructing, constructed, newQuery,
@@ -170,55 +166,16 @@ class DaoArray implements DaoInterface
      */
     protected function hooks( $event, $data=null )
     {
+        $args = func_get_args();
+        array_shift($args);
         foreach( $this->hooks as $hook ) {
-            $args = func_get_args();
-            array_shift($args);
             if( method_exists( $hook, $method = 'on'.ucfirst($event) ) ) {
-                call_user_func_array( [$this, $method], $args );
+                call_user_func_array( [$hook, $method], $args );
             }
             if( method_exists( $hook, $method = 'on'.ucfirst($event).'Filter' ) ) {
-                $data = call_user_func_array( [$this, $method], $args );
+                $data = call_user_func_array( [$hook, $method], $args );
             }
         }
-        return $data;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    protected function onInsertingFilter( $data )
-    {
-        $data = $this->onUpdatingFilter( $data );
-        $now = $this->getCurrentTime();
-        $this->created_at    && $data[$this->created_at]   = $now->format($this->date_formats);
-        $this->created_date  && $data[$this->created_date] = $now->format('Y-m-d');
-        $this->created_time  && $data[$this->created_time] = $now->format('H:i:s');
-        return $data;
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    protected function onUpdatingFilter( $data )
-    {
-        $now = $this->getCurrentTime();
-        $this->updated_at    && $data[$this->updated_at]   = $now->format($this->date_formats);
-        $this->updated_date  && $data[$this->updated_date] = $now->format('Y-m-d');
-        $this->updated_time  && $data[$this->updated_time] = $now->format('H:i:s');
-        return $data;
-    }
-    
-    protected function onSelectedFilter( $data )
-    {
-        $set = function( & $data, $name ) {
-            if( $time = Magic::get( $data, $name ) ) {
-                Magic::set( $data, $name, new \DateTime($time) );
-            }
-        };
-        $set( $data, $this->created_at );
-        $set( $data, $this->updated_at );
         return $data;
     }
 
