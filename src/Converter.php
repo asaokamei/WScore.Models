@@ -3,6 +3,7 @@ namespace WScore\Models;
 
 use ArrayObject;
 use DateTime;
+use WScore\Models\Entity\Magic;
 
 /**
  * Class Converter
@@ -12,7 +13,7 @@ use DateTime;
 class Converter
 {
     /**
-     * @var Dao
+     * @var DaoArray
      */
     protected $dao;
 
@@ -100,11 +101,7 @@ class Converter
         $list = $this->listColumns( $data );
         $entity = $this->getNewEntity();
         foreach( $list as $name ) {
-            if( is_array( $entity ) ) {
-                $entity = $this->set( $entity, $name, $data[$name] );
-            } else {
-                $this->set( $entity, $name, $data[$name] );
-            }
+            $this->set( $entity, $name, $data[$name] );
         }
         return $entity;
     }
@@ -118,7 +115,7 @@ class Converter
     public function set( & $entity, $name, $value )
     {
         $object = $this->convertToObject( $name, $value );
-        $this->setRawAttribute( $entity, $name, $object );
+        Magic::set( $entity, $name, $object );
         return $entity;
     }
 
@@ -138,7 +135,7 @@ class Converter
     protected function convertToObject( $name, $value )
     {
         if( is_object( $value ) ) return $value;
-        $method = 'set'.$this->up($name);
+        $method = 'set'.Magic::upCamelCase($name);
         if( method_exists( $this, $method ) ) {
             // primitive setter defined in Converter class. 
             // for entity objects, define such setter in its entity class. 
@@ -159,28 +156,6 @@ class Converter
         return $value;
     }
 
-    /**
-     * @param array|object $data
-     * @param string $name
-     * @param mixed $value
-     */
-    protected function setRawAttribute( &$data, $name, $value )
-    {
-        if( is_array( $data ) ) {
-            $data[ $name ] = $value;
-            return;
-        }
-        $method = 'set'.$this->up($name);
-        if( is_object( $data ) && method_exists( $data, $method ) ) {
-            $data->$method( $$value );
-            return;
-        }
-        if( $data instanceof \ArrayAccess ) {
-            $data[$name] = $value;
-            return;
-        }
-    }
-
     // +----------------------------------------------------------------------+
     //  convert from entity object to an array.
     // +----------------------------------------------------------------------+
@@ -193,30 +168,10 @@ class Converter
         $list = $this->listColumns( $data );
         $array = array();
         foreach( $list as $name ) {
-            $value = $this->get( $data, $name );
+            $value = Magic::get( $data, $name );
             $array[$name] = $this->convertToString( $name, $value );
         }
         return $array;
-    }
-
-    /**
-     * @param array|object $data
-     * @param string $name
-     * @return mixed
-     */
-    public function get( $data, $name )
-    {
-        if( is_array( $data ) ) {
-            return isset($data[ $name ]) ? $data[ $name ]: null ;
-        }
-        $method = 'get'.$this->up($name);
-        if( is_object( $data ) && method_exists( $data, $method ) ) {
-            return $data->$method();
-        }
-        if( $data instanceof \ArrayAccess && isset( $data[$name]) ) {
-            return $data[$name];
-        }
-        return null;
     }
 
     /**
@@ -226,36 +181,15 @@ class Converter
      */
     protected function convertToString( $name, $value )
     {
-        if( is_object( $value ) ) {
-            if( isset( $this->formats[$name] ) && method_exists( $value, 'format' ) ) {
-                $format = $this->formats[$name];
-                $value = $value->format($format);
-            }
-            elseif( $value instanceof DateTime ) {
-                $format = isset( $this->formats['datetime'] ) ? $this->formats['datetime']: '';
-                $value = $value->format($format);
-            }
-            elseif( method_exists( $value, '__toString' ) ) {
-                $value = $value->__toString();
-            }
-            $this->setRawAttribute($data, $name, $value );
+        $format = null;
+        if( isset( $this->formats[$name] ) ) {
+            $format = $this->formats[$name];
         }
-        return $value;
+        elseif( $value instanceof DateTime ) {
+            $format = isset( $this->formats['datetime'] ) ? $this->formats['datetime']: '';
+        }
+        return Magic::evaluate( $value, $format );
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
-    protected function Up( $name )
-    {
-        $list = explode( '_', $name );
-        $up = '';
-        foreach( $list as $w ) {
-            $up .= ucfirst( $w );
-        }
-        return $up;
-    }
     // +----------------------------------------------------------------------+
-
 }

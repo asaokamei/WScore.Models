@@ -4,6 +4,7 @@ namespace WScore\Models;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use RuntimeException;
+use WScore\Models\Entity\Magic;
 use WScore\Models\Query\Eloquent;
 
 /**
@@ -188,7 +189,7 @@ class DaoArray implements DaoInterface
             $data[ $this->primaryKey ] = $id;
         } else {
             $this->query->insert( $data );
-            $id = true;
+            $id = Magic::get( $data, $this->primaryKey ) ?: true;
         }
         $this->hooks( 'inserted', $data );
         $this->query();

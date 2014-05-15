@@ -2,7 +2,7 @@
 namespace WScore\Models;
 
 use ArrayAccess;
-use RuntimeException;
+use WScore\Models\Entity\Magic;
 
 class DaoEntity extends DaoArray
 {
@@ -67,11 +67,11 @@ class DaoEntity extends DaoArray
         $data = $this->convert->toArray($entity);
         $this->hooks( 'saving', $data );
         if( $this->isRetrieved($entity) ) {
-            $id = $this->get( $entity, $this->primaryKey );
+            $id = Magic::get( $entity, $this->primaryKey );
             $this->update( $id, $data );
         } else {
             $id = $this->insert( $data );
-            $this->set( $entity, $this->primaryKey, $id );
+            Magic::set( $entity, $this->primaryKey, $id );
             $this->hash( $entity );
         }
         $this->hooks( 'saved', $data );
@@ -105,7 +105,7 @@ class DaoEntity extends DaoArray
     public function remove( $entity )
     {
         $this->entity = $entity;
-        $key = $this->get( $entity, $this->primaryKey );
+        $key = Magic::get( $entity, $this->primaryKey );
         $this->hooks( 'removing', $key );
         $this->delete($key);
         $this->deletedEntity[] = spl_object_hash($entity);
@@ -114,30 +114,6 @@ class DaoEntity extends DaoArray
     // +----------------------------------------------------------------------+
     //  converting entity to/from array data.
     // +----------------------------------------------------------------------+
-    /**
-     * @param array|ArrayAccess $data
-     * @param $name
-     * @param $value
-     * @throws RuntimeException
-     */
-    public function set( & $data, $name, $value )
-    {
-        if( !$name ) return;
-        $this->convert->set( $data, $name, $value );
-        return;
-    }
-
-    /**
-     * @param object $data
-     * @param string $name
-     * @return mixed
-     */
-    public function get( $data, $name )
-    {
-        if( !$name ) return null;
-        return $this->convert->get( $data, $name );
-    }
-
     /**
      * @param object $entity
      */
