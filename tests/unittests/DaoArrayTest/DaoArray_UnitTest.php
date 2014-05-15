@@ -86,38 +86,6 @@ class DaoArray_UnitTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function updateTimeStamps_and_toString_convert_date_insert()
-    {
-        $data   = array( 'test' => 'testing' );
-        $this->dao->callUpdateTimeStamps( $data, true );
-        $this->assertEquals( 4, count( $data ) );
-        $this->assertTrue( isset( $data['created_at']));
-        $this->assertTrue( isset( $data['creation_date']));
-        $this->assertTrue( isset( $data['updated_at']));
-        // checking datetime contents
-        $date1 = new \DateTime($data['created_at']);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $data['created_at'] );
-    }
-
-    /**
-     * @test
-     */
-    function updateTimeStamps_and_toString_convert_date_update()
-    {
-        $data   = array( 'test' => 'testing' );
-        $this->dao->callUpdateTimeStamps( $data );
-        $this->assertEquals( 2, count( $data ) );
-        $this->assertTrue( isset( $data['updated_at']));
-        // checking datetime contents
-        $date1 = new \DateTime($data['updated_at']);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertEquals( $date1->format('Y-m-d H:i:s'), $data['updated_at'] );
-    }
-
-    /**
-     * @test
-     */
     function testHooks_fires_test_event_and_invoke_onTest()
     {
         $this->assertEquals( null, $this->dao->lastValue );

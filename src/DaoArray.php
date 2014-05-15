@@ -59,6 +59,13 @@ class DaoArray implements DaoInterface
      */
     protected $columns = array();
 
+    /**
+     * array of objects for hooks and filters
+     * 
+     * @var array
+     */
+    protected $hooks = array();
+    
     /*
      * fields for automated datetime columns.
      */
@@ -91,6 +98,7 @@ class DaoArray implements DaoInterface
             $this->primaryKey = $this->table . '_id';
         }
         $this->query();
+        $this->hooks[] = $this;
         $this->hooks( 'constructed' );
     }
 
@@ -157,19 +165,49 @@ class DaoArray implements DaoInterface
      * - updating, updated, deleting, deleted,
      *
      * @param string $event
+     * @param mixed|null   $data
+     * @return mixed|null
      */
-    protected function hooks( $event )
+    protected function hooks( $event, $data=null )
     {
-        if( method_exists( $this, $scope = 'on'.ucfirst($event) ) ) {
+        foreach( $this->hooks as $hook ) {
             $args = func_get_args();
             array_shift($args);
-            call_user_func_array( [$this, $scope], $args );
+            if( method_exists( $hook, $method = 'on'.ucfirst($event) ) ) {
+                call_user_func_array( [$this, $method], $args );
+            }
+            if( method_exists( $hook, $method = 'on'.ucfirst($event).'Filter' ) ) {
+                $data = call_user_func_array( [$this, $method], $args );
+            }
         }
-        /* example of a hook.
-        if( $event == 'updating' ) {
-            $this->lastQuery->lockForUpdate();
-        }
-        */
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function onInsertingFilter( $data )
+    {
+        $data = $this->onUpdatingFilter( $data );
+        $now = $this->getCurrentTime();
+        $this->created_at    && $data[$this->created_at]   = $now->format($this->date_formats);
+        $this->created_date  && $data[$this->created_date] = $now->format('Y-m-d');
+        $this->created_time  && $data[$this->created_time] = $now->format('H:i:s');
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    protected function onUpdatingFilter( $data )
+    {
+        $now = $this->getCurrentTime();
+        $this->updated_at    && $data[$this->updated_at]   = $now->format($this->date_formats);
+        $this->updated_date  && $data[$this->updated_date] = $now->format('Y-m-d');
+        $this->updated_time  && $data[$this->updated_time] = $now->format('H:i:s');
+        return $data;
     }
 
     // +----------------------------------------------------------------------+
@@ -181,9 +219,7 @@ class DaoArray implements DaoInterface
      */
     public function insert( $data )
     {
-        $this->updateTimeStamps( $data, true );
-        // insert data
-        $this->hooks( 'inserting', $data );
+        $data = $this->hooks( 'inserting', $data );
         if( $this->insertSerial ) {
             $id = $this->query->insertGetId( $data );
             $data[ $this->primaryKey ] = $id;
@@ -209,9 +245,8 @@ class DaoArray implements DaoInterface
             $data = func_get_arg(1);
             $this->setId( $id );
         }
-        $this->updateTimeStamps( $data );
         // update data
-        $this->hooks( 'updating', $data );
+        $data = $this->hooks( 'updating', $data );
         $ok = $this->query->update( $data );
         $this->hooks( 'updated', $data );
         $this->query();
@@ -226,7 +261,6 @@ class DaoArray implements DaoInterface
     {
         $this->hooks( 'selecting' );
         $data = $this->query->select( $columns )->get();
-        // select data
         $this->hooks( 'selected', $data );
         $this->query();
         return $data;
@@ -254,23 +288,6 @@ class DaoArray implements DaoInterface
             $id = $id[$this->primaryKey];
         }
         $this->query->where( $this->primaryKey, '=', $id );
-    }
-
-    /**
-     * @param array $data
-     * @param bool $insert
-     */
-    protected function updateTimeStamps( &$data, $insert=false )
-    {
-        $now = $this->getCurrentTime();
-        $this->updated_at    && $data[$this->updated_at]   = $now->format($this->date_formats);
-        $this->updated_date  && $data[$this->updated_date] = $now->format('Y-m-d');
-        $this->updated_time  && $data[$this->updated_time] = $now->format('H:i:s');
-        if( !$insert ) return;
-
-        $this->created_at    && $data[$this->created_at]   = $now->format($this->date_formats);
-        $this->created_date  && $data[$this->created_date] = $now->format('Y-m-d');
-        $this->created_time  && $data[$this->created_time] = $now->format('H:i:s');
     }
 
     // +----------------------------------------------------------------------+

@@ -39,24 +39,15 @@ class TestDaoArray extends DaoArray
 
     // +---------------------+
     /**
-     * testing updateTimeStamps
-     *
-     * @param      $data
-     * @param bool $insert
-     */
-    public function callUpdateTimeStamps( &$data, $insert=false ) {
-        $this->updateTimeStamps( $data, $insert );
-    }
-
-    /**
      * hooks to keep the last (converted) value for update/insert.
      *
      * @param string $event
-     * @param array $value
+     * @param array  $value
+     * @return array|mixed|null
      */
     protected function hooks( $event, $value=null )
     {
-        parent::hooks( $event, $value );
+        $value = parent::hooks( $event, $value );
         switch( $event ) {
             case 'inserted':
             case 'updated':
@@ -64,6 +55,7 @@ class TestDaoArray extends DaoArray
                 break;
             default:
         }
+        return $value;
     }
 
     public function _setAny( $name, $value ) {
