@@ -12,12 +12,10 @@ MIT License
 
 depends on "Illuminate/database", a Laravel's database component.
 
-Laravel has an excellent ORM called Eloquent, but
+> Laravel has an excellent ORM called Eloquent, but
 I wanted a simple Data Access Object implementation.
-
 Also, I needed something very configurable so that I can
 use it for --outdated-- legacy projects.
-
 Lots of nice ideas, such as scope, are from Laravel's code.
 
 
@@ -80,7 +78,7 @@ $dao = new YourDao(..);
 $list_of_M = $dao->type('M')->select();
 ```
 
-### Hooks (events)
+### Hooks (Events)
 
 create on{Events} methods in your Dao class.
 
@@ -92,23 +90,57 @@ class YourDao extends Dao {
 }
 ```
 
-or extend hooks method like:
-
-```php
-protected function hooks( $event, $values=null ) {
-    parent::hooks( $event, $values ); // make sure to call parent hooks.
-    switch( $event ) {
-        case 'inserted':
-            // do some stuff.
-            break;
-    }
-}
-```
-
 available events are:
 
 *   constructing, constructed, newQuery, selecting, selected,
     inserting, inserted, updating, updated, deleting, deleted
+
+
+### Hooks (Filters)
+
+Filters works just like another hook, but they are for altering
+data to be processed. Filter methods takes $data, modify it, and
+__must__ return back.
+
+create on{Event}Filter methods in your Dao class.
+
+__IMPORTANT__: return data. or there will be no data!
+
+This filter is used for adding time stamps to the data when
+updating or inserting it to database.
+
+```php
+class YourDao {
+    function onUpdatingFilter( $data )
+    {
+        $this->setTimeStamp( $data, 'updated_at' );
+        $this->setTimeStamp( $data, 'updated_date' );
+        $this->setTimeStamp( $data, 'updated_time' );
+        return $data;
+    }
+```
+
+
+### Hook Objects
+
+Your Dao code may become bloated if you keep adding
+event and filter hooks. Register hook objects in the
+Dao as
+
+```php
+class YourDao {
+    public function __construct( $db ) {
+        // ...
+        $this->hooks[] = new TimeStamp();
+    }
+```
+
+Ugh, ugly. to be DI ready, soon.
+
+When defining hooks in hook objects, make sure these
+hook methods are public (accessible from outside the
+class).
+
 
 Converter for Entity and Value Object
 -------------------------------------
