@@ -1,7 +1,7 @@
 <?php
 namespace WScore\functionalTests\UsersModel;
 
-use WScore\Models\Converter;
+use WScore\Models\Dao\Converter;
 
 class UsersConverter extends Converter
 {
