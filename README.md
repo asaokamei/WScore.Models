@@ -16,7 +16,7 @@ depends on "Illuminate/database", a Laravel's database component.
 I wanted a simple Data Access Object implementation.
 Also, I needed something very configurable so that I can
 use it for --outdated-- legacy projects.
-Lots of nice ideas, such as scope, are from Laravel's code.
+Lots of nice ideas, such as scope, are from Laravel Framework.
 
 
 Installation
