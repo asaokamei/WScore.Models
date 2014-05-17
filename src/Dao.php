@@ -31,17 +31,35 @@ class Dao
     }
 
     /**
-     * @param $name
-     * @param $args
+     * @param string|null $name
+     * @return Dao
+     * @throws \RuntimeException
+     */
+    public static function dao( $name=null )
+    {
+        if( !$name ) $name = get_called_class();
+        if( array_key_exists( $name, static::$instances ) ) {
+            return static::$instances[$name];
+        }
+        throw new RuntimeException('no such dao: '.$name );
+    }
+    
+    /**
+     * @param string $name
+     * @param array $args
      * @throws \RuntimeException
      * @return Dao
      */
     public static function __callStatic( $name, $args )
     {
-        if( !array_key_exists( $name, static::$instances ) ) {
-            throw new RuntimeException('no such dao: '.$name );
+        if( array_key_exists( $name, static::$instances ) ) {
+            return static::dao($name);
         }
-        return static::$instances[$name];
+        $dao = static::dao();
+        if( method_exists( $dao, $name ) ) {
+            return call_user_func_array( [$dao, $name], $args );
+        }
+        throw new RuntimeException('no such dao method: '.$name );
     }
 
     /**

@@ -8,7 +8,8 @@ class MoreDao
     public static function getInstance()
     {
         $self = new self(null);
-        Dao::_setDaoObject( $self, 'more' );
+        Dao::_setDaoObject( $self, 'More' );
+        
         return $self;
     }
 }

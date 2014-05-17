@@ -36,7 +36,7 @@ class DaoTest extends \PHPUnit_Framework_TestCase
         StaticDao::getInstance();
         MoreDao::getInstance();
         $this->assertEquals( 'tests\DaoTest\StaticDao', get_class( Dao::StaticDao() ) );
-        $this->assertEquals( 'tests\DaoTest\MoreDao', get_class( Dao::more() ) );
+        $this->assertEquals( 'tests\DaoTest\MoreDao', get_class( Dao::More() ) );
     }
 
     /**
@@ -55,5 +55,17 @@ class DaoTest extends \PHPUnit_Framework_TestCase
     {
         StaticDao::getInstance();
         $called = Dao::StaticDao()->callMe();
+    }
+
+    /**
+     * @ test
+     */
+    function static_call_for_callMe_not_working_yet()
+    {
+        StaticDao::getInstance();
+        $this->assertTrue( class_exists( '\StaticDao' ) );
+        $this->assertEquals( 'tests\DaoTest\StaticDao', get_class( \StaticDao::dao('StaticDao') ) );
+        $this->assertEquals( 'tests\DaoTest\StaticDao', get_class( \StaticDao::dao() ) );
+        $this->assertEquals( 'you called me up', \StaticDao::callMe() );
     }
 }
