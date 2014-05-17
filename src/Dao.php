@@ -32,7 +32,7 @@ class Dao
 
     /**
      * @param string|null $name
-     * @return Dao
+     * @return DaoArray
      * @throws \RuntimeException
      */
     public static function dao( $name=null )
