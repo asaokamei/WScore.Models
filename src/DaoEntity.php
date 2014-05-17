@@ -2,6 +2,7 @@
 namespace WScore\Models;
 
 use ArrayAccess;
+use WScore\Models\Dao\Converter;
 use WScore\Models\Entity\Magic;
 
 class DaoEntity extends DaoArray

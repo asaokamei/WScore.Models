@@ -1,8 +1,9 @@
 <?php
-namespace WScore\Models;
+namespace WScore\Models\Dao;
 
 use ArrayObject;
 use DateTime;
+use WScore\Models\DaoArray;
 use WScore\Models\Entity\Magic;
 
 /**

@@ -5,7 +5,7 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Query\Builder;
 use Mockery as m;
 use Mockery\MockInterface;
-use WScore\Models\Converter;
+use WScore\Models\Dao\Converter;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 require_once( __DIR__ . '/TestDaoArray.php' );

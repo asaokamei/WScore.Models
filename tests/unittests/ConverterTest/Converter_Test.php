@@ -2,7 +2,7 @@
 namespace tests\ConverterTest;
 
 use DateTime;
-use WScore\Models\Converter;
+use WScore\Models\Dao\Converter;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
 
@@ -21,7 +21,7 @@ class Converter_Test extends \PHPUnit_Framework_TestCase
 
     function test0()
     {
-        $this->assertEquals( 'WScore\Models\Converter', get_class($this->convert ) );
+        $this->assertEquals( 'WScore\Models\Dao\Converter', get_class($this->convert ) );
     }
 
     /**
