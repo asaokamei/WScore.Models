@@ -53,6 +53,33 @@ class Converter
     }
 
     // +----------------------------------------------------------------------+
+    //  filter hooks
+    // +----------------------------------------------------------------------+
+    /**
+     * @param array $data
+     * @return ArrayObject|object
+     */
+    public function onSavingFilter( $data )
+    {
+        return $this->toEntity( $data );
+    }
+
+    /**
+     * @param $list
+     * @return array
+     */
+    public function onLoaded( $list )
+    {
+        if( isset( $list[0] ) && is_array( $list[0] ) ) {
+            foreach( $list as $k => $data ) {
+                $list[$k] = $this->toArray($data);
+            }
+            return $list;
+        }
+        return $this->toArray( $list );
+    }
+    
+    // +----------------------------------------------------------------------+
     //  some converters
     // +----------------------------------------------------------------------+
 
