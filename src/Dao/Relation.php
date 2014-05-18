@@ -34,7 +34,7 @@ class Relation
     }
 
     // +----------------------------------------------------------------------+
-    //  set up relations (simple ones).
+    //  set up relations.
     // +----------------------------------------------------------------------+
     /**
      * @param string      $name
@@ -66,9 +66,6 @@ class Relation
         return $relation;
     }
     
-    // +----------------------------------------------------------------------+
-    //  set up many to many relationship. 
-    // +----------------------------------------------------------------------+
     /**
      * @param      $name
      * @param      $target
@@ -98,6 +95,25 @@ class Relation
             $target = Magic::get( $data, $name );
             $relation->setSource( $data );
             $relation->setTarget( $target );
+            if( !$relation->relate() ) {
+                // do nothing. maybe linked in saved filter. 
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * try to convert related entity objects, after the main entity is saved.
+     * 
+     * @param $data
+     * @return mixed
+     * @throws \RuntimeException
+     */
+    public function onSavedFilter( $data )
+    {
+        foreach( $this->relations as $name => $relation ) {
+            $relation = $this->relations[$name];
+            if( $relation->isLinked() ) continue;
             if( !$relation->relate() ) {
                 throw new \RuntimeException('Cannot relate data');
             }

@@ -25,11 +25,18 @@ abstract class RelationAbstract
     protected $target;
 
     /**
+     * turn to true when relation is linked.
+     * 
+     * @var bool
+     */
+    protected $isLinked = false;
+    
+    /**
      * @param $source
      */
-    public function setSource( $source )
+    public function setSource( & $source )
     {
-        $this->source = $source;
+        $this->source = & $source;
     }
 
     /**
@@ -38,6 +45,13 @@ abstract class RelationAbstract
     public function setTarget( $target )
     {
         $this->target = $target;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLinked() {
+        return $this->isLinked;
     }
 
     /**
