@@ -103,6 +103,8 @@ class HasJoin extends RelationAbstract
      */
     public function relate()
     {
+        $this->setupHasJoin();
+        
         // TODO: Implement save() method.
     }
 }

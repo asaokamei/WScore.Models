@@ -2,22 +2,23 @@
 namespace WScore\Models\Dao\Relation;
 
 use WScore\Models\Dao;
+use WScore\Models\Entity\Magic;
 
 class BelongsTo extends RelationAbstract
 {
     protected $info = array();
 
     /**
-     * @param string      $target
+     * @param string      $targetDao
      * @param string|null $targetKey
      * @param string|null $myKey
      */
-    public function __construct( $target, $targetKey=null, $myKey=null )
+    public function __construct( $targetDao, $targetKey=null, $myKey=null )
     {
-        $targetKey = $targetKey?: Dao::dao($target)->getKeyName();
+        $targetKey = $targetKey?: Dao::dao($targetDao)->getKeyName();
         $this->info = array(
             'myKey'     => $myKey ?: $targetKey,
-            'target'    => $target,
+            'targetDao' => $targetDao,
             'targetKey' => $targetKey,
         );
     }
@@ -27,6 +28,11 @@ class BelongsTo extends RelationAbstract
      */
     public function relate()
     {
-        // TODO: Implement save() method.
+        $id = Magic::get( $this->target, $this->info['targetKey'] );
+        if( $id ) {
+            Magic::set( $this->source, $this->info['myKey'], $id );
+            $this->isLinked = true;
+        }
+        return $this->isLinked();
     }
 }

@@ -2,6 +2,7 @@
 namespace WScore\Models\Dao\Relation;
 
 use WScore\Models\Dao;
+use WScore\Models\Entity\Magic;
 
 /**
  * @property mixed dao
@@ -10,17 +11,17 @@ class HasMany extends RelationAbstract
 {
 
     /**
-     * @param string $target
+     * @param string $targetDao
      * @param string|null $targetKey
      * @param string|null $myKey
      */
-    public function __construct( $target, $targetKey=null, $myKey=null )
+    public function __construct( $targetDao, $targetKey=null, $myKey=null )
     {
         $myKey     = $myKey?: $this->dao->getKeyName();
-        $targetKey = $targetKey?: Dao::dao($target)->getKeyName();
+        $targetKey = $targetKey?: Dao::dao($targetDao)->getKeyName();
         $this->info = array(
             'myKey'     => $myKey,
-            'target'    => $target,
+            'targetDao' => $targetDao,
             'targetKey' => $targetKey,
         );
     }
@@ -30,6 +31,11 @@ class HasMany extends RelationAbstract
      */
     public function relate()
     {
-        // TODO: Implement save() method.
+        $id = Magic::get( $this->source, $this->info['myKey'] );
+        if( $id ) {
+            Magic::set( $this->target, $this->info['targetKey'], $id );
+            $this->isLinked = true;
+        }
+        return $this->isLinked();
     }
 }
