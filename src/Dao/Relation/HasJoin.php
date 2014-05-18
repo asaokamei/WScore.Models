@@ -2,6 +2,7 @@
 namespace WScore\Models\Dao\Relation;
 
 use WScore\Models\Dao;
+use WScore\Models\Entity\Magic;
 
 /**
  * @property mixed dao
@@ -74,7 +75,7 @@ class HasJoin extends RelationAbstract
      */
     protected function setupHasJoin()
     {
-        $info = $this->info;
+        $info = &$this->info;
         $target = $info['target'];
         if( !isset( $info['joinBy'] ) ) {
             $joinBy = [$this->dao->getTable(), Dao::dao($target)->getTable()];
@@ -104,7 +105,15 @@ class HasJoin extends RelationAbstract
     public function relate()
     {
         $this->setupHasJoin();
-        
-        // TODO: Implement save() method.
+        $sourceId = Magic::get( $this->source, $this->info['sourceKey']);
+        $targetId = Magic::get( $this->target, $this->info['targetKey']);
+        $join = Dao::dao( $targetId->info['joinBy']);
+        foreach( $targetId as $id ) {
+            $join->insert( [
+                $this->info['joinSourceKey'] => $sourceId,
+                $this->info['joinTargetKey'] => $id,
+            ] );
+        }
+        return $this->isLinked = true;
     }
 }
