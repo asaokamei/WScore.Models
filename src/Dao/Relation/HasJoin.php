@@ -70,7 +70,7 @@ class HasJoin extends RelationAbstract
     }
 
     /**
-     * @param string $name
+     * 
      */
     protected function setupHasJoin()
     {
@@ -101,7 +101,7 @@ class HasJoin extends RelationAbstract
     /**
      * @return bool
      */
-    public function save()
+    public function relate()
     {
         // TODO: Implement save() method.
     }

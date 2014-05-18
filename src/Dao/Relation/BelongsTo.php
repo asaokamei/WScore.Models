@@ -25,7 +25,7 @@ class BelongsTo extends RelationAbstract
     /**
      * @return bool
      */
-    public function save()
+    public function relate()
     {
         // TODO: Implement save() method.
     }

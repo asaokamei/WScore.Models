@@ -43,5 +43,5 @@ abstract class RelationAbstract
     /**
      * @return bool
      */
-    abstract public function save();
+    abstract public function relate();
 }

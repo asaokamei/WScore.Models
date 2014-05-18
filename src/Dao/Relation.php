@@ -98,7 +98,7 @@ class Relation
             $target = Magic::get( $data, $name );
             $relation->setSource( $data );
             $relation->setTarget( $target );
-            if( !$relation->save() ) {
+            if( !$relation->relate() ) {
                 throw new \RuntimeException('Cannot relate data');
             }
         }
