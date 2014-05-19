@@ -11,14 +11,14 @@ class HasJoin extends RelationAbstract
 {
 
     /**
-     * @param      $name
      * @param      $target
      */
-    public function __construct( $name, $target )
+    public function __construct( $target )
     {
         $this->info = array(
             'target'    => $target,
         );
+        $this->setupHasJoin();
     }
 
     /**
@@ -104,7 +104,6 @@ class HasJoin extends RelationAbstract
      */
     public function relate()
     {
-        $this->setupHasJoin();
         $sourceId = Magic::get( $this->source, $this->info['sourceKey']);
         $targetId = Magic::get( $this->target, $this->info['targetKey']);
         $join = Dao::dao( $targetId->info['joinBy']);

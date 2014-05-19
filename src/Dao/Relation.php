@@ -74,7 +74,7 @@ class Relation
     public function hasJoin( $name, $target )
     {
         $this->currName = $name;
-        $relation = new HasJoin($name, $target );
+        $relation = new HasJoin( $target );
         $this->relations[$name] = $relation;
         return $relation;
     }
