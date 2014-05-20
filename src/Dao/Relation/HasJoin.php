@@ -104,15 +104,37 @@ class HasJoin extends RelationAbstract
      */
     public function relate()
     {
+        $join = Dao::dao( $this->info['joinBy']);
         $sourceId = Magic::get( $this->source, $this->info['sourceKey']);
         $targetId = Magic::get( $this->target, $this->info['targetKey']);
-        $join = Dao::dao( $targetId->info['joinBy']);
+        
+        $join->delete( $sourceId, $this->info['joinSourceKey'] );
         foreach( $targetId as $id ) {
             $join->insert( [
                 $this->info['joinSourceKey'] => $sourceId,
                 $this->info['joinTargetKey'] => $id,
             ] );
         }
+        return $this->isLinked = true;
+    }
+
+    /**
+     * loads related data from the database into the entity data.
+     *
+     * @return null|array|object
+     */
+    public function load()
+    {
+        $join = Dao::dao( $this->info['joinBy']);
+        if( !$sourceId = Magic::get( $this->source, $this->info['sourceKey'] ) ) {
+            return false;
+        }
+        if( !$joinData = $join->load( $sourceId, $this->info['joinSourceKey'] ) ) {
+            return false;
+        }
+        $targetId = Magic::get( $joinData, $this->info['joinTargetKey'] );
+        $target = Dao::dao( $this->info['targetDao'] );
+        $this->target = $target->load( $targetId, $this->info['targetKey'] );
         return $this->isLinked = true;
     }
 }

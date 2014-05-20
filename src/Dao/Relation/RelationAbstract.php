@@ -52,6 +52,7 @@ abstract class RelationAbstract
     public function setTarget( $target )
     {
         $this->target = $target;
+        $this->isLinked = false;
     }
 
     /**

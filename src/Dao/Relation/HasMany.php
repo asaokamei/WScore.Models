@@ -38,4 +38,22 @@ class HasMany extends RelationAbstract
         }
         return $this->isLinked();
     }
+
+    /**
+     * loads related data from the database into the entity data.
+     *
+     * @return null|array|object
+     */
+    public function load()
+    {
+        $dao = Dao::dao( $this->info['targetDao'] );
+        $key = $this->info[ 'targetKey' ];
+        $id  = Magic::get( $this->source, $this->info['myKey'] );
+        if( $target = $dao->load( $id, $key ) ) {
+            $this->target = $target;
+        }
+        Magic::set( $this->source, $this->name, $this->target );
+        $this->isLinked = true;
+        return $this->target;
+    }
 }

@@ -15,6 +15,13 @@ class Magic
     static public function get( $data, $name )
     {
         if( !$name ) return null;
+        if( static::isCollection($data) ) {
+            $values = array();
+            foreach( $data as $key => $datum ) {
+                $values[$key] = static::get( $datum, $name );
+            }
+            return $values;
+        }
         if( is_array( $data ) ) {
             return isset( $data[$name] ) ? $data[ $name ]: null ;
         }
@@ -29,26 +36,49 @@ class Magic
     }
 
     /**
-     * @param array|object $data
-     * @param string $name
-     * @param mixed $value
+     * @param array|object  $data
+     * @param string        $name
+     * @param string|object $value
+     * @return array|\ArrayAccess|object
      */
     static public function set( &$data, $name, $value )
     {
-        if( !$name ) return;
+        if( !$name ) return $data;
+        if( static::isCollection($data) ) {
+            foreach( $data as $key => $datum ) {
+                $data[$key] = static::set( $datum, $name, $value );
+            }
+            return $data;
+        }
         if( is_array( $data ) ) {
             $data[ $name ] = $value;
-            return;
+            return $data;
         }
         $method = 'set'.static::upCamelCase($name);
         if( is_object( $data ) && method_exists( $data, $method ) ) {
             $data->$method( $$value );
-            return;
+            return $data;
         }
         if( $data instanceof \ArrayAccess ) {
             $data[$name] = $value;
-            return;
+            return $data;
         }
+        return $data;
+    }
+
+    /**
+     * @param array|object $data
+     * @return bool
+     */
+    public static function isCollection( $data )
+    {
+        if( is_object($data) && $data instanceof \ArrayAccess && isset( $data[0] ) ) {
+            return true;
+        }
+        if( is_array($data) && isset( $data[0] ) ) {
+            return true;
+        }
+        return false;
     }
 
     /**

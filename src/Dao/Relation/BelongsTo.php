@@ -45,9 +45,13 @@ class BelongsTo extends RelationAbstract
         $key = $this->info[ 'targetKey' ];
         $id  = Magic::get( $this->source, $this->info['myKey'] );
         if( $target = $dao->load( $id, $key ) ) {
-            $this->target = $target[0];
+            if( count( $target ) ) {
+                $target = $target[0];
+            }
+            $this->target = $target;
         }
         Magic::set( $this->source, $this->name, $this->target );
+        $this->isLinked = true;
         return $this->target;
     }
 }

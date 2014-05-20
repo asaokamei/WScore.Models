@@ -233,11 +233,19 @@ class DaoArray implements DaoInterface
 
     /**
      * @param string $id
+     * @param null   $column
      * @return int
      */
-    public function delete($id=null)
+    public function delete( $id=null, $column=null)
     {
         $this->hooks( 'deleting', $id );
+        if( $id ) {
+            if( $column ) {
+                $this->query->where( $column, '=', $id );
+            } else {
+                $this->query->where( $this->primaryKey, '=', $id );
+            }
+        }
         $result = $this->query->delete($id);
         $this->hooks( 'deleted', $id );
         $this->query();
