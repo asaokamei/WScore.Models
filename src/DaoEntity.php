@@ -78,9 +78,10 @@ class DaoEntity extends DaoArray
 
     /**
      * @param null|string $id
+     * @param null|string $column
      * @return object[]
      */
-    public function load($id=null)
+    public function load( $id=null, $column=null )
     {
         $this->hooks( 'loading', $id );
         if( $id ) {

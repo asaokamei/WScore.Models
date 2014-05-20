@@ -255,6 +255,22 @@ class DaoArray implements DaoInterface
         $this->query->where( $this->primaryKey, '=', $id );
     }
 
+    /**
+     * @param null|string $id
+     * @param null|string $column
+     * @return array
+     */
+    public function load( $id=null, $column=null )
+    {
+        if( $id ) {
+            if( $column ) {
+                $this->query->where( $column, '=', $id );
+            } else {
+                $this->setId( $id );
+            }
+        }
+        return $this->select();
+    }
     // +----------------------------------------------------------------------+
     //  managing data
     // +----------------------------------------------------------------------+

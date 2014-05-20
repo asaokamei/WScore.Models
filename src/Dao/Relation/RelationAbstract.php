@@ -4,6 +4,13 @@ namespace WScore\Models\Dao\Relation;
 abstract class RelationAbstract
 {
     /**
+     * name of the relation in the entity.
+     *
+     * @var
+     */
+    protected $name;
+
+    /**
      * information about the relationship.
      * 
      * @var array
@@ -58,4 +65,11 @@ abstract class RelationAbstract
      * @return bool
      */
     abstract public function relate();
+
+    /**
+     * loads related data from the database into the entity data.
+     *
+     * @return null|array|object
+     */
+    abstract public function load();
 }

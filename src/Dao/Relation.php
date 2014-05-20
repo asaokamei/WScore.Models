@@ -45,15 +45,15 @@ class Relation
     // +----------------------------------------------------------------------+
     /**
      * @param string      $name
-     * @param string      $target
+     * @param string      $targetDao
      * @param string|null $targetKey
      * @param string|null $myKey
      * @return BelongsTo
      */
-    public function belongsTo( $name, $target, $targetKey=null, $myKey=null )
+    public function belongsTo( $name, $targetDao, $targetKey=null, $myKey=null )
     {
         $this->currName = $name;
-        $relation = new BelongsTo( $target, $targetKey, $myKey );
+        $relation = new BelongsTo( $name, $targetDao, $targetKey, $myKey );
         $this->relations[$name] = $relation;
         return $relation;
     }
