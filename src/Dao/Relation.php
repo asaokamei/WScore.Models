@@ -25,7 +25,14 @@ class Relation
      * @var string
      */
     protected $currName = null;
-    
+
+    /**
+     * list of relations based on entity hash.
+     *
+     * @var RelationAbstract[][]
+     */
+    protected $hashed = array();
+
     /**
      * @param DaoArray $dao
      */
@@ -92,12 +99,7 @@ class Relation
     public function onSavingFilter( $data )
     {
         foreach( $this->relations as $name => $relation ) {
-            $target = Magic::get( $data, $name );
-            $relation->setSource( $data );
-            $relation->setTarget( $target );
-            if( !$relation->relate() ) {
-                // do nothing. maybe linked in saved filter. 
-            }
+            $this->link( $data, $name, false );
         }
         return $data;
     }
@@ -112,15 +114,40 @@ class Relation
     public function onSavedFilter( $data )
     {
         foreach( $this->relations as $name => $relation ) {
-            $relation = $this->relations[$name];
-            if( $relation->isLinked() ) continue;
-            if( !$relation->relate() ) {
-                throw new \RuntimeException('Cannot relate data');
-            }
+            $this->link( $data, $name, true );
         }
         return $data;
     }
-    
+
+    /**
+     * @param object $data
+     * @param string $name
+     * @param bool $throw
+     * @throws \RuntimeException
+     * @return mixed
+     */
+    public function link( &$data, $name, $throw=true )
+    {
+        $target = Magic::get( $data, $name );
+        $relation = $this->findRelation( $data, $name );
+
+        if( !$relation ) {
+            // related data were not loaded, so far.
+            if( !$target ) {
+                // new related data were set, either.
+                // ignore this case.
+                return $data;
+            }
+        }
+        if( !$this->relate( $data, $name, $target ) ) {
+            if( $throw ) {
+                throw new \RuntimeException('Cannot relate data');
+            }
+            // do nothing. maybe linked in saved filter.
+        }
+        return $data;
+    }
+
     /**
      * loads related entities. 
      * 
@@ -132,5 +159,65 @@ class Relation
         return $list;
     }
 
+    /**
+     * relates the entity to target for relation $name.
+     *
+     * @param $entity
+     * @param $name
+     * @param $target
+     * @return bool
+     */
+    public function relate( $entity, $name, $target )
+    {
+        $relation = $this->loadRelation( $entity, $name );
+        $relation->setTarget( $target );
+        return $relation->relate();
+    }
+
+    /**
+     * @param $entity
+     * @param $name
+     * @return RelationAbstract
+     * @throws \RuntimeException
+     */
+    protected function loadRelation( $entity, $name )
+    {
+        if( array_key_exists( $this->relations, $name ) ) {
+            throw new \RuntimeException( 'No such relation: '.$name );
+        }
+        if( !$relation = $this->findRelation( $entity, $name ) ) {
+            $relation = clone( $this->relations[$name] );
+            $relation->setSource( $entity );
+            $this->saveRelation( $entity, $name, $relation );
+        }
+        return $relation;
+    }
+
+    /**
+     * @param $entity
+     * @param $name
+     * @return null|RelationAbstract
+     */
+    protected function findRelation( $entity, $name )
+    {
+        if( !array_key_exists( $this->hashed, $hash = spl_object_hash( $entity ) ) ) {
+            return null;
+        }
+        if( !array_key_exists( $this->hashed[$hash], $name ) ) {
+            return null;
+        }
+        return $this->hashed[$hash][$name];
+    }
+
+    /**
+     * @param $entity
+     * @param $name
+     * @param $relation
+     */
+    protected function saveRelation( $entity, $name, $relation )
+    {
+        $hash = spl_object_hash( $entity );
+        $this->hashed[$hash][$name] = $relation;
+    }
     // +----------------------------------------------------------------------+
 }
