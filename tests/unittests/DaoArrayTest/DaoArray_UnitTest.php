@@ -151,7 +151,8 @@ class DaoArray_UnitTest extends \PHPUnit_Framework_TestCase
     {
         $dao = $this->dao;
         $this->db->shouldReceive('table')->once();
-        $this->query->shouldReceive('delete')->with('testID');
+        $this->query->shouldReceive('where')->with('TestDaoArray_id', '=', 'testID');
+        $this->query->shouldReceive('delete')->withNoArgs();
         $dao->delete('testID');
         $this->assertTrue(true);
     }

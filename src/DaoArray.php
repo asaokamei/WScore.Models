@@ -246,7 +246,7 @@ class DaoArray implements DaoInterface
                 $this->query->where( $this->primaryKey, '=', $id );
             }
         }
-        $result = $this->query->delete($id);
+        $result = $this->query->delete();
         $this->hooks( 'deleted', $id );
         $this->query();
         return $result;

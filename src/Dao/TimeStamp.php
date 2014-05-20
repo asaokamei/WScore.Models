@@ -102,6 +102,12 @@ class TimeStamp
      */
     public function onSelectedFilter( $data )
     {
+        if( Magic::isCollection( $data ) ) {
+            foreach( $data as $key => $datum ) {
+                $data[$key] = $this->onSelectedFilter($datum);
+            }
+            return $data;
+        }
         $this->setDateTime( $data, 'created_at' );
         $this->setDateTime( $data, 'updated_at' );
         return $data;
