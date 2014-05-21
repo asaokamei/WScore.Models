@@ -126,7 +126,7 @@ class Relation
      * @throws \RuntimeException
      * @return mixed
      */
-    public function link( &$data, $name, $throw=true )
+    protected function link( &$data, $name, $throw=true )
     {
         $target = Magic::get( $data, $name );
         $relation = $this->findRelation( $data, $name );

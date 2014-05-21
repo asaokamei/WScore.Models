@@ -3,6 +3,7 @@ namespace WScore\Models;
 
 use ArrayAccess;
 use WScore\Models\Dao\Converter;
+use WScore\Models\Dao\Relation;
 use WScore\Models\Entity\Magic;
 
 class DaoEntity extends DaoArray
@@ -11,6 +12,11 @@ class DaoEntity extends DaoArray
      * @var Converter
      */
     protected $convert;
+
+    /**
+     * @var Relation
+     */
+    protected $relation;
 
     /**
      * keep the last data to be inserted, updated, or selected.
@@ -43,6 +49,15 @@ class DaoEntity extends DaoArray
     {
         $this->convert = $converter;
         $this->convert->setDao( $this );
+    }
+
+    /**
+     * @param Relation $relation
+     */
+    public function setRelation( $relation )
+    {
+        $this->relation = $relation;
+        $this->setHook( $relation );
     }
 
     /**
