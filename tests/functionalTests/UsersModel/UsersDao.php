@@ -15,7 +15,9 @@ class UsersDao extends DaoEntity
     protected $columns = [
         'user_id', 'status', 'password', 'gender', 'name', 'birth_date', 'email'
     ];
-    
+
+    protected $entityClass = '\WScore\functionalTests\UsersModel\UserEntity';
+
     /**
      * @param $db
      * @return static

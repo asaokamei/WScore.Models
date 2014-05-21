@@ -197,14 +197,17 @@ use carmel case name for setter/getter (i.e. getCarmelCase);
 the converter will find the appropriate name as necessary.
 
 
-### Defining Converter
+### Defining Converter and Mutators
+
+specify converter class and mutators as:
+
 
 Finally, a converter class.
 
 ```php
-class UsersConverter extends Converter {
+class UsersDao extends DaoEntity {
     protected $entityClass = 'UserEntity';
-    protected function setStatus( $value ) {
+    protected function muteStatusAttribute( $value ) {
         return new UserStatus( $value );
     }
 }

@@ -5,13 +5,11 @@ use WScore\Models\Dao\Converter;
 
 class UsersConverter extends Converter
 {
-    protected $entityClass = '\WScore\functionalTests\UsersModel\UserEntity';
-
     /**
      * @param int $value
      * @return UserStatus
      */
-    protected function setStatus( $value )
+    protected function muteStatusAttribute( $value )
     {
         return new UserStatus($value);
     }
@@ -20,7 +18,7 @@ class UsersConverter extends Converter
      * @param string $value
      * @return UserGender
      */
-    protected function setGender( $value )
+    protected function muteGenderAttribute( $value )
     {
         return new UserGender($value);
     }

@@ -26,6 +26,13 @@ class DaoEntity extends DaoArray
     protected $entity;
 
     /**
+     * entity class
+     *
+     * @var string
+     */
+    protected $entityClass = '\ArrayObject';
+
+    /**
      * list of loaded entity's object hash.
      *
      * @var array
@@ -47,8 +54,9 @@ class DaoEntity extends DaoArray
      */
     public function setConverter( $converter )
     {
+        $converter->setEntityClass( $this->entityClass );
+        $converter->setColumns(     $this->columns );
         $this->convert = $converter;
-        $this->convert->setDao( $this );
     }
 
     /**

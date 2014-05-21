@@ -14,11 +14,6 @@ use WScore\Models\Entity\Magic;
 class Converter
 {
     /**
-     * @var DaoArray
-     */
-    protected $dao;
-
-    /**
      * specify the format to convert an object to a string.
      * @var array
      */
@@ -27,6 +22,13 @@ class Converter
     );
 
     protected $entityClass = '\\ArrayObject';
+
+    /**
+     * list of columns in the entity object.
+     *
+     * @var array
+     */
+    protected $columns = null;
 
     /**
      * specify how a value maybe converted to an object.
@@ -46,11 +48,19 @@ class Converter
     //  setup the converter
     // +----------------------------------------------------------------------+
     /**
-     * @param $dao
+     * @param $class
      */
-    public function setDao( $dao )
-    {
-        $this->dao = $dao;
+    public function setEntityClass( $class ) {
+        if( $class ) {
+            $this->entityClass = $class;
+        }
+    }
+
+    /**
+     * @param array $columns
+     */
+    public function setColumns( $columns ) {
+        $this->columns = $columns;
     }
 
     // +----------------------------------------------------------------------+
@@ -94,17 +104,21 @@ class Converter
     }
 
     /**
-     * returns the list of columns. 
-     * 
+     * returns the list of columns.
+     *
      * @param array|object $data
+     * @throws \RuntimeException
      * @return array
      */
     protected function listColumns( $data )
     {
-        if( is_array( $data ) || !$this->dao ) {
+        if( is_array( $data ) ) {
             return array_keys($data);
         }
-        return $this->dao->getColumns( $data );
+        if( $this->columns ) {
+            return $this->columns;
+        }
+        throw new \RuntimeException( 'cannot find columns' );
     }
     // +----------------------------------------------------------------------+
     //  convert from array to entity object.
@@ -152,7 +166,7 @@ class Converter
     protected function convertToObject( $name, $value )
     {
         if( is_object( $value ) ) return $value;
-        $method = 'set'.Magic::upCamelCase($name);
+        $method = 'mute'.Magic::upCamelCase($name).'Attribute';
         if( method_exists( $this, $method ) ) {
             // primitive setter defined in Converter class. 
             // for entity objects, define such setter in its entity class. 
