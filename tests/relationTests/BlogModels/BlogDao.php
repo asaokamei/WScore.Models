@@ -1,5 +1,5 @@
 <?php
-namespace Blogs\Model;
+namespace tests\relationTests\BlogModels;
 
 use Illuminate\Database\Capsule\Manager;
 use WScore\Models\Dao\Relation;

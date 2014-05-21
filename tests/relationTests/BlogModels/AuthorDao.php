@@ -1,7 +1,8 @@
 <?php
-namespace Blogs\Model;
+namespace tests\relationTests\BlogModels;
 
 use Illuminate\Database\Capsule\Manager;
+use WScore\Models\Dao\Converter;
 use WScore\Models\Dao\Relation;
 use WScore\Models\DaoEntity;
 
@@ -25,6 +26,18 @@ class AuthorDao extends DaoEntity
     public function __construct( $db )
     {
         parent::__construct( $db );
+    }
+
+    /**
+     * @param $db
+     * @return static
+     */
+    public static function getInstance( $db )
+    {
+        /** @var DaoEntity $dao */
+        $dao = new static( $db );
+        $dao->setConverter( new Converter() );
+        return $dao;
     }
 
     /**

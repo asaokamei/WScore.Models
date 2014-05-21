@@ -1,5 +1,5 @@
 <?php
-namespace Blogs\Model;
+namespace tests\relationTests\BlogModels;
 
 use WScore\Models\Enum\AbstractEnum;
 

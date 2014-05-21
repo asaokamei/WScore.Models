@@ -77,9 +77,9 @@ class ConfigBlog
      */
     public static function setAuthorTable()
     {
-        static::$schema->dropIfExists( 'author' );
+        static::$schema->dropIfExists( 'blog_author' );
 
-        static::$schema->create( 'author', function ( $table ) {
+        static::$schema->create( 'blog_author', function ( $table ) {
             /** @var Blueprint $table */
             $table->increments( 'author_id' );
             $table->integer(    'status' );
