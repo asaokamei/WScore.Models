@@ -17,6 +17,8 @@ class AuthorDao extends DaoEntity
         'created_at', 'updated_at'
     ];
 
+    protected $entityClass = '\Blogs\Model\UserEntity';
+
     /**
      * @param Manager $db
      */
@@ -33,5 +35,23 @@ class AuthorDao extends DaoEntity
         $relation->hasMany( 'blogs', 'BlogDao' );
         $relation->hasJoin( 'roles', 'RoleDao' );
         parent::setRelation($relation);
+    }
+
+    /**
+     * @param int $value
+     * @return AuthorStatus
+     */
+    protected function setStatus( $value )
+    {
+        return new AuthorStatus($value);
+    }
+
+    /**
+     * @param string $value
+     * @return AuthorGender
+     */
+    protected function setGender( $value )
+    {
+        return new AuthorGender($value);
     }
 }
