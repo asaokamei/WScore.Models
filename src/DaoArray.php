@@ -239,13 +239,7 @@ class DaoArray implements DaoInterface
     public function delete( $id=null, $column=null)
     {
         $this->hooks( 'deleting', $id );
-        if( $id ) {
-            if( $column ) {
-                $this->query->where( $column, '=', $id );
-            } else {
-                $this->query->where( $this->primaryKey, '=', $id );
-            }
-        }
+        $this->setId( $id, $column );
         $result = $this->query->delete();
         $this->hooks( 'deleted', $id );
         $this->query();
@@ -253,14 +247,23 @@ class DaoArray implements DaoInterface
     }
 
     /**
+     * set id/key for query.
+     * specify $column to use, or use primary key if not set.
+     * uses whereIn if $id is an array.
+     *
      * @param string|array $id
+     * @param string|null  $column
      */
-    public function setId($id)
+    public function setId( $id, $column=null )
     {
+        if( !$id ) return;
+        if( !$column ) $column = $this->primaryKey;
         if( is_array($id) ) {
             $id = $id[$this->primaryKey];
+            $this->query->whereIn( $column, $id );
+        } else {
+            $this->query->where( $column, '=', $id );
         }
-        $this->query->where( $this->primaryKey, '=', $id );
     }
 
     /**
@@ -270,13 +273,7 @@ class DaoArray implements DaoInterface
      */
     public function load( $id=null, $column=null )
     {
-        if( $id ) {
-            if( $column ) {
-                $this->query->where( $column, '=', $id );
-            } else {
-                $this->setId( $id );
-            }
-        }
+        $this->setId( $id, $column );
         return $this->select();
     }
     // +----------------------------------------------------------------------+

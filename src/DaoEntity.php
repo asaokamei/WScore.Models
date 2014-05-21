@@ -84,9 +84,7 @@ class DaoEntity extends DaoArray
     public function load( $id=null, $column=null )
     {
         $this->hooks( 'loading', $id );
-        if( $id ) {
-            $this->setId( $id );
-        }
+        $this->setId( $id );
         $list = $this->select();
         foreach( $list as $key => $data ) {
             $list[$key] = $entity = $this->convert->toEntity( $data );
