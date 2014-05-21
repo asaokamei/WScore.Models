@@ -36,7 +36,7 @@ class ConfigBlog
             'password'  => 'admin',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => 'blog_'
+            'prefix'    => ''
         ]);
         $capsule->setEventDispatcher(new Dispatcher(new Container()));
         $capsule->setAsGlobal();

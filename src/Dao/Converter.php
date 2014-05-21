@@ -44,6 +44,26 @@ class Converter
      */
     protected $converts = array();
 
+    /**
+     * @var object[]
+     */
+    protected $mutator = array();
+
+    /**
+     * 
+     */
+    public function __construct()
+    {
+        $this->setMutator( $this );
+    }
+
+    /**
+     * @param object $mutator
+     */
+    public function setMutator( $mutator )
+    {
+        $this->mutator[] = $mutator;
+    }
     // +----------------------------------------------------------------------+
     //  setup the converter
     // +----------------------------------------------------------------------+
@@ -167,10 +187,10 @@ class Converter
     {
         if( is_object( $value ) ) return $value;
         $method = 'mute'.Magic::upCamelCase($name).'Attribute';
-        if( method_exists( $this, $method ) ) {
-            // primitive setter defined in Converter class. 
-            // for entity objects, define such setter in its entity class. 
-            return $this->$method( $value );
+        foreach( $this->mutator as $mutator ) {
+            if( method_exists( $mutator, $method ) ) {
+                return $mutator->$method( $value );
+            }
         }
         if( array_key_exists( $name, $this->converts ) ) {
             $converter = $this->converts[$name];

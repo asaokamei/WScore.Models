@@ -7,8 +7,10 @@ use WScore\Models\DaoEntity;
 
 class AuthorDao extends DaoEntity
 {
-    protected $table = 'author';
+    protected $table = 'blog_author';
 
+    protected $primaryKey = 'author_id';
+    
     protected $columns = [
         'status', 'name', 'gender', 'name', 'birth_date', 'email',
     ];
@@ -17,7 +19,7 @@ class AuthorDao extends DaoEntity
         'created_at', 'updated_at'
     ];
 
-    protected $entityClass = '\Blogs\Model\UserEntity';
+    protected $entityClass = '\tests\relationTests\BlogModels\Author';
 
     /**
      * @param Manager $db
@@ -41,7 +43,7 @@ class AuthorDao extends DaoEntity
      * @param int $value
      * @return AuthorStatus
      */
-    protected function muteStatusAttribute( $value )
+    public function muteStatusAttribute( $value )
     {
         return new AuthorStatus($value);
     }
@@ -50,7 +52,7 @@ class AuthorDao extends DaoEntity
      * @param string $value
      * @return AuthorGender
      */
-    protected function muteGenderAttribute( $value )
+    public function muteGenderAttribute( $value )
     {
         return new AuthorGender($value);
     }

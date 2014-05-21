@@ -70,6 +70,7 @@ class DaoEntity extends DaoArray
     {
         $converter->setEntityClass( $this->entityClass );
         $converter->setColumns(     $this->columns );
+        $converter->setMutator( $this );
         $this->convert = $converter;
     }
 
