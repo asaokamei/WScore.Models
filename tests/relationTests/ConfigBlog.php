@@ -1,0 +1,160 @@
+<?php
+
+require_once( dirname(__DIR__).'/autoload.php' );
+
+use Illuminate\Container\Container;
+use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
+use Illuminate\Events\Dispatcher;
+
+ConfigBlog::setupTables();
+
+class ConfigBlog
+{
+    /**
+     * @var Manager
+     */
+    public static $capsule;
+
+    /**
+     * @var Builder
+     */
+    public static $schema;
+    
+    /**
+     * @return Manager
+     */
+    public static function buildCapsule()
+    {
+        $capsule = new Manager();
+        $capsule->addConnection([
+            'driver'    => 'mysql',
+            'host'      => 'localhost',
+            'database'  => 'test_models',
+            'username'  => 'admin',
+            'password'  => 'admin',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => 'blog_'
+        ]);
+        $capsule->setEventDispatcher(new Dispatcher(new Container()));
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
+        return $capsule;
+    }
+
+    /**
+     * @return Manager
+     */
+    public static function getCapsule()
+    {
+        if( !static::$capsule ) {
+            static::$capsule = static::buildCapsule();
+        }
+        return static::$capsule;
+    }
+
+    /**
+     * 
+     */
+    public static function setupTables()
+    {
+        static::$capsule = static::getCapsule();
+        $connection = static::$capsule->getConnection();
+        $connection->setSchemaGrammar(new Illuminate\Database\Schema\Grammars\MySqlGrammar() );
+        static::$schema = new Builder( $connection );
+
+        static::setAuthorTable();
+        static::setBlogTable();
+        static::setCommentTable();
+        static::setRoleTable();
+        static::setRoleauthorTable();
+    }
+
+    /**
+     *
+     */
+    public static function setAuthorTable()
+    {
+        static::$schema->dropIfExists( 'author' );
+
+        static::$schema->create( 'author', function ( $table ) {
+            /** @var Blueprint $table */
+            $table->increments( 'author_id' );
+            $table->integer(    'status' );
+            $table->string(     'password', 512 );
+            $table->string(     'gender', 1 );
+            $table->string(     'name', 512 );
+            $table->date(       'birth_date' );
+            $table->string(     'email', 1024 );
+            $table->timestamps();
+        } );
+    }
+
+    /**
+     *
+     */
+    public static function setRoleTable()
+    {
+        static::$schema->dropIfExists( 'role' );
+
+        static::$schema->create( 'role', function ( $table ) {
+            /** @var Blueprint $table */
+            $table->increments( 'role_id' );
+            $table->string(     'role', 128 );
+            $table->timestamps();
+        } );
+    }
+
+    /**
+     *
+     */
+    public static function setRoleauthorTable()
+    {
+        static::$schema->dropIfExists( 'role_author' );
+
+        static::$schema->create( 'role_author', function ( $table ) {
+            /** @var Blueprint $table */
+            $table->integer( 'role_id' );
+            $table->integer( 'author_id' );
+            $table->timestamps();
+        } );
+    }
+
+    /**
+     *
+     */
+    public static function setBlogTable()
+    {
+        static::$schema->dropIfExists( 'blog' );
+
+        static::$schema->create( 'blog', function ( $table ) {
+            /** @var Blueprint $table */
+            $table->increments( 'blog_id' );
+            $table->integer(    'author_id' );
+            $table->integer(    'status' );
+            $table->string(     'title', 512 );
+            $table->text(       'content' );
+            $table->timestamps();
+        } );
+    }
+
+    /**
+     *
+     */
+    public static function setCommentTable()
+    {
+        static::$schema->dropIfExists( 'comment' );
+
+        static::$schema->create( 'comment', function ( $table ) {
+            /** @var Blueprint $table */
+            $table->increments( 'comment_id' );
+            $table->integer(    'blog_id' );
+            $table->integer(    'author_id' );
+            $table->integer(    'status' );
+            $table->text(       'comment' );
+            $table->timestamps();
+        } );
+    }
+}
