@@ -108,27 +108,6 @@ class DaoArray implements DaoInterface
     }
 
     /**
-     * @return Eloquent
-     */
-    public function q()
-    {
-        return $this;
-    }
-    
-    /**
-     * @param bool $new
-     * @return Builder
-     */
-    public function query( $new=true )
-    {
-        if( $new ) {
-            $this->query = $this->db->table( $this->table );
-            $this->hooks( 'newQuery' );
-        }
-        return $this->query;
-    }
-
-    /**
      * @param $method
      * @param $args
      * @return $this
@@ -187,6 +166,27 @@ class DaoArray implements DaoInterface
     // +----------------------------------------------------------------------+
     //  Basic CRUD methods.
     // +----------------------------------------------------------------------+
+    /**
+     * @return Eloquent
+     */
+    public function q()
+    {
+        return $this;
+    }
+
+    /**
+     * @param bool $new
+     * @return Builder
+     */
+    public function query( $new=true )
+    {
+        if( $new ) {
+            $this->query = $this->db->table( $this->table );
+            $this->hooks( 'newQuery' );
+        }
+        return $this->query;
+    }
+
     /**
      * @param array $data
      * @return bool
