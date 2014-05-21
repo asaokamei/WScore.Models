@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AuthorAR extends Model
 {
-    protected $table = 'author';
+    protected $table = 'blog_author';
     
     protected $primaryKey = 'author_id';
 

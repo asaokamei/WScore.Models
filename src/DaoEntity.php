@@ -4,6 +4,7 @@ namespace WScore\Models;
 use ArrayAccess;
 use WScore\Models\Dao\Converter;
 use WScore\Models\Dao\Relation;
+use WScore\Models\Dao\TimeStamp;
 use WScore\Models\Entity\Magic;
 
 class DaoEntity extends DaoArray
@@ -45,6 +46,19 @@ class DaoEntity extends DaoArray
      * @var array
      */
     protected $deletedEntity = array();
+
+    /**
+     * @param $db
+     * @return DaoEntity
+     */
+    public static function getInstance( $db )
+    {
+        /** @var DaoEntity $dao */
+        $dao = new static( $db );
+        $dao->setTimeStamps( new TimeStamp() );
+        $dao->setConverter( new Converter() );
+        return $dao;
+    }
 
     // +----------------------------------------------------------------------+
     //  entity related methods

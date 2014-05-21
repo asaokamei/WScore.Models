@@ -41,10 +41,7 @@ class DaoArray_UnitTest extends \PHPUnit_Framework_TestCase
         // construct TestDao using mocked db.
         $db = m::mock( 'Illuminate\Database\Capsule\Manager' );
         $db->shouldReceive('table')->once();
-        $this->dao = new TestDaoArray(
-            $db,
-            new Converter()
-        );
+        $this->dao = TestDaoArray::getInstance( $db );
         // replaced the first mocked db with the new one. 
         m::close();
         $this->db = m::mock( 'Illuminate\Database\Capsule\Manager' );

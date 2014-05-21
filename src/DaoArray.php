@@ -100,11 +100,29 @@ class DaoArray implements DaoInterface
             $this->primaryKey = $this->table . '_id';
         }
         $this->query();
-        $stamp = new TimeStamp();
-        $stamp->setTimeStamps( $this->timeStamps );
         $this->setHook( $this );
-        $this->setHook( $stamp );
         $this->hooks( 'constructed' );
+    }
+
+    /**
+     * @param $db
+     * @return DaoArray
+     */
+    public static function getInstance( $db ) 
+    {
+        /** @var DaoArray $dao */
+        $dao = new static( $db );
+        $dao->setTimeStamps( new TimeStamp() );
+        return $dao;
+    }
+
+    /**
+     * @param TimeStamp $stamp
+     */
+    public function setTimeStamps( $stamp )
+    {
+        $stamp->setTimeStamps( $this->timeStamps );
+        $this->setHook( $stamp );
     }
 
     /**
