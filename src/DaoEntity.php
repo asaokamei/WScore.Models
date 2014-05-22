@@ -32,7 +32,7 @@ class DaoEntity extends DaoArray
      *
      * @var string
      */
-    protected $entityClass = '\ArrayObject';
+    protected $entityClass = '\WScore\Models\Entity\EntityAccess';
 
     /**
      * list of loaded entity's object hash.

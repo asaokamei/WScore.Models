@@ -10,6 +10,7 @@ namespace WScore\Models\Entity;
  * general rule:
  * if property is set, access through getter and setter.
  * if not set, access through magic methods or array-access.
+ * cannot overwrite an existing value; can set only once.
  */
 class EntityAccess implements \ArrayAccess
 {
@@ -32,12 +33,12 @@ class EntityAccess implements \ArrayAccess
     }
 
     /**
-     * @param $name
+     * @param $offset
      * @return null
      */
-    public function __get( $name )
+    public function __get( $offset )
     {
-        return isset( $this->$name )? $this->$name: null;
+        return $this->offsetGet( $offset );
     }
 
     /**
