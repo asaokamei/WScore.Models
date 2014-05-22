@@ -70,7 +70,7 @@ class Relation
     public function hasMany( $name, $target, $targetKey=null, $myKey=null )
     {
         $this->currName = $name;
-        $relation = new HasMany( $target, $targetKey, $myKey );
+        $relation = new HasMany( $name, $target, $targetKey, $myKey );
         $relation->setMyDaoName( $this->dao->getDaoName() );
         $relation->setMyKeyName( $this->dao->getKeyName() );
         $this->relations[$name] = $relation;
@@ -85,7 +85,7 @@ class Relation
     public function hasJoin( $name, $target )
     {
         $this->currName = $name;
-        $relation = new HasJoin( $target );
+        $relation = new HasJoin( $name, $target );
         $relation->setMyDaoName( $this->dao->getDaoName() );
         $relation->setMyKeyName( $this->dao->getKeyName() );
         $this->relations[$name] = $relation;

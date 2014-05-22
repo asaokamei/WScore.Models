@@ -34,9 +34,9 @@ class AuthorDao extends DaoEntity
      */
     public function setRelation( $relation )
     {
+        parent::setRelation($relation);
         $relation->hasMany( 'blogs', 'BlogDao' );
         $relation->hasJoin( 'roles', 'RoleDao' );
-        parent::setRelation($relation);
     }
 
     /**

@@ -15,12 +15,26 @@ class BelongsTo extends RelationAbstract
     public function __construct( $name, $targetDao, $targetKey=null, $myKey=null )
     {
         $this->name = $name;
-        $targetKey = $targetKey?: Dao::dao($targetDao)->getKeyName();
         $this->info = array(
-            'myKey'     => $myKey ?: $targetKey,
+            'myKey'     => $myKey,
             'targetDao' => $targetDao,
             'targetKey' => $targetKey,
         );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getInfo()
+    {
+        static $initialized = false;
+        if( !$initialized ) {
+            $targetKey = Dao::dao($this->info['targetDao'])->getKeyName();
+            $this->info['targetKey'] = $this->info['targetKey'] ?: $targetKey;
+            $this->info['myKey'] = $this->info['myKey'] ?: $targetKey;
+            $initialized = true;
+        }
+        return $this->info;
     }
 
     /**
@@ -28,9 +42,10 @@ class BelongsTo extends RelationAbstract
      */
     public function relate()
     {
-        $id = Magic::get( $this->target, $this->info['targetKey'] );
+        $info = $this->getInfo();
+        $id = Magic::get( $this->target, $info['targetKey'] );
         if( $id ) {
-            Magic::set( $this->source, $this->info['myKey'], $id );
+            Magic::set( $this->source, $info['myKey'], $id );
             $this->isLinked = true;
         }
         return $this->isLinked();
@@ -41,9 +56,10 @@ class BelongsTo extends RelationAbstract
      */
     public function load()
     {
-        $dao = Dao::dao( $this->info['targetDao'] );
-        $key = $this->info[ 'targetKey' ];
-        $id  = Magic::get( $this->source, $this->info['myKey'] );
+        $info = $this->getInfo();
+        $dao = Dao::dao( $info['targetDao'] );
+        $key = $info[ 'targetKey' ];
+        $id  = Magic::get( $this->source, $info['myKey'] );
         if( $target = $dao->load( $id, $key ) ) {
             if( count( $target ) ) {
                 $target = $target[0];

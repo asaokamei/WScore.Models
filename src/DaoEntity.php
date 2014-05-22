@@ -64,7 +64,7 @@ class DaoEntity extends DaoArray
         if( !$relation ) $relation = new Relation();
         $dao->setTimeStamps( $stamps );
         $dao->setConverter( $converter );
-        //$dao->setRelation( $relation );
+        $dao->setRelation( $relation );
         return $dao;
     }
 
@@ -87,6 +87,7 @@ class DaoEntity extends DaoArray
      */
     public function setRelation( $relation )
     {
+        $relation->setDao( $this );
         $this->relation = $relation;
         $this->setHook( $relation );
     }

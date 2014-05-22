@@ -30,8 +30,8 @@ class BlogDao extends DaoEntity
      */
     public function setRelation( $relation )
     {
+        parent::setRelation($relation);
         $relation->belongsTo( 'author',   'AuthorDao' );
         $relation->hasMany(   'comments', 'CommentDao' );
-        parent::setRelation($relation);
     }
 }

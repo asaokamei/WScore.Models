@@ -28,7 +28,6 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     function setup()
     {
         $this->capsule = \ConfigBlog::getCapsule();
-        $this->daoBlog = BlogDao::getInstance( $this->capsule );
         $this->dao = AuthorDao::getInstance( $this->capsule );
         $this->daoBlog = BlogDao::getInstance( $this->capsule );
         \ConfigBlog::setupTables();

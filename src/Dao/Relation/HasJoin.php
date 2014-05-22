@@ -11,14 +11,15 @@ class HasJoin extends RelationAbstract
 {
 
     /**
-     * @param      $target
+     * @param string $name
+     * @param string $target
      */
-    public function __construct( $target )
+    public function __construct( $name, $target )
     {
+        $this->name = $name;
         $this->info = array(
-            'target'    => $target,
+            'targetDao'    => $target,
         );
-        $this->setupHasJoin();
     }
 
     /**
@@ -71,32 +72,36 @@ class HasJoin extends RelationAbstract
     }
 
     /**
-     * 
+     * @return array
      */
-    protected function setupHasJoin()
+    protected function getInfo()
     {
-        $info = &$this->info;
-        $target = $info['target'];
-        if( !isset( $info['joinBy'] ) ) {
-            $joinBy = [$this->dao->getTable(), Dao::dao($target)->getTable()];
-            sort( $joinBy );
-            $info['joinBy'] = implode( '_', $joinBy );
+        static $initialized = false;
+        if( !$initialized ) {
+            $info = &$this->info;
+            $target = $info['targetDao'];
+            if( !isset( $info['joinBy'] ) ) {
+                $joinBy = [$this->dao->getTable(), Dao::dao($target)->getTable()];
+                sort( $joinBy );
+                $info['joinBy'] = implode( '_', $joinBy );
+            }
+            if( !isset( $info['targetKey'] ) ) {
+                $info['targetKey'] = Dao::dao($target)->getKeyName();
+            }
+            if( !isset( $info['targetBy'] ) ) {
+                $info['targetBy'] = $info['targetKey'];
+            }
+            if( !isset( $info['joinTargetKey'] ) ) {
+                $info['joinTargetKey'] = $info['targetKey'];
+            }
+            if( !isset( $info['sourceKey'] ) ) {
+                $info['sourceKey'] = $this->dao->getKeyName();
+            }
+            if( !isset( $info['joinSourceKey'] ) ) {
+                $info['joinSourceKey'] = $info['sourceKey'];
+            }
         }
-        if( !isset( $info['targetKey'] ) ) {
-            $info['targetKey'] = Dao::dao($target)->getKeyName();
-        }
-        if( !isset( $info['targetBy'] ) ) {
-            $info['targetBy'] = $info['targetKey'];
-        }
-        if( !isset( $info['joinTargetKey'] ) ) {
-            $info['joinTargetKey'] = $info['targetKey'];
-        }
-        if( !isset( $info['sourceKey'] ) ) {
-            $info['sourceKey'] = $this->dao->getKeyName();
-        }
-        if( !isset( $info['joinSourceKey'] ) ) {
-            $info['joinSourceKey'] = $info['sourceKey'];
-        }
+        return $this->info;
     }
 
     /**
@@ -104,15 +109,16 @@ class HasJoin extends RelationAbstract
      */
     public function relate()
     {
-        $join = Dao::dao( $this->info['joinBy']);
-        $sourceId = Magic::get( $this->source, $this->info['sourceKey']);
-        $targetId = Magic::get( $this->target, $this->info['targetKey']);
+        $info = $this->getInfo();
+        $join = Dao::dao( $info['joinBy']);
+        $sourceId = Magic::get( $this->source, $info['sourceKey']);
+        $targetId = Magic::get( $this->target, $info['targetKey']);
         
-        $join->delete( $sourceId, $this->info['joinSourceKey'] );
+        $join->delete( $sourceId, $info['joinSourceKey'] );
         foreach( $targetId as $id ) {
             $join->insert( [
-                $this->info['joinSourceKey'] => $sourceId,
-                $this->info['joinTargetKey'] => $id,
+                $info['joinSourceKey'] => $sourceId,
+                $info['joinTargetKey'] => $id,
             ] );
         }
         return $this->isLinked = true;
@@ -125,16 +131,17 @@ class HasJoin extends RelationAbstract
      */
     public function load()
     {
-        $join = Dao::dao( $this->info['joinBy']);
-        if( !$sourceId = Magic::get( $this->source, $this->info['sourceKey'] ) ) {
+        $info = $this->getInfo();
+        $join = Dao::dao( $info['joinBy']);
+        if( !$sourceId = Magic::get( $this->source, $info['sourceKey'] ) ) {
             return false;
         }
-        if( !$joinData = $join->load( $sourceId, $this->info['joinSourceKey'] ) ) {
+        if( !$joinData = $join->load( $sourceId, $info['joinSourceKey'] ) ) {
             return false;
         }
-        $targetId = Magic::get( $joinData, $this->info['joinTargetKey'] );
-        $target = Dao::dao( $this->info['targetDao'] );
-        $this->target = $target->load( $targetId, $this->info['targetKey'] );
+        $targetId = Magic::get( $joinData, $info['joinTargetKey'] );
+        $target = Dao::dao( $info['targetDao'] );
+        $this->target = $target->load( $targetId, $info['targetKey'] );
         return $this->isLinked = true;
     }
 }
