@@ -197,7 +197,7 @@ class Relation
      * @return RelationAbstract
      * @throws \RuntimeException
      */
-    protected function loadRelation( $entity, $name )
+    public function loadRelation( $entity, $name )
     {
         if( !array_key_exists( $name, $this->relations ) ) {
             throw new \RuntimeException( 'No such relation: '.$name );

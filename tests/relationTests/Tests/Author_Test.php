@@ -114,7 +114,7 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     {
         $blog = $this->daoBlog->create( $this->getBlogData() );
         $user = $this->daoAuth->create( $this->getUserData() );
-        $linked = $this->daoAuth->relate()->relate($user, 'blogs', $blog );
+        $linked = $this->daoAuth->relate($user, 'blogs')->relate($blog );
         $this->assertEquals( null, $blog['author_id'] );
         $this->assertEquals( false, $linked );
         $this->assertEquals( false, $linked );
@@ -128,7 +128,7 @@ class Author_Test extends \PHPUnit_Framework_TestCase
         $blog = $this->daoBlog->create( $this->getBlogData() );
         $user = $this->daoAuth->create( $this->getUserData() );
         $user['author_id'] = 'test-ID';
-        $linked = $this->daoAuth->relate()->relate($user, 'blogs', $blog );
+        $linked = $this->daoAuth->relate($user, 'blogs')->relate($blog );
         $this->assertEquals( 'test-ID', $blog['author_id'] );
         $this->assertEquals( true, $linked );
     }

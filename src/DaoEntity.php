@@ -5,6 +5,7 @@ use ArrayAccess;
 use Illuminate\Database\Capsule\Manager;
 use WScore\Models\Dao\Converter;
 use WScore\Models\Dao\Relation;
+use WScore\Models\Dao\Relation\RelationAbstract;
 use WScore\Models\Dao\TimeStamp;
 use WScore\Models\Entity\Magic;
 
@@ -183,10 +184,12 @@ class DaoEntity extends DaoArray
     }
 
     /**
-     * @return Relation
+     * @param object $entity
+     * @param string $name
+     * @return RelationAbstract
      */
-    public function relate() {
-        return $this->relation;
+    public function relate( $entity, $name ) {
+        return $this->relation->loadRelation( $entity, $name );
     }
     // +----------------------------------------------------------------------+
 }

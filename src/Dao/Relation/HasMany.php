@@ -38,12 +38,14 @@ class HasMany extends RelationAbstract
         }
         return $this->info;
     }
-    
+
     /**
+     * @param null|object $target
      * @return bool
      */
-    public function relate()
+    public function relate($target=null)
     {
+        if( $target ) $this->setTarget($target);
         $info = $this->getInfo();
         $id = Magic::get( $this->source, $info['myKey'] );
         if( $id ) {

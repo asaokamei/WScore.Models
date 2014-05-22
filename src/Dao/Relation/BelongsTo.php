@@ -37,10 +37,12 @@ class BelongsTo extends RelationAbstract
     }
 
     /**
+     * @param null|object $target
      * @return bool
      */
-    public function relate()
+    public function relate($target=null)
     {
+        if( $target ) $this->setTarget($target);
         $info = $this->getInfo();
         $id = Magic::get( $this->target, $info['targetKey'] );
         if( $id ) {
