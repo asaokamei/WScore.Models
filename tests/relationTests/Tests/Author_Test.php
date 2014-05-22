@@ -74,17 +74,18 @@ class Author_Test extends \PHPUnit_Framework_TestCase
         $pKey = $user_data->getKey();
         $found = $this->dao->load( $pKey );
         $this->assertFalse( Magic::isCollection( $found ) );
+        /** @var Author $author */
         $author = $found;
         $this->assertTrue( is_object( $author ) );
         $this->assertEquals( 'tests\relationTests\BlogModels\Author', get_class( $author ) );
         $this->assertEquals( $pKey, $author->author_id );
         $this->assertEquals( $user_data->name, $author->name );
         $this->assertEquals( 'tests\relationTests\BlogModels\AuthorStatus', get_class($author->getStatus() ) );
-        $this->assertEquals( 'tests\relationTests\BlogModels\AuthorGender', get_class($author->gender ) );
+        $this->assertEquals( 'tests\relationTests\BlogModels\AuthorGender', get_class($author->getGender() ) );
         /** @var AuthorStatus $status */
-        $status=$author->status;
+        $status=$author->getStatus();
         /** @var AuthorGender $gender */
-        $gender=$author->gender;
+        $gender=$author->getGender();
         $this->assertTrue( $status->isActive() );
         $this->assertTrue( $gender->is( AuthorGender::FEMALE ) );
     }

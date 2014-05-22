@@ -1,10 +1,13 @@
 <?php
 namespace tests\relationTests\BlogModels;
 
+/**
+ * Class Author
+ * @package tests\relationTests\BlogModels
+ *
+ */
 class Author implements \ArrayAccess
 {
-    protected $author_id;
-
     /**
      * @var AuthorStatus
      */
