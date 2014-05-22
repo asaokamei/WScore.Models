@@ -29,12 +29,10 @@ class HasMany extends RelationAbstract
     /**
      * @return array
      */
-    protected function getInfo()
+    public function getInfo()
     {
-        static $initialized = false;
-        if( !$initialized ) {
-            $targetKey = Dao::dao($this->info['targetDao'])->getKeyName();
-            $this->info['targetKey'] = $this->info['targetKey'] ?: $targetKey;
+        if( !$this->initialized ) {
+            $this->info['targetKey'] = $this->info['targetKey'] ?: $this->myPrimaryKey;
             $this->info['myKey'] = $this->info['myKey'] ?: $this->myPrimaryKey;
             $initialized = true;
         }

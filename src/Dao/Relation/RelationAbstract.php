@@ -14,6 +14,8 @@ abstract class RelationAbstract
 
     protected $myPrimaryKey;
 
+    protected $initialized = false;
+    
     /**
      * information about the relationship.
      * 
@@ -59,6 +61,11 @@ abstract class RelationAbstract
         $this->isLinked = false;
     }
 
+    /**
+     * @return array
+     */
+    abstract public function getInfo();
+    
     /**
      * @return bool
      */

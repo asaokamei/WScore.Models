@@ -68,9 +68,6 @@ class DaoEntity extends DaoArray
         return $dao;
     }
 
-    // +----------------------------------------------------------------------+
-    //  entity related methods
-    // +----------------------------------------------------------------------+
     /**
      * @param Converter $converter
      */
@@ -92,6 +89,9 @@ class DaoEntity extends DaoArray
         $this->setHook( $relation );
     }
 
+    // +----------------------------------------------------------------------+
+    //  entity related methods
+    // +----------------------------------------------------------------------+
     /**
      * @param array $data
      * @return array|object
@@ -180,6 +180,13 @@ class DaoEntity extends DaoArray
      */
     public function isDeleted($entity) {
         return in_array( spl_object_hash($entity), $this->deletedEntity );
+    }
+
+    /**
+     * @return Relation
+     */
+    public function relate() {
+        return $this->relation;
     }
     // +----------------------------------------------------------------------+
 }

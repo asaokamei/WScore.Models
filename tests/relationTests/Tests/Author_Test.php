@@ -18,7 +18,12 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     /**
      * @var AuthorDao
      */
-    var $dao;
+    var $daoAuth;
+
+    /**
+     * @var BlogDao
+     */
+    var $daoBlog;
 
     /**
      * @var Capsule
@@ -28,11 +33,14 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     function setup()
     {
         $this->capsule = \ConfigBlog::getCapsule();
-        $this->dao = AuthorDao::getInstance( $this->capsule );
+        $this->daoAuth = AuthorDao::getInstance( $this->capsule );
         $this->daoBlog = BlogDao::getInstance( $this->capsule );
         \ConfigBlog::setupTables();
     }
 
+    function getRand() {
+        return mt_rand(1000,9999);
+    }
     /**
      * @return array
      */
@@ -48,6 +56,15 @@ class Author_Test extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    function getBlogData()
+    {
+        return [
+            'status' => '1', 
+            'author_id' => null, 
+            'title' => 'blog-title:'.$this->getRand(), 
+            'content' => 'blog-content:'.$this->getRand(),
+        ];
+    }
     /**
      * @return AuthorAR
      */
@@ -61,7 +78,7 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals( 'Illuminate\Database\Capsule\Manager', get_class($this->capsule) );
         $this->assertEquals( 'Illuminate\Database\Eloquent\Builder', get_class(AuthorAR::query()) );
-        $this->assertEquals( 'tests\relationTests\BlogModels\AuthorDao', get_class($this->dao) );
+        $this->assertEquals( 'tests\relationTests\BlogModels\AuthorDao', get_class($this->daoAuth) );
         $this->assertEquals( 'tests\relationTests\BlogModels\AuthorAR', get_class( $this->createUser() ) );
     }
 
@@ -72,7 +89,7 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     {
         $user_data = $this->createUser();
         $pKey = $user_data->getKey();
-        $found = $this->dao->load( $pKey );
+        $found = $this->daoAuth->load( $pKey );
         $this->assertFalse( Magic::isCollection( $found ) );
         /** @var Author $author */
         $author = $found;
@@ -90,4 +107,29 @@ class Author_Test extends \PHPUnit_Framework_TestCase
         $this->assertTrue( $gender->is( AuthorGender::FEMALE ) );
     }
 
+    /**
+     * @test
+     */
+    function HasMany_user2blog_wo_authorId_not_link_()
+    {
+        $blog = $this->daoBlog->create( $this->getBlogData() );
+        $user = $this->daoAuth->create( $this->getUserData() );
+        $linked = $this->daoAuth->relate()->relate($user, 'blogs', $blog );
+        $this->assertEquals( null, $blog['author_id'] );
+        $this->assertEquals( false, $linked );
+        $this->assertEquals( false, $linked );
+    }
+
+    /**
+     * @test
+     */
+    function HasMany_user2blog_sets_author_id_in_blog_entity()
+    {
+        $blog = $this->daoBlog->create( $this->getBlogData() );
+        $user = $this->daoAuth->create( $this->getUserData() );
+        $user['author_id'] = 'test-ID';
+        $linked = $this->daoAuth->relate()->relate($user, 'blogs', $blog );
+        $this->assertEquals( 'test-ID', $blog['author_id'] );
+        $this->assertEquals( true, $linked );
+    }
 }

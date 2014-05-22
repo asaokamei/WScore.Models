@@ -25,10 +25,9 @@ class BelongsTo extends RelationAbstract
     /**
      * @return array
      */
-    protected function getInfo()
+    public function getInfo()
     {
-        static $initialized = false;
-        if( !$initialized ) {
+        if( !$this->initialized ) {
             $targetKey = Dao::dao($this->info['targetDao'])->getKeyName();
             $this->info['targetKey'] = $this->info['targetKey'] ?: $targetKey;
             $this->info['myKey'] = $this->info['myKey'] ?: $targetKey;

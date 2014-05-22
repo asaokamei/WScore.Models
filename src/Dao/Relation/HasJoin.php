@@ -74,10 +74,9 @@ class HasJoin extends RelationAbstract
     /**
      * @return array
      */
-    protected function getInfo()
+    public function getInfo()
     {
-        static $initialized = false;
-        if( !$initialized ) {
+        if( !$this->initialized ) {
             $info = &$this->info;
             $target = $info['targetDao'];
             if( !isset( $info['joinBy'] ) ) {

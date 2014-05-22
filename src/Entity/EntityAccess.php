@@ -58,7 +58,7 @@ class EntityAccess implements \ArrayAccess
      */
     public function offsetGet( $offset )
     {
-        return isset( $this->$name )? $this->$name: null;
+        return isset( $this->$offset )? $this->$offset: null;
     }
 
     /**

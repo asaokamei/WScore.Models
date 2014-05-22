@@ -22,9 +22,9 @@ class Relation
     protected $relations = array();
 
     /**
-     * @var string
+     * @var bool
      */
-    protected $currName = null;
+    protected $setUpDone = false;
 
     /**
      * list of relations based on entity hash.
@@ -52,7 +52,6 @@ class Relation
      */
     public function belongsTo( $name, $targetDao, $targetKey=null, $myKey=null )
     {
-        $this->currName = $name;
         $relation = new BelongsTo( $name, $targetDao, $targetKey, $myKey );
         $relation->setMyDaoName( $this->dao->getDaoName() );
         $relation->setMyKeyName( $this->dao->getKeyName() );
@@ -65,11 +64,10 @@ class Relation
      * @param string      $target
      * @param string|null $targetKey
      * @param string|null $myKey
-     * @return \WScore\Models\Dao\Relation\HasMany
+     * @return HasMany
      */
     public function hasMany( $name, $target, $targetKey=null, $myKey=null )
     {
-        $this->currName = $name;
         $relation = new HasMany( $name, $target, $targetKey, $myKey );
         $relation->setMyDaoName( $this->dao->getDaoName() );
         $relation->setMyKeyName( $this->dao->getKeyName() );
@@ -84,12 +82,24 @@ class Relation
      */
     public function hasJoin( $name, $target )
     {
-        $this->currName = $name;
         $relation = new HasJoin( $name, $target );
         $relation->setMyDaoName( $this->dao->getDaoName() );
         $relation->setMyKeyName( $this->dao->getKeyName() );
         $this->relations[$name] = $relation;
         return $relation;
+    }
+
+    /**
+     * just before using any of the relation is used, 
+     * set up all the relations. Setting up the relation 
+     * requires all the dao to be constructed... 
+     */
+    protected function setUpRelations()
+    {
+        if( $this->setUpDone ) return;
+        foreach( $this->relations as $relation ) {
+            $relation->getInfo();
+        }
     }
 
     // +----------------------------------------------------------------------+
@@ -175,6 +185,7 @@ class Relation
      */
     public function relate( $entity, $name, $target )
     {
+        $this->setUpRelations();
         $relation = $this->loadRelation( $entity, $name );
         $relation->setTarget( $target );
         return $relation->relate();
@@ -188,7 +199,7 @@ class Relation
      */
     protected function loadRelation( $entity, $name )
     {
-        if( array_key_exists( $this->relations, $name ) ) {
+        if( !array_key_exists( $name, $this->relations ) ) {
             throw new \RuntimeException( 'No such relation: '.$name );
         }
         if( !$relation = $this->findRelation( $entity, $name ) ) {
@@ -206,10 +217,13 @@ class Relation
      */
     protected function findRelation( $entity, $name )
     {
-        if( !array_key_exists( $this->hashed, $hash = spl_object_hash( $entity ) ) ) {
+        if( is_array( $entity ) ) {
             return null;
         }
-        if( !array_key_exists( $this->hashed[$hash], $name ) ) {
+        if( !array_key_exists( $hash = spl_object_hash( $entity ), $this->hashed ) ) {
+            return null;
+        }
+        if( !array_key_exists( $name, $this->hashed[$hash] ) ) {
             return null;
         }
         return $this->hashed[$hash][$name];
@@ -222,6 +236,9 @@ class Relation
      */
     protected function saveRelation( $entity, $name, $relation )
     {
+        if( is_array( $entity ) ) {
+            return;
+        }
         $hash = spl_object_hash( $entity );
         $this->hashed[$hash][$name] = $relation;
     }
