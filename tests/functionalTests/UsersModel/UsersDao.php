@@ -1,6 +1,10 @@
 <?php
 namespace WScore\functionalTests\UsersModel;
 
+use Illuminate\Database\Capsule\Manager;
+use WScore\Models\Dao\Converter;
+use WScore\Models\Dao\Relation;
+use WScore\Models\Dao\TimeStamp;
 use WScore\Models\DaoEntity;
 
 require_once( __DIR__.'/UsersConverter.php' );
@@ -19,14 +23,18 @@ class UsersDao extends DaoEntity
     protected $entityClass = '\WScore\functionalTests\UsersModel\UserEntity';
 
     /**
-     * @param $db
-     * @return static
+     * @param Manager $db
+     * @param TimeStamp|null $stamps
+     * @param Converter|null $converter
+     * @param Relation|null  $relation
+     * @return DaoEntity
      */
-    public static function getInstance( $db )
+    public static function getInstance( $db, $stamps=null, $converter=null, $relation=null )
     {
         /** @var DaoEntity $dao */
-        $dao = new static( $db );
-        $dao->setConverter( new UsersConverter() );
+        $dao = parent::getInstance($db, null, new UsersConverter() );
+//        $dao = new static( $db );
+  //      $dao->setConverter( new UsersConverter() );
         return $dao;
     }
 }

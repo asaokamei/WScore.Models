@@ -2,6 +2,7 @@
 namespace WScore\Models;
 
 use ArrayAccess;
+use Illuminate\Database\Capsule\Manager;
 use WScore\Models\Dao\Converter;
 use WScore\Models\Dao\Relation;
 use WScore\Models\Dao\TimeStamp;
@@ -48,15 +49,22 @@ class DaoEntity extends DaoArray
     protected $deletedEntity = array();
 
     /**
-     * @param $db
+     * @param Manager $db
+     * @param TimeStamp|null $stamps
+     * @param Converter|null $converter
+     * @param Relation|null  $relation
      * @return DaoEntity
      */
-    public static function getInstance( $db )
+    public static function getInstance( $db, $stamps=null, $converter=null, $relation=null )
     {
         /** @var DaoEntity $dao */
         $dao = new static( $db );
-        $dao->setTimeStamps( new TimeStamp() );
-        $dao->setConverter( new Converter() );
+        if( !$stamps ) $stamps = new TimeStamp();
+        if( !$converter ) $converter = new Converter();
+        if( !$relation ) $relation = new Relation();
+        $dao->setTimeStamps( $stamps );
+        $dao->setConverter( $converter );
+        //$dao->setRelation( $relation );
         return $dao;
     }
 

@@ -105,14 +105,16 @@ class DaoArray implements DaoInterface
     }
 
     /**
-     * @param $db
+     * @param Manager $db
+     * @param TimeStamp|null $stamps
      * @return DaoArray
      */
-    public static function getInstance( $db ) 
+    public static function getInstance( $db, $stamps=null )
     {
         /** @var DaoArray $dao */
         $dao = new static( $db );
-        $dao->setTimeStamps( new TimeStamp() );
+        if( !$stamps ) $stamps = new TimeStamp();
+        $dao->setTimeStamps( $stamps );
         return $dao;
     }
 
