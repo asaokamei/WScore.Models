@@ -150,10 +150,10 @@ class Converter
     public function toEntity( $data )
     {
         $list = $this->listColumns( $data );
-        $entity = $this->getNewEntity();
         foreach( $list as $name ) {
-            $this->set( $entity, $name, $data[$name] );
+            $this->set( $data, $name, $data[$name] );
         }
+        $entity = $this->getNewEntity($data);
         return $entity;
     }
 
@@ -171,11 +171,15 @@ class Converter
     }
 
     /**
+     * @param array $data
      * @return array|ArrayObject
      */
-    protected function getNewEntity()
+    protected function getNewEntity($data)
     {
-        return new $this->entityClass;
+        if( isset( $this->entityClass ) ) {
+            return new $this->entityClass($data);
+        }
+        return $data;
     }
 
     /**

@@ -18,6 +18,14 @@ class Author implements \ArrayAccess
     protected $password;
 
     /**
+     * @param array $data
+     */
+    public function __construct( $data=[] )
+    {
+        $this->assign($data);
+    }
+
+    /**
      * @return AuthorStatus
      */
     public function getStatus()
@@ -49,6 +57,15 @@ class Author implements \ArrayAccess
         $this->gender = $gender;
     }
 
+    /**
+     * @param $data
+     */
+    protected function assign( $data )
+    {
+        foreach( $data as $offset => $value ) {
+            $this->offsetSet( $offset, $value );
+        }
+    }
     /**
      * @param $name
      * @return null
