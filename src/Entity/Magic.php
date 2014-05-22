@@ -56,7 +56,7 @@ class Magic
         }
         $method = 'set'.static::upCamelCase($name);
         if( is_object( $data ) && method_exists( $data, $method ) ) {
-            $data->$method( $$value );
+            $data->$method( $value );
             return $data;
         }
         if( $data instanceof \ArrayAccess ) {
