@@ -18,6 +18,7 @@ class Dao
     /**
      * @param \WScore\Models\DaoArray|\WScore\Models\DaoEntity $dao
      * @param string| null $name
+     * @return string
      */
     public static function _setDaoObject( $dao, $name=null )
     {
@@ -28,6 +29,7 @@ class Dao
             }
         }
         static::$instances[$name] = $dao;
+        return $name;
     }
 
     /**

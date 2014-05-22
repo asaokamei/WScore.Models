@@ -54,6 +54,8 @@ class Relation
     {
         $this->currName = $name;
         $relation = new BelongsTo( $name, $targetDao, $targetKey, $myKey );
+        $relation->setMyDaoName( $this->dao->getDaoName() );
+        $relation->setMyKeyName( $this->dao->getKeyName() );
         $this->relations[$name] = $relation;
         return $relation;
     }
@@ -69,6 +71,8 @@ class Relation
     {
         $this->currName = $name;
         $relation = new HasMany( $target, $targetKey, $myKey );
+        $relation->setMyDaoName( $this->dao->getDaoName() );
+        $relation->setMyKeyName( $this->dao->getKeyName() );
         $this->relations[$name] = $relation;
         return $relation;
     }
@@ -82,6 +86,8 @@ class Relation
     {
         $this->currName = $name;
         $relation = new HasJoin( $target );
+        $relation->setMyDaoName( $this->dao->getDaoName() );
+        $relation->setMyKeyName( $this->dao->getKeyName() );
         $this->relations[$name] = $relation;
         return $relation;
     }

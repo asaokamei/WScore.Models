@@ -10,6 +10,10 @@ abstract class RelationAbstract
      */
     protected $name;
 
+    protected $myDaoName;
+
+    protected $myPrimaryKey;
+
     /**
      * information about the relationship.
      * 
@@ -73,4 +77,20 @@ abstract class RelationAbstract
      * @return null|array|object
      */
     abstract public function load();
+
+    /**
+     * @param mixed $myDaoName
+     */
+    public function setMyDaoName( $myDaoName )
+    {
+        $this->myDaoName = $myDaoName;
+    }
+
+    /**
+     * @param mixed $myPrimaryKey
+     */
+    public function setMyKeyName( $myPrimaryKey )
+    {
+        $this->myPrimaryKey = $myPrimaryKey;
+    }
 }

@@ -17,7 +17,7 @@ class HasMany extends RelationAbstract
      */
     public function __construct( $targetDao, $targetKey=null, $myKey=null )
     {
-        $myKey     = $myKey?: $this->dao->getKeyName();
+        $myKey     = $myKey?: $this->myPrimaryKey;
         $targetKey = $targetKey?: Dao::dao($targetDao)->getKeyName();
         $this->info = array(
             'myKey'     => $myKey,

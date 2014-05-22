@@ -7,6 +7,7 @@ use tests\relationTests\BlogModels\AuthorDao;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use tests\relationTests\BlogModels\AuthorGender;
 use tests\relationTests\BlogModels\AuthorStatus;
+use tests\relationTests\BlogModels\BlogDao;
 use WScore\Models\Entity\Magic;
 
 require_once( dirname( dirname( __DIR__ ) ) . '/autoload.php' );
@@ -27,7 +28,9 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     function setup()
     {
         $this->capsule = \ConfigBlog::getCapsule();
+        $this->daoBlog = BlogDao::getInstance( $this->capsule );
         $this->dao = AuthorDao::getInstance( $this->capsule );
+        $this->daoBlog = BlogDao::getInstance( $this->capsule );
         \ConfigBlog::setupTables();
     }
 

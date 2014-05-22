@@ -40,6 +40,11 @@ class DaoArray implements DaoInterface
     protected $primaryKey;
 
     /**
+     * @var string
+     */
+    protected $daoName;
+
+    /**
      * set to false when using insert, instead of insertId.
      *
      * @var string
@@ -101,6 +106,7 @@ class DaoArray implements DaoInterface
         }
         $this->query();
         $this->setHook( $this );
+        $this->daoName = Dao::_setDaoObject( $this, $this->daoName );
         $this->hooks( 'constructed' );
     }
 
@@ -330,6 +336,13 @@ class DaoArray implements DaoInterface
      */
     public function getKeyName() {
         return $this->primaryKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDaoName() {
+        return $this->daoName;
     }
     // +----------------------------------------------------------------------+
 }
