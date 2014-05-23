@@ -1,7 +1,6 @@
 <?php
 namespace tests\relationTests\Tests;
 
-use Illuminate\Support\Facades\DB;
 use tests\relationTests\BlogModels\Author;
 use tests\relationTests\BlogModels\AuthorAR;
 use tests\relationTests\BlogModels\AuthorDao;

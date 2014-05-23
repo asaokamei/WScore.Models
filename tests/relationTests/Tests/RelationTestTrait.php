@@ -5,6 +5,7 @@ use tests\relationTests\BlogModels\AuthorAR;
 use tests\relationTests\BlogModels\AuthorGender;
 use tests\relationTests\BlogModels\AuthorStatus;
 use tests\relationTests\BlogModels\BlogAR;
+use tests\relationTests\BlogModels\RoleAR;
 
 trait RelationTestTrait
 {
@@ -44,6 +45,17 @@ trait RelationTestTrait
     }
 
     /**
+     * @return array
+     */
+    function getRoleData()
+    {
+        return [
+            'status' => '1',
+            'role' => 'role-name:'.$this->getRand(),
+        ];
+    }
+
+    /**
      * @return AuthorAR
      */
     function createUser()
@@ -53,7 +65,7 @@ trait RelationTestTrait
     }
 
     /**
-     * @return AuthorAR
+     * @return BlogAR
      */
     function createBlog()
     {
@@ -61,5 +73,14 @@ trait RelationTestTrait
         return $blog;
     }
 
+
+    /**
+     * @return RoleAR
+     */
+    function createRole()
+    {
+        $role = RoleAR::create( $this->getRoleData() );
+        return $role;
+    }
 
 }

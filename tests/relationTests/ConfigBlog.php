@@ -69,7 +69,7 @@ class ConfigBlog
         static::setBlogTable();
         static::setCommentTable();
         static::setRoleTable();
-        static::setRoleauthorTable();
+        static::setAuthorRoleTable();
     }
 
     /**
@@ -102,6 +102,7 @@ class ConfigBlog
         static::$schema->create( 'blog_role', function ( $table ) {
             /** @var Blueprint $table */
             $table->increments( 'role_id' );
+            $table->string(     'status', 1 );
             $table->string(     'role', 128 );
             $table->timestamps();
         } );
@@ -110,11 +111,11 @@ class ConfigBlog
     /**
      *
      */
-    public static function setRoleauthorTable()
+    public static function setAuthorRoleTable()
     {
-        static::$schema->dropIfExists( 'blog_role_author' );
+        static::$schema->dropIfExists( 'blog_author_role' );
 
-        static::$schema->create( 'blog_role_author', function ( $table ) {
+        static::$schema->create( 'blog_author_role', function ( $table ) {
             /** @var Blueprint $table */
             $table->integer( 'role_id' );
             $table->integer( 'author_id' );
