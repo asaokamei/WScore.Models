@@ -80,7 +80,7 @@ class HasJoin extends RelationAbstract
             $info = &$this->info;
             $target = $info['targetDao'];
             if( !isset( $info['joinBy'] ) ) {
-                $joinBy = [$this->dao->getTable(), Dao::dao($target)->getTable()];
+                $joinBy = [Dao::dao($this->myDaoName)->getTable(), Dao::dao($target)->getTable()];
                 sort( $joinBy );
                 $info['joinBy'] = implode( '_', $joinBy );
             }
@@ -94,7 +94,7 @@ class HasJoin extends RelationAbstract
                 $info['joinTargetKey'] = $info['targetKey'];
             }
             if( !isset( $info['sourceKey'] ) ) {
-                $info['sourceKey'] = $this->dao->getKeyName();
+                $info['sourceKey'] = Dao::dao($this->myDaoName)->getKeyName();
             }
             if( !isset( $info['joinSourceKey'] ) ) {
                 $info['joinSourceKey'] = $info['sourceKey'];

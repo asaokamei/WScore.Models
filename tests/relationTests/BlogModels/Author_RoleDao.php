@@ -1,7 +1,6 @@
 <?php
 namespace tests\relationTests\BlogModels;
 
-use Illuminate\Database\Capsule\Manager;
 use WScore\Models\Dao\Relation;
 use WScore\Models\DaoEntity;
 

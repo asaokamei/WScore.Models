@@ -2,6 +2,7 @@
 namespace tests\relationTests\Tests;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use tests\relationTests\BlogModels\Author_RoleDao;
 use tests\relationTests\BlogModels\AuthorAR;
 use tests\relationTests\BlogModels\AuthorDao;
 use tests\relationTests\BlogModels\RoleAR;
@@ -24,6 +25,8 @@ class HasJoin_Test extends \PHPUnit_Framework_TestCase
      */
     var $daoRole;
 
+    var $daoAuthRole;
+    
     /**
      * @var Capsule
      */
@@ -34,6 +37,7 @@ class HasJoin_Test extends \PHPUnit_Framework_TestCase
         $this->capsule = \ConfigBlog::getCapsule();
         $this->daoAuth = AuthorDao::getInstance( $this->capsule );
         $this->daoRole = RoleDao::getInstance( $this->capsule );
+        $this->daoAuthRole = Author_RoleDao::getInstance( $this->capsule );
         \ConfigBlog::setupTables();
     }
 
@@ -41,7 +45,7 @@ class HasJoin_Test extends \PHPUnit_Framework_TestCase
      * @param int $num_role
      * @return array
      */
-    function addDbAuthorBlog( $num_role=3 )
+    function addDbAuthorRole( $num_role=3 )
     {
         $data   = array();
         $author = AuthorAR::create( $this->getUserData() );
@@ -55,7 +59,7 @@ class HasJoin_Test extends \PHPUnit_Framework_TestCase
 
     function test0()
     {
-        $data = $this->addDbAuthorBlog();
+        $data = $this->addDbAuthorRole();
         $this->assertEquals( 3, count( $data['role'] ) );
 
         $this->assertEquals( 'Illuminate\Database\Capsule\Manager', get_class($this->capsule) );
@@ -64,4 +68,19 @@ class HasJoin_Test extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'tests\relationTests\BlogModels\AuthorAR', get_class( $this->createUser() ) );
     }
 
+    /**
+     * @test
+     */
+    function HasJoin_relates_author2role_and_loads_role2author()
+    {
+        // relate author to role.
+        $data = $this->addDbAuthorRole();
+        $auth_id = $data['author']['author_id'];
+        $author  = $this->daoAuth->load($auth_id);
+        $roles   = [];
+        $roles[] = $this->daoRole->load($data['role'][0]['role_id']);
+        $roles[] = $this->daoRole->load($data['role'][2]['role_id']);
+        
+        $this->daoAuth->relate( $author, 'roles' )->relate( $roles );
+    }
 }

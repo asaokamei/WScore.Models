@@ -33,6 +33,6 @@ class RoleDao extends DaoEntity
     public function setRelation( $relation )
     {
         parent::setRelation($relation);
-        $relation->hasJoin(   'authors',   'AuthorDao' );
+        $relation->hasJoin(   'authors',   'AuthorDao' )->joinBy('Author_RoleDao');
     }
 }
