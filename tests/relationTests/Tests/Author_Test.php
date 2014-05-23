@@ -1,5 +1,5 @@
 <?php
-namespace tests\relationTests\Test;
+namespace tests\relationTests\Tests;
 
 use tests\relationTests\BlogModels\Author;
 use tests\relationTests\BlogModels\AuthorAR;
@@ -15,6 +15,8 @@ require_once( dirname( __DIR__ ) . '/ConfigBlog.php' );
 
 class Author_Test extends \PHPUnit_Framework_TestCase
 {
+    use RelationTestTrait;
+
     /**
      * @var AuthorDao
      */
@@ -36,42 +38,6 @@ class Author_Test extends \PHPUnit_Framework_TestCase
         $this->daoAuth = AuthorDao::getInstance( $this->capsule );
         $this->daoBlog = BlogDao::getInstance( $this->capsule );
         \ConfigBlog::setupTables();
-    }
-
-    function getRand() {
-        return mt_rand(1000,9999);
-    }
-    /**
-     * @return array
-     */
-    function getUserData()
-    {
-        return [
-            'status' => AuthorStatus::ACTIVE,
-            'password' => '',
-            'gender' => AuthorGender::FEMALE,
-            'name'   => 'name:'.mt_rand(1000,9999),
-            'birth_date' => '1989-01-23',
-            'email'  => 'm'.mt_rand(1000,9999).'@example.com',
-        ];
-    }
-
-    function getBlogData()
-    {
-        return [
-            'status' => '1', 
-            'author_id' => null, 
-            'title' => 'blog-title:'.$this->getRand(), 
-            'content' => 'blog-content:'.$this->getRand(),
-        ];
-    }
-    /**
-     * @return AuthorAR
-     */
-    function createUser()
-    {
-        $user = AuthorAR::create( $this->getUserData() );
-        return $user;
     }
 
     function test0()
@@ -110,7 +76,7 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function HasMany_user2blog_wo_authorId_not_link_()
+    function HasMany_user2blog_relate_wo_authorId_not_link_()
     {
         $blog = $this->daoBlog->create( $this->getBlogData() );
         $user = $this->daoAuth->create( $this->getUserData() );
@@ -123,7 +89,7 @@ class Author_Test extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function HasMany_user2blog_sets_author_id_in_blog_entity()
+    function HasMany_user2blog_relate_sets_author_id_in_blog_entity()
     {
         $blog = $this->daoBlog->create( $this->getBlogData() );
         $user = $this->daoAuth->create( $this->getUserData() );
@@ -131,5 +97,30 @@ class Author_Test extends \PHPUnit_Framework_TestCase
         $linked = $this->daoAuth->relate($user, 'blogs')->relate($blog );
         $this->assertEquals( 'test-ID', $blog['author_id'] );
         $this->assertEquals( true, $linked );
+    }
+
+    /**
+     * @test
+     */
+    function BelongsTo_blog2user_relate_sets_author_id_in_blg_entity()
+    {
+        $blog = $this->daoBlog->create( $this->getBlogData() );
+        $user = $this->daoAuth->create( $this->getUserData() );
+        $user['author_id'] = 'test-ID';
+        $linked = $this->daoBlog->relate($blog, 'author')->relate($user );
+        $this->assertEquals( 'test-ID', $blog['author_id'] );
+        $this->assertEquals( true, $linked );
+    }
+
+    /**
+     * @test
+     */
+    function BelongsTo_blog2user_relate_wo_author_id_will_not_link()
+    {
+        $blog = $this->daoBlog->create( $this->getBlogData() );
+        $user = $this->daoAuth->create( $this->getUserData() );
+        $linked = $this->daoBlog->relate($blog, 'author')->relate($user );
+        $this->assertEquals( null, $blog['author_id'] );
+        $this->assertEquals( false, $linked );
     }
 }

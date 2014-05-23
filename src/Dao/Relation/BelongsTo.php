@@ -31,7 +31,7 @@ class BelongsTo extends RelationAbstract
             $targetKey = Dao::dao($this->info['targetDao'])->getKeyName();
             $this->info['targetKey'] = $this->info['targetKey'] ?: $targetKey;
             $this->info['myKey'] = $this->info['myKey'] ?: $targetKey;
-            $initialized = true;
+            $this->initialized = true;
         }
         return $this->info;
     }

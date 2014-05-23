@@ -7,7 +7,9 @@ use WScore\Models\DaoEntity;
 
 class BlogDao extends DaoEntity
 {
-    protected $table = 'blog';
+    protected $table = 'blog_blog';
+
+    protected $primaryKey = 'blog_id';
 
     protected $columns = [
         'status', 'author_id', 'title', 'content',

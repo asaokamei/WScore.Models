@@ -97,9 +97,9 @@ class ConfigBlog
      */
     public static function setRoleTable()
     {
-        static::$schema->dropIfExists( 'role' );
+        static::$schema->dropIfExists( 'blog_role' );
 
-        static::$schema->create( 'role', function ( $table ) {
+        static::$schema->create( 'blog_role', function ( $table ) {
             /** @var Blueprint $table */
             $table->increments( 'role_id' );
             $table->string(     'role', 128 );
@@ -112,9 +112,9 @@ class ConfigBlog
      */
     public static function setRoleauthorTable()
     {
-        static::$schema->dropIfExists( 'role_author' );
+        static::$schema->dropIfExists( 'blog_role_author' );
 
-        static::$schema->create( 'role_author', function ( $table ) {
+        static::$schema->create( 'blog_role_author', function ( $table ) {
             /** @var Blueprint $table */
             $table->integer( 'role_id' );
             $table->integer( 'author_id' );
@@ -127,9 +127,9 @@ class ConfigBlog
      */
     public static function setBlogTable()
     {
-        static::$schema->dropIfExists( 'blog' );
+        static::$schema->dropIfExists( 'blog_blog' );
 
-        static::$schema->create( 'blog', function ( $table ) {
+        static::$schema->create( 'blog_blog', function ( $table ) {
             /** @var Blueprint $table */
             $table->increments( 'blog_id' );
             $table->integer(    'author_id' );
@@ -145,9 +145,9 @@ class ConfigBlog
      */
     public static function setCommentTable()
     {
-        static::$schema->dropIfExists( 'comment' );
+        static::$schema->dropIfExists( 'blog_comment' );
 
-        static::$schema->create( 'comment', function ( $table ) {
+        static::$schema->create( 'blog_comment', function ( $table ) {
             /** @var Blueprint $table */
             $table->increments( 'comment_id' );
             $table->integer(    'blog_id' );

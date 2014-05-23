@@ -132,14 +132,14 @@ class DaoEntity extends DaoArray
     public function load( $id=null, $column=null )
     {
         $this->hooks( 'loading', $id );
-        $this->setId( $id );
+        $this->setId( $id, $column );
         $list = $this->select();
         foreach( $list as $key => $data ) {
             $list[$key] = $entity = $this->convert->toEntity( $data );
             $this->hash($entity);
         }
         $this->hooks( 'loaded', $list );
-        if( $id ) {
+        if( $id && !$column ) { // load by primaryKey. should have one result.
             return $list[0];
         }
         return $list;

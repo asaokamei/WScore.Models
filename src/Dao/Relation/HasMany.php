@@ -34,7 +34,7 @@ class HasMany extends RelationAbstract
         if( !$this->initialized ) {
             $this->info['targetKey'] = $this->info['targetKey'] ?: $this->myPrimaryKey;
             $this->info['myKey'] = $this->info['myKey'] ?: $this->myPrimaryKey;
-            $initialized = true;
+            $this->initialized = true;
         }
         return $this->info;
     }

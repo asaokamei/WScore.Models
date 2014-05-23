@@ -77,7 +77,7 @@ abstract class RelationAbstract
      * @param object|object[] $target
      * @return bool
      */
-    abstract public function relate($target);
+    abstract public function relate($target=null);
 
     /**
      * loads related data from the database into the entity data.
