@@ -81,6 +81,17 @@ class HasJoin_Test extends \PHPUnit_Framework_TestCase
         $roles[] = $this->daoRole->load($data['role'][0]['role_id']);
         $roles[] = $this->daoRole->load($data['role'][2]['role_id']);
         
+        // relate the author to the 2 of the roles. 
         $this->daoAuth->relate( $author, 'roles' )->relate( $roles );
+        
+        // get author from the 2nd role. 
+        $roleAuthor = $this->daoRole->relate( $roles[1], 'authors' )->load();
+        $this->assertEquals( $author->name, $roleAuthor[0]->name );
+        
+        // get roles from the author, again.
+        $roles2 = $this->daoAuth->relate( $author, 'roles' )->load();
+        $this->assertEquals(2, count( $roles2) );
+        $this->assertEquals( $roles[0]->role, $roles2[0]->role );
+        $this->assertEquals( $roles[1]->role, $roles2[1]->role );
     }
 }

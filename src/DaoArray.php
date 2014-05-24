@@ -294,7 +294,6 @@ class DaoArray implements DaoInterface
         if( !$id ) return;
         if( !$column ) $column = $this->primaryKey;
         if( is_array($id) ) {
-            $id = $id[$this->primaryKey];
             $this->query->whereIn( $column, $id );
         } else {
             $this->query->where( $column, '=', $id );

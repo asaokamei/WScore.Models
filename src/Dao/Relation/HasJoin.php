@@ -143,6 +143,7 @@ class HasJoin extends RelationAbstract
         $targetId = Magic::get( $joinData, $info['joinTargetKey'] );
         $target = Dao::dao( $info['targetDao'] );
         $this->target = $target->load( $targetId, $info['targetKey'] );
-        return $this->isLinked = true;
+        $this->isLinked = true;
+        return $this->target;
     }
 }
