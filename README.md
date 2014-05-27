@@ -19,8 +19,7 @@ use it for --outdated-- legacy projects.
 Lots of nice ideas, such as scope, are from Laravel Framework.
 
 
-Installation
-------------
+### Installation
 
 use composer to get it as "wscore/dbgateway". name may change.
 
