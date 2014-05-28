@@ -30,14 +30,14 @@ Basic Usage
 ### constructing of Dao
 
 ```php
-class YourDao extends Dao
+class YourDao extends DaoEntity
 {
     protected $table = 'our_user';
     protected $primaryKey = 'user_id';
     protected $columns = [ 'user_id', 'status', 'name',... ];
 }
 $capsule = new Manager();
-$dao = new YourDao( $capsule );
+$dao = YourDao::getInstance( $capsule );
 ```
 
 Please refer to Illuminate/database for setting up "Capsule",
@@ -120,25 +120,20 @@ class YourDao {
 ```
 
 
-### Hook Objects
+### Mutater
 
-Your Dao code may become bloated if you keep adding
-event and filter hooks. Register hook objects in the
-Dao as
+Mutater converts member property values (strings and numbers)
+into another object, such as DateTime.
+
+create mute{PropertyName}Attribute methods to Dao class.
 
 ```php
-class YourDao {
-    public function __construct( $db ) {
-        // ...
-        $this->hooks[] = new TimeStamp();
+class UsersDao extends DaoEntity {
+    protected function muteStatusAttribute( $value ) {
+        return new UserStatus( $value );
     }
+}
 ```
-
-Ugh, ugly. to be DI ready, soon.
-
-When defining hooks in hook objects, make sure these
-hook methods are public (accessible from outside the
-class).
 
 
 Converter for Entity and Value Object
@@ -196,34 +191,34 @@ use carmel case name for setter/getter (i.e. getCarmelCase);
 the converter will find the appropriate name as necessary.
 
 
-### Defining Converter and Mutators
+Other than Dao
+--------------
 
-specify converter class and mutators as:
+Having scopes, hooks (event), filters, and mutators in one
+single Dao class may create fat class.
 
+You can branch out these methods to another class, and
+inject it to the Dao object.
 
-Finally, a converter class.
+to-be-written. 
+
+### Hook Objects
+
+Your Dao code may become bloated if you keep adding
+event and filter hooks. Register hook objects in the
+Dao as
 
 ```php
-class UsersDao extends DaoEntity {
-    protected $entityClass = 'UserEntity';
-    protected function muteStatusAttribute( $value ) {
-        return new UserStatus( $value );
+class YourDao {
+    public function __construct( $db ) {
+        // ...
+        $this->hooks[] = new TimeStamp();
     }
-}
 ```
 
-### Putting things together
+Ugh, ugly. to be DI ready, soon.
 
-```php
-$dao = new YourDao( $capsule, new UsersConverter );
+When defining hooks in hook objects, make sure these
+hook methods are public (accessible from outside the
+class).
 
-// get existing user entity. 
-$user = $dao->load(1);
-echo $user->status->show(); // echos 'inactive user'.
-$user->setStatus( new UserStatus( UserStatus::ACTIVE ) );
-$dao->save( $user );
-
-// create a new user
-$user = $dao->create( ['status'=> UserStatus::INACTIVE, 'name' => 'new user' ] );
-$dao->save( $user );
-```
